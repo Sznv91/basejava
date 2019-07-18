@@ -53,9 +53,9 @@ public class ArrayStorage {
     Resume[] getAll() {
         Resume[] filteredResume = new Resume[size];
         int filterIterator = 0;
-        for (int i = 0; i < storage.length - 1; i++) {
-            if (storage[i] != null) {
-                filteredResume[filterIterator] = storage[i];
+        for (Resume resume : storage) {
+            if (resume != null) {
+                filteredResume[filterIterator] = resume;
                 filterIterator++;
             }
         }
