@@ -7,44 +7,45 @@ public class ArrayStorage {
     private int size = 0;
 
     void clear() {
-        int clearCounter = 0;
-        while (this.size > 0) {
-            if (storage[clearCounter] != null) {
-                storage[clearCounter] = null;
-                this.size--;
-            }
-            clearCounter++;
+        while (size > 0) {
+            storage[size - 1] = null;
+            size--;
         }
     }
 
     void save(Resume r) {
         if (r != null) {
-            for (int i = 0; i < storage.length - 1; i++) {
-                if (storage[i] == null) {
-                    storage[i] = r;
-                    this.size++;
-                    break;
-                }
-            }
+            storage[size] = r;
+            size++;
         }
     }
 
     Resume get(String uuid) {
-        for (Resume resume : storage) {
-            if (resume != null && resume.uuid.equals(uuid)) {
-                return resume;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
             }
         }
         return null;
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < storage.length - 1; i++) {
-            if (storage[i] != null && storage[i].uuid.equals(uuid)) {
+        int deleteIndex = -1;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
                 storage[i] = null;
-                size--;
+                deleteIndex = i;
             }
         }
+        if (deleteIndex != -1) {
+            for (int i = deleteIndex; i < size; i++) {
+                Resume tmp = storage[i];
+                storage[i] = storage[i + 1];
+                storage[i + 1] = tmp;
+            }
+            size--;
+        }
+
     }
 
     /**
@@ -52,17 +53,14 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         Resume[] filteredResume = new Resume[size];
-        int filterCounter = 0;
-        for (Resume resume : storage) {
-            if (resume != null) {
-                filteredResume[filterCounter] = resume;
-                filterCounter++;
-            }
+
+        for (int i = 0; i < size; i++) {
+            filteredResume[i] = storage[i];
         }
         return filteredResume;
     }
 
     int size() {
-        return this.size;
+        return size;
     }
 }
