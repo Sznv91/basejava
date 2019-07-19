@@ -52,11 +52,11 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         Resume[] filteredResume = new Resume[size];
-        int filterIterator = 0;
+        int filterCounter = 0;
         for (Resume resume : storage) {
             if (resume != null) {
-                filteredResume[filterIterator] = resume;
-                filterIterator++;
+                filteredResume[filterCounter] = resume;
+                filterCounter++;
             }
         }
         return filteredResume;
