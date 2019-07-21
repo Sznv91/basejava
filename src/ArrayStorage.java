@@ -11,8 +11,9 @@ public class ArrayStorage {
 
     void update(Resume original, Resume updateResume) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].equals(original)) {
-                storage[i].uuid = updateResume.uuid;
+            if (storage[i].getUuid().equals(original.getUuid())) {
+                storage[i] = updateResume;
+                break;
             }
         }
     }
@@ -48,7 +49,7 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return storage[i];
             }
         }
@@ -58,7 +59,7 @@ public class ArrayStorage {
 
     void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 storage[i] = storage[size - 1];
                 storage[size - 1] = null;
                 size--;
