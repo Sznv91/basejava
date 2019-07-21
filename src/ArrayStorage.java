@@ -4,9 +4,9 @@ import static java.util.Arrays.fill;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
+class ArrayStorage {
 
-    private Resume[] storage = new Resume[10_000];
+    private final Resume[] storage = new Resume[10_000];
     private int size = 0;
 
     void update(Resume resume) {
@@ -30,7 +30,7 @@ public class ArrayStorage {
 
     void save(Resume resume) {
         boolean resumeExist = false;
-        if (resume != null && resume.getUuid() != null && size < storage.length) {
+        if ((resume != null) && (resume.getUuid() != null) && (size < storage.length)) {
             for (int i = 0; i < size; i++) {
                 if (storage[i].getUuid().equals(resume.getUuid())) {
                     resumeExist = true;
@@ -46,14 +46,15 @@ public class ArrayStorage {
             System.out.print("Resume \"" + resume + "\" doesn't save");
             if (resume == null) {
                 System.out.println(" because resume can't be \"null\"");
+                return;
             }
             if (size >= storage.length) {
                 System.out.println(" not enough free cells in storage");
+                return;
             }
-            if (resume.getUuid() == null){
+            if (resume.getUuid() == null) {
                 System.out.println(" because UUID is null");
             }
-
         }
     }
 

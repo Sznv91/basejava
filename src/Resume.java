@@ -3,7 +3,7 @@ import java.util.Objects;
 /**
  * Initial resume class
  */
-public class Resume {
+class Resume {
 
     // Unique identifier
     private String uuid;

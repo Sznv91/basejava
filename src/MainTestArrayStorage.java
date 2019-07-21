@@ -1,7 +1,7 @@
 /**
  * Test for your ArrayStorage implementation
  */
-public class MainTestArrayStorage {
+class MainTestArrayStorage {
     private static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
