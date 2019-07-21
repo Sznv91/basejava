@@ -10,11 +10,16 @@ public class ArrayStorage {
     private int size = 0;
 
     void update(Resume original, Resume updateResume) {
+        boolean resumeExist = false;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(original.getUuid())) {
                 storage[i] = updateResume;
+                resumeExist = true;
                 break;
             }
+        }
+        if (!resumeExist) {
+            System.out.println("Not updated, UUID " + original.getUuid() + " not found");
         }
     }
 
@@ -59,12 +64,18 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        boolean resumeExist = false;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 storage[i] = storage[size - 1];
                 storage[size - 1] = null;
                 size--;
+                resumeExist = true;
+                break;
             }
+        }
+        if (!resumeExist) {
+            System.out.println("Not delete, UUID " + uuid + " not found");
         }
     }
 
