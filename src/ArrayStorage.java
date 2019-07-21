@@ -25,14 +25,15 @@ public class ArrayStorage {
 
     void save(Resume resume) {
         boolean resumeExist = false;
-        if (resume != null && size < storage.length - 1) {
+        if (resume != null && size < storage.length) {
             for (int i = 0; i < size; i++) {
-                if (storage[i].equals(resume)) {
+                if (storage[i].getUuid().equals(resume.getUuid())) {
                     resumeExist = true;
+                    System.out.println("Not saved, uuid already exist");
                     break;
                 }
             }
-            if (resumeExist == false) {
+            if (!resumeExist) {
                 storage[size] = resume;
                 size++;
             }
@@ -41,8 +42,8 @@ public class ArrayStorage {
             if (resume == null) {
                 System.out.println(" because resume can't be \"null\"");
             }
-            if (size >= storage.length - 1) {
-                System.out.println(" not enough free cells in massive");
+            if (size >= storage.length) {
+                System.out.println(" not enough free cells in storage");
             }
         }
     }
