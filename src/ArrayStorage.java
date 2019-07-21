@@ -9,17 +9,17 @@ public class ArrayStorage {
     private Resume[] storage = new Resume[10_000];
     private int size = 0;
 
-    void update(Resume original, Resume updateResume) {
+    void update(Resume resume) {
         boolean resumeExist = false;
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(original.getUuid())) {
-                storage[i] = updateResume;
+            if (storage[i].getUuid().equals(resume.getUuid())) {
+                storage[i] = resume;
                 resumeExist = true;
                 break;
             }
         }
         if (!resumeExist) {
-            System.out.println("Not updated, UUID " + original.getUuid() + " not found");
+            System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
         }
     }
 
@@ -30,7 +30,7 @@ public class ArrayStorage {
 
     void save(Resume resume) {
         boolean resumeExist = false;
-        if (resume != null && size < storage.length) {
+        if (resume != null && resume.getUuid() != null && size < storage.length) {
             for (int i = 0; i < size; i++) {
                 if (storage[i].getUuid().equals(resume.getUuid())) {
                     resumeExist = true;
@@ -50,6 +50,10 @@ public class ArrayStorage {
             if (size >= storage.length) {
                 System.out.println(" not enough free cells in storage");
             }
+            if (resume.getUuid() == null){
+                System.out.println(" because UUID is null");
+            }
+
         }
     }
 

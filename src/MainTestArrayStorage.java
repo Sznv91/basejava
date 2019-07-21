@@ -28,8 +28,8 @@ public class MainTestArrayStorage {
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
-        ARRAY_STORAGE.update(r2,r4);
-        System.out.println("Test update method, expect: uuid4 Actual: " + ARRAY_STORAGE.get(r2.getUuid()));
+        System.out.println("Test update method, expect: SOP not found._Actual:");
+        ARRAY_STORAGE.update(r4);
         ARRAY_STORAGE.clear();
         printAll();
 
