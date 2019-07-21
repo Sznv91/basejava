@@ -6,7 +6,7 @@ import static java.util.Arrays.fill;
  */
 public class ArrayStorage {
 
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
     private int size = 0;
 
     void update(Resume original, Resume updateResume) {
@@ -19,26 +19,26 @@ public class ArrayStorage {
     }
 
     void clear() {
-        fill(storage, null);
+        fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume r) {
+    void save(Resume resume) {
         boolean resumeExist = false;
-        if (r != null && size < storage.length - 1) {
+        if (resume != null && size < storage.length - 1) {
             for (int i = 0; i < size; i++) {
-                if (storage[i].equals(r)) {
+                if (storage[i].equals(resume)) {
                     resumeExist = true;
                     break;
                 }
             }
             if (resumeExist == false) {
-                storage[size] = r;
+                storage[size] = resume;
                 size++;
             }
         } else {
-            System.out.print("Resume \"" + r + "\" doesn't save");
-            if (r == null) {
+            System.out.print("Resume \"" + resume + "\" doesn't save");
+            if (resume == null) {
                 System.out.println(" because resume can't be \"null\"");
             }
             if (size >= storage.length - 1) {
