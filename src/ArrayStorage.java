@@ -25,7 +25,7 @@ class ArrayStorage {
     }
 
     void save(Resume resume) {
-        if ((resume != null) && (resume.getUuid() != null) && (size < storage.length)) {
+        if (size < storage.length) {
             int positionResume = positionResume(resume.getUuid());
             if (positionResume < 0) {
                 storage[size] = resume;
@@ -34,18 +34,7 @@ class ArrayStorage {
                 System.out.println("Not saved, uuid already exist");
             }
         } else {
-            System.out.print("Resume \"" + resume + "\" doesn't save");
-            if (resume == null) {
-                System.out.println(" because resume can't be \"null\"");
-                return;
-            }
-            if (size >= storage.length) {
-                System.out.println(" not enough free cells in storage");
-                return;
-            }
-            if (resume.getUuid() == null) {
-                System.out.println(" because UUID is null");
-            }
+            System.out.println(" not enough free cells in storage");
         }
     }
 
