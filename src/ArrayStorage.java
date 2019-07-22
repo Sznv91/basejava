@@ -10,15 +10,11 @@ class ArrayStorage {
     private int size = 0;
 
     void update(Resume resume) {
-        boolean resumeExist = false;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(resume.getUuid())) {
-                storage[i] = resume;
-                resumeExist = true;
-                break;
-            }
-        }
-        if (!resumeExist) {
+        int positionResume = positionResume(resume.getUuid());
+        if (positionResume > -1) {
+            storage[positionResume] = resume;
+            System.out.println("Not saved, uuid already exist");
+        } else {
             System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
         }
     }
@@ -29,18 +25,13 @@ class ArrayStorage {
     }
 
     void save(Resume resume) {
-        boolean resumeExist = false;
         if ((resume != null) && (resume.getUuid() != null) && (size < storage.length)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(resume.getUuid())) {
-                    resumeExist = true;
-                    System.out.println("Not saved, uuid already exist");
-                    break;
-                }
-            }
-            if (!resumeExist) {
+            int positionResume = positionResume(resume.getUuid());
+            if (positionResume < 0) {
                 storage[size] = resume;
                 size++;
+            } else {
+                System.out.println("Not saved, uuid already exist");
             }
         } else {
             System.out.print("Resume \"" + resume + "\" doesn't save");
@@ -59,10 +50,9 @@ class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int positionResume = positionResume(uuid);
+        if (positionResume > -1) {
+            return storage[positionResume];
         }
         System.out.println("Resume \"" + uuid + "\" doesn't found in massive");
         return null;
@@ -93,5 +83,14 @@ class ArrayStorage {
 
     int size() {
         return size;
+    }
+
+    private int positionResume(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
