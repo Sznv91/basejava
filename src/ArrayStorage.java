@@ -10,10 +10,9 @@ class ArrayStorage {
     private int size = 0;
 
     void update(Resume resume) {
-        int positionResume = positionResume(resume.getUuid());
-        if (positionResume > -1) {
-            storage[positionResume] = resume;
-            System.out.println("Not saved, uuid already exist");
+        int index = getIndex(resume.getUuid());
+        if (index > -1) {
+            storage[index] = resume;
         } else {
             System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
         }
@@ -26,7 +25,7 @@ class ArrayStorage {
 
     void save(Resume resume) {
         if (size < storage.length) {
-            int positionResume = positionResume(resume.getUuid());
+            int positionResume = getIndex(resume.getUuid());
             if (positionResume < 0) {
                 storage[size] = resume;
                 size++;
@@ -39,18 +38,18 @@ class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        int positionResume = positionResume(uuid);
-        if (positionResume > -1) {
-            return storage[positionResume];
+        int index = getIndex(uuid);
+        if (index > -1) {
+            return storage[index];
         }
         System.out.println("Resume \"" + uuid + "\" doesn't found in massive");
         return null;
     }
 
     void delete(String uuid) {
-        int positionResume = positionResume(uuid);
-        if (positionResume > -1) {
-            storage[positionResume] = storage[size - 1];
+        int index = getIndex(uuid);
+        if (index > -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         } else {
@@ -69,7 +68,7 @@ class ArrayStorage {
         return size;
     }
 
-    private int positionResume(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
