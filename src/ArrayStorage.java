@@ -59,17 +59,12 @@ class ArrayStorage {
     }
 
     void delete(String uuid) {
-        boolean resumeExist = false;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-                resumeExist = true;
-                break;
-            }
-        }
-        if (!resumeExist) {
+        int positionResume = positionResume(uuid);
+        if (positionResume > -1) {
+            storage[positionResume] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+        } else {
             System.out.println("Not delete, UUID " + uuid + " not found");
         }
     }
