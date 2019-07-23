@@ -4,12 +4,13 @@ import static java.util.Arrays.fill;
 /**
  * Array based storage for Resumes
  */
-class ArrayStorage {
+class ArrayStorage implements Storage {
 
-    private final Resume[] storage = new Resume[10_000];
+    private static final int STORAGE_LIMIT = 10_000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
-    void update(Resume resume) {
+    public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index > -1) {
             storage[index] = resume;
@@ -18,15 +19,14 @@ class ArrayStorage {
         }
     }
 
-    void clear() {
+    public void clear() {
         fill(storage, 0, size, null);
         size = 0;
     }
 
-    void save(Resume resume) {
-        if (size < storage.length) {
-            int positionResume = getIndex(resume.getUuid());
-            if (positionResume < 0) {
+    public void save(Resume resume) {
+        if (size < STORAGE_LIMIT) {
+            if (getIndex(resume.getUuid()) < 0) {
                 storage[size] = resume;
                 size++;
             } else {
@@ -37,7 +37,7 @@ class ArrayStorage {
         }
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
             return storage[index];
@@ -46,7 +46,7 @@ class ArrayStorage {
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
             storage[index] = storage[size - 1];
@@ -60,11 +60,11 @@ class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return copyOfRange(storage, 0, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
