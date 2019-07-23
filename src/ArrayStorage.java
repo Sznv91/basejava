@@ -1,14 +1,8 @@
-import static java.util.Arrays.copyOfRange;
-import static java.util.Arrays.fill;
 
 /**
  * Array based storage for Resumes
  */
-class ArrayStorage implements Storage {
-
-    private static final int STORAGE_LIMIT = 10_000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
+class ArrayStorage extends AbstractArrayStorage {
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
@@ -17,11 +11,6 @@ class ArrayStorage implements Storage {
         } else {
             System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
         }
-    }
-
-    public void clear() {
-        fill(storage, 0, size, null);
-        size = 0;
     }
 
     public void save(Resume resume) {
@@ -60,13 +49,6 @@ class ArrayStorage implements Storage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public Resume[] getAll() {
-        return copyOfRange(storage, 0, size);
-    }
-
-    public int size() {
-        return size;
-    }
 
     private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
