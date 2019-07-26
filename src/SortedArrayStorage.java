@@ -2,7 +2,7 @@ import static java.util.Arrays.binarySearch;
 import static java.lang.Math.abs;
 import static java.util.Arrays.copyOfRange;
 
-public class SortedArray extends AbstractArrayStorage {
+public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void update(Resume resume) {
