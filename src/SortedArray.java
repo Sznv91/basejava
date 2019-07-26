@@ -18,7 +18,7 @@ public class SortedArray extends AbstractArrayStorage {
             System.out.println("Resume " + resume.getUuid() + " already exist");
             return;
         }
-        makeHole(index);
+        rebuildStorage(index, false);
         storage[index] = resume;
         size++;
     }
@@ -37,8 +37,9 @@ public class SortedArray extends AbstractArrayStorage {
     @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index >= 0){
-            
+        if (index >= 0) {
+            rebuildStorage(index,true);
+            size--;
         }
 
     }
@@ -49,12 +50,19 @@ public class SortedArray extends AbstractArrayStorage {
         return binarySearch(storage, 0, size, searchKey);
     }
 
-    private void makeHole(int index) {
+    private void rebuildStorage(int index, boolean addOrDelete) {
         Resume[] fixMassive = new Resume[STORAGE_LIMIT];
-        Resume[] leftPart = copyOfRange(storage, 0, index);
-        Resume[] rightPart = copyOfRange(storage, index, size);
+        Resume[] leftPart;
+        Resume[] rightPart;
+        leftPart = copyOfRange(storage, 0, index);
+        rightPart = copyOfRange(storage, index, size);
+        if (addOrDelete == false) {
+            System.arraycopy(rightPart, 0, fixMassive, index + 1, rightPart.length);
+        } else {
+            System.arraycopy(rightPart, 0, fixMassive, index-1, rightPart.length);
+        }
         System.arraycopy(leftPart, 0, fixMassive, 0, leftPart.length);
-        System.arraycopy(rightPart, 0, fixMassive, index + 1, rightPart.length);
+
         storage = fixMassive;
     }
 }

@@ -26,9 +26,11 @@ public class TestSortedArray {
         printAll();
 
         System.out.println("Get r5: " + sortArray.get(r5.getUuid()));
-
         System.out.println("Get dummy: " + sortArray.get("dummy"));
         System.out.println("Get r3: " + sortArray.get(r4.getUuid()));
+
+        sortArray.delete("uuid6");
+        printAll();
     }
 
     private static void printAll() {
