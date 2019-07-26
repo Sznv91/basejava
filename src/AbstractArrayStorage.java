@@ -7,7 +7,7 @@ import static java.util.Arrays.fill;
 abstract class AbstractArrayStorage implements Storage {
 
     static final int STORAGE_LIMIT = 10_000;
-    final Resume[] storage = new Resume[STORAGE_LIMIT];
+    Resume[] storage = new Resume[STORAGE_LIMIT]; //be final
     int size = 0;
 
     public Resume[] getAll() {
