@@ -1,7 +1,7 @@
 
-public class TestSortedArray {
+class TestSortedArray {
 
-    private static Storage sortArray = new SortedArray();
+    private static final Storage sortArray = new SortedArray();
 
     public static void main(String[] args) {
 
