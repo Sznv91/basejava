@@ -1,5 +1,9 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
+
 /**
- * Test for your ArrayStorage implementation
+ * Test for your ru.topjava.basejava.storage.ArrayStorage implementation
  */
 class MainTestArrayStorage {
     private static final Storage ARRAY_STORAGE = new ArrayStorage();

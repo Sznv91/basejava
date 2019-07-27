@@ -1,3 +1,7 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
+
 import static java.util.Arrays.binarySearch;
 import static java.lang.Math.abs;
 
@@ -34,7 +38,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public int getIndex(String uuid) {
+    int getIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return binarySearch(storage, 0, size, searchKey);

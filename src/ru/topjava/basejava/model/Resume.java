@@ -1,9 +1,11 @@
+package ru.topjava.basejava.model;
+
 import java.util.Objects;
 
 /**
  * Initial resume class
  */
-class Resume implements Comparable<Resume> {
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private String uuid;
@@ -35,7 +37,7 @@ class Resume implements Comparable<Resume> {
     }
 
     @Override
-    public int compareTo(Resume resume){
+    public int compareTo(Resume resume) {
         return uuid.compareTo(resume.uuid);
     }
 }

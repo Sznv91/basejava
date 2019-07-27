@@ -1,3 +1,7 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
+
 import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.fill;
 
@@ -41,5 +45,5 @@ abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    abstract public int getIndex(String uuid);
+    abstract int getIndex(String uuid);
 }

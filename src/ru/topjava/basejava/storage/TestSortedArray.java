@@ -1,3 +1,6 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
 
 class TestSortedArray {
 

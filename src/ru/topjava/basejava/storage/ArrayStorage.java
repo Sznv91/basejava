@@ -1,3 +1,6 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
 
 /**
  * Array based storage for Resumes
@@ -29,11 +32,7 @@ class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-
-    public int getIndex(String uuid) {
+    int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
