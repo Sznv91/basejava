@@ -29,17 +29,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return storage[index];
-        } else {
-            System.out.println("Resume " + uuid + " not found");
-            return null;
-        }
-    }
-
-    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
@@ -49,7 +38,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     }
 
-    private int getIndex(String uuid) {
+    @Override
+    public int getIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return binarySearch(storage, 0, size, searchKey);

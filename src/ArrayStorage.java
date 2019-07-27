@@ -26,15 +26,6 @@ class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            return storage[index];
-        }
-        System.out.println("Resume \"" + uuid + "\" doesn't found in massive");
-        return null;
-    }
-
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
@@ -50,7 +41,7 @@ class ArrayStorage extends AbstractArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
 
-    private int getIndex(String uuid) {
+    public int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

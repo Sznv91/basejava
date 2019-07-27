@@ -10,6 +10,15 @@ abstract class AbstractArrayStorage implements Storage {
     Resume[] storage = new Resume[STORAGE_LIMIT]; //be final
     int size = 0;
 
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index > -1) {
+            return storage[index];
+        }
+        System.out.println("Resume \"" + uuid + "\" doesn't found in massive");
+        return null;
+    }
+
     public Resume[] getAll() {
         return copyOfRange(storage, 0, size);
     }
@@ -22,4 +31,6 @@ abstract class AbstractArrayStorage implements Storage {
     public int size() {
         return size;
     }
+
+    abstract public int getIndex(String uuid);
 }
