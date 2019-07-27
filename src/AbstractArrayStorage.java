@@ -12,7 +12,7 @@ abstract class AbstractArrayStorage implements Storage {
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (index > -1) {
+        if (index >= 0) {
             storage[index] = resume;
         } else {
             System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
@@ -21,7 +21,7 @@ abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index > -1) {
+        if (index >= 0) {
             return storage[index];
         }
         System.out.println("Resume \"" + uuid + "\" doesn't found in massive");

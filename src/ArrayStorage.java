@@ -6,7 +6,8 @@ class ArrayStorage extends AbstractArrayStorage {
 
     public void save(Resume resume) {
         if (size < STORAGE_LIMIT) {
-            if (getIndex(resume.getUuid()) < 0) {
+            int index = getIndex(resume.getUuid());
+            if (index <= 0) {
                 storage[size] = resume;
                 size++;
             } else {
@@ -19,7 +20,7 @@ class ArrayStorage extends AbstractArrayStorage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index > -1) {
+        if (index >= 0) {
             storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
