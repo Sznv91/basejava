@@ -1,6 +1,5 @@
 import static java.util.Arrays.binarySearch;
 import static java.lang.Math.abs;
-import static java.util.Arrays.copyOfRange;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
@@ -13,7 +12,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             System.out.println("Resume " + resume.getUuid() + " already exist");
             return;
         }
-        rebuildStorage(index, "save");
+        System.arraycopy(storage, index,
+                storage, index + 1, size);
         storage[index] = resume;
         size++;
     }
@@ -22,10 +22,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
-            rebuildStorage(index, "delete");
+            System.arraycopy(storage, index + 1,
+                    storage, index, size);
             size--;
         }
-
     }
 
     @Override
@@ -33,21 +33,5 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return binarySearch(storage, 0, size, searchKey);
-    }
-
-    private void rebuildStorage(int index, String action) {
-        Resume[] fixMassive = new Resume[STORAGE_LIMIT];
-        Resume[] leftPart;
-        Resume[] rightPart;
-        leftPart = copyOfRange(storage, 0, index);
-        rightPart = copyOfRange(storage, index, size);
-        if (action.equals("save")) {
-            System.arraycopy(rightPart, 0, fixMassive, index + 1, rightPart.length);
-        } else {
-            System.arraycopy(rightPart, 0, fixMassive, index - 1, rightPart.length);
-        }
-        System.arraycopy(leftPart, 0, fixMassive, 0, leftPart.length);
-
-        storage = fixMassive;
     }
 }
