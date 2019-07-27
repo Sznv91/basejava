@@ -5,7 +5,7 @@ import ru.topjava.basejava.model.Resume;
 /**
  * Array based storage for Resumes
  */
-interface Storage {
+public interface Storage {
 
     void update(Resume resume);
 

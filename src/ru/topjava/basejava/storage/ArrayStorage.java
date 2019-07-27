@@ -5,7 +5,7 @@ import ru.topjava.basejava.model.Resume;
 /**
  * Array based storage for Resumes
  */
-class ArrayStorage extends AbstractArrayStorage {
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void save(Resume resume) {
         if (size < STORAGE_LIMIT) {
