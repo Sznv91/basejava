@@ -10,6 +10,15 @@ abstract class AbstractArrayStorage implements Storage {
     Resume[] storage = new Resume[STORAGE_LIMIT]; //be final
     int size = 0;
 
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index > -1) {
+            storage[index] = resume;
+        } else {
+            System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
+        }
+    }
+
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {

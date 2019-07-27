@@ -5,16 +5,6 @@ import static java.util.Arrays.copyOfRange;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index > -1) {
-            storage[index] = resume;
-        } else {
-            System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
-        }
-    }
-
-    @Override
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index <= 0) {

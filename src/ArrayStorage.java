@@ -4,15 +4,6 @@
  */
 class ArrayStorage extends AbstractArrayStorage {
 
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index > -1) {
-            storage[index] = resume;
-        } else {
-            System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
-        }
-    }
-
     public void save(Resume resume) {
         if (size < STORAGE_LIMIT) {
             if (getIndex(resume.getUuid()) < 0) {
