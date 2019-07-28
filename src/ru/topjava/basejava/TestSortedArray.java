@@ -28,6 +28,9 @@ class TestSortedArray {
         sortArray.save(r4);
         sortArray.save(r2);
 
+        System.out.println("test save duplicate. Except: Not saved, uuid already exist. _Actual:");
+        sortArray.save(r1);
+
         printAll();
 
         System.out.println("Get r5: " + sortArray.get(r5.getUuid()));
