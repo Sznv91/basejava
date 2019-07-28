@@ -33,6 +33,7 @@ abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
         if (index >= 0) {
             doDelete(index);
+            System.out.println("Delete " + index + " success");
         } else {
             System.out.println("Not delete, UUID " + uuid + " not found");
         }

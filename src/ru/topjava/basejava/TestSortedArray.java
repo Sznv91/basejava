@@ -29,7 +29,7 @@ class TestSortedArray {
         sortArray.save(r2);
 
         System.out.println("test save duplicate. Except: Not saved, uuid already exist. _Actual:");
-        sortArray.save(r1);
+        sortArray.save(r4);
 
         printAll();
 
@@ -37,7 +37,7 @@ class TestSortedArray {
         System.out.println("Get dummy: " + sortArray.get("dummy"));
         System.out.println("Get r4: " + sortArray.get(r4.getUuid()));
 
-        sortArray.delete("uuid6");
+        sortArray.delete("uuid12");
         printAll();
     }
 
