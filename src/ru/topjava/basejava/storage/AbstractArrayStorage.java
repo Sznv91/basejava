@@ -10,9 +10,35 @@ import static java.util.Arrays.fill;
  */
 abstract class AbstractArrayStorage implements Storage {
 
-    static final int STORAGE_LIMIT = 10_000;
+    private static final int STORAGE_LIMIT = 10_000;
     final Resume[] storage = new Resume[STORAGE_LIMIT];
     int size = 0;
+
+    public void save(Resume resume) {
+        if (size < STORAGE_LIMIT) {
+            int index = getIndex(resume.getUuid());
+            if (index < 0) {
+                doSave(index, resume);
+            } else {
+                System.out.println("Not saved, uuid already exist");
+            }
+        } else {
+            System.out.println(" not enough free cells in storage");
+        }
+    }
+
+    protected abstract void doSave(int index, Resume resume);
+
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            doDelete(index);
+        } else {
+            System.out.println("Not delete, UUID " + uuid + " not found");
+        }
+    }
+
+    protected abstract void doDelete(int index);
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
