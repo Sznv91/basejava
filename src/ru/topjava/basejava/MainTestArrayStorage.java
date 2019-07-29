@@ -33,7 +33,7 @@ class MainTestArrayStorage {
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
-        ARRAY_STORAGE.delete(r1.getUuid());
+        ARRAY_STORAGE.delete(r3.getUuid());
         printAll();
         System.out.println("Test update method, expect: SOP not found._Actual:");
         ARRAY_STORAGE.update(r4);

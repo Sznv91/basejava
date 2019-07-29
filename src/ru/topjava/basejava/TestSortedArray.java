@@ -37,7 +37,7 @@ class TestSortedArray {
         System.out.println("Get dummy: " + sortArray.get("dummy"));
         System.out.println("Get r4: " + sortArray.get(r4.getUuid()));
 
-        sortArray.delete("uuid12");
+        sortArray.delete("uuid9");
         printAll();
     }
 

@@ -8,20 +8,24 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void doSave(int index, Resume resume) {
-        int position = (index * (-1)) - 1;
-        System.arraycopy(storage, position, storage, position + 1, size);
+        int position = (index * (-1) - 1);
+        if (position != size) {
+            System.arraycopy(storage, position, storage, position + 1, size - 1);
+        }
         storage[position] = resume;
-        size++;
     }
 
     @Override
     protected void doDelete(int index) {
-        System.arraycopy(storage, index + 1, storage, index, size);
-        size--;
+        if (index != (size - 1)) {
+            System.arraycopy(storage, index + 1, storage, index, size);
+        } else {
+            storage[index] = null;
+        }
     }
 
     @Override
-    int getIndex(String uuid) {
+    protected int getIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return binarySearch(storage, 0, size, searchKey);
