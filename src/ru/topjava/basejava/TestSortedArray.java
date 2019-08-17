@@ -19,25 +19,34 @@ class TestSortedArray {
         r1.setUuid("uuid3");
         r2.setUuid("uuid6");
         r3.setUuid("uuid23");
-        r4.setUuid("uuid12");
-        r5.setUuid("uuid9");
+        r4.setUuid("uuid16");
+        r5.setUuid("uuid6");
 
         sortArray.save(r3);
         sortArray.save(r1);
-        sortArray.save(r5);
-        sortArray.save(r4);
         sortArray.save(r2);
-
-        System.out.println("test save duplicate. Except: Not saved, uuid already exist. _Actual:");
-        sortArray.save(r4);
-
         printAll();
 
-        System.out.println("Get r5: " + sortArray.get(r5.getUuid()));
-        System.out.println("Get dummy: " + sortArray.get("dummy"));
-        System.out.println("Get r4: " + sortArray.get(r4.getUuid()));
+        System.out.println("test save duplicate. Except: Not saved, uuid already exist. _Actual:");
+        sortArray.save(r5);
 
-        sortArray.delete("uuid9");
+        System.out.println("Get dummy: " + sortArray.get("dummy"));
+
+        sortArray.save(r4);
+        printAll();
+
+        sortArray.save(r2);
+
+        sortArray.delete("uuid16");
+        printAll();
+        sortArray.save(r4);
+        sortArray.delete("uuid23");
+        printAll();
+        sortArray.save(r3);
+        sortArray.delete("uuid6");
+        printAll();
+
+        sortArray.clear();
         printAll();
     }
 
