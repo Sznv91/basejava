@@ -8,7 +8,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void doSave(int index, Resume resume) {
-        int position = (index * (-1) - 1);
+        int position = index * (-1) - 1;
         if (position != size) {
             System.arraycopy(storage, position, storage, position + 1, (size - position));
         }

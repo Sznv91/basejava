@@ -1,10 +1,11 @@
 package ru.topjava.basejava.exeption;
 
-public class StorageExeption extends RuntimeException {
+public class StorageException extends RuntimeException {
 
     private final String uuid;
 
-    public StorageExeption(String uuid) {
+    public StorageException(String message, String uuid){
+        super(message);
         this.uuid = uuid;
     }
 
