@@ -10,17 +10,11 @@ class TestSortedArray {
 
     public static void main(String[] args) {
 
-        Resume r1 = new Resume();
-        Resume r2 = new Resume();
-        Resume r3 = new Resume();
-        Resume r4 = new Resume();
-        Resume r5 = new Resume();
-
-        r1.setUuid("uuid3");
-        r2.setUuid("uuid6");
-        r3.setUuid("uuid23");
-        r4.setUuid("uuid16");
-        r5.setUuid("uuid6");
+        Resume r1 = new Resume("uuid3");
+        Resume r2 = new Resume("uuid6");
+        Resume r3 = new Resume("uuid23");
+        Resume r4 = new Resume("uuid16");
+        Resume r5 = new Resume("uuid6");
 
         sortArray.save(r3);
         sortArray.save(r1);
