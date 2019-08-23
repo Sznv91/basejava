@@ -1,5 +1,7 @@
 package ru.topjava.basejava.storage;
 
+import ru.topjava.basejava.exeption.ExistStorageExeption;
+import ru.topjava.basejava.exeption.NotExistStorageExeption;
 import ru.topjava.basejava.model.Resume;
 
 import static java.util.Arrays.copyOfRange;
@@ -32,7 +34,7 @@ abstract class AbstractArrayStorage implements Storage {
                 doSave(index, resume);
                 size++;
             } else {
-                System.out.println("Not saved, uuid already exist");
+                throw new ExistStorageExeption(resume.getUuid());
             }
         } else {
             System.out.println(" not enough free cells in storage");
@@ -45,7 +47,7 @@ abstract class AbstractArrayStorage implements Storage {
             doDelete(index);
             size--;
         } else {
-            System.out.println("Not delete, UUID " + uuid + " not found");
+            throw new NotExistStorageExeption(uuid);
         }
     }
 
@@ -54,7 +56,7 @@ abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             storage[index] = resume;
         } else {
-            System.out.println("Not updated, UUID " + resume.getUuid() + " not found");
+            throw new NotExistStorageExeption(resume.getUuid());
         }
     }
 
@@ -63,8 +65,7 @@ abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             return storage[index];
         }
-        System.out.println("Resume \"" + uuid + "\" doesn't found in massive");
-        return null;
+        throw new NotExistStorageExeption(uuid);
     }
 
     public Resume[] getAll() {
