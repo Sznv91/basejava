@@ -26,12 +26,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doSave(int index, Resume resume) {
-
+        storage.add(resume);
     }
 
     @Override
     protected void doUpdate(Resume resume, int index) {
-
+        storage.set(index,resume);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ListStorage extends AbstractStorage {
         if (storage.contains(resume)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            storage.add(resume);
+           doSave(0,resume); // 0 - not use
         }
 
     }
