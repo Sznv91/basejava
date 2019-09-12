@@ -14,6 +14,7 @@ abstract class AbstractArrayStorage extends AbstractStorage {
 
     private static final int STORAGE_LIMIT = 10_000;
     final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size;
 
     public void save(Resume resume) {
         if (size < STORAGE_LIMIT) {
@@ -51,6 +52,10 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected void doUpdate(Resume resume, int index) {
         storage[index] = resume;
+    }
+
+    public int size(){
+        return size;
     }
 
 }
