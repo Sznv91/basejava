@@ -8,14 +8,13 @@ import ru.topjava.basejava.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void doSave(int index, Resume resume) {
+    protected void pasteResume(int index, Resume resume) {
         storage[size] = resume;
     }
 
     @Override
-    protected void doDelete(int index) {
+    protected void deleteFromArray(int index) {
         storage[index] = storage[size - 1];
-        storage[size - 1] = null;
     }
 
     @Override

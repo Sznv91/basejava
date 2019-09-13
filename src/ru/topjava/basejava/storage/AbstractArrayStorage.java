@@ -1,7 +1,5 @@
 package ru.topjava.basejava.storage;
 
-import ru.topjava.basejava.exeption.ExistStorageException;
-import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
 
@@ -17,34 +15,34 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
-    protected abstract void doDelete(int index);
-    protected abstract void doSave(int index, Resume resume);
+    protected abstract void deleteFromArray(int index);
 
-    public void save(Resume resume) {
+    protected abstract void pasteResume(int index, Resume resume);
+
+    protected void doSave(int index, Resume resume) {
         if (size < STORAGE_LIMIT) {
-            if (size == 0) {
-                storage[0] = resume;
-                size++;
-                return;
-            }
-            int index = getIndex(resume.getUuid());
-            if (index < 0) {
-                doSave(index, resume);
-                size++;
-            } else {
-                throw new ExistStorageException(resume.getUuid());
-            }
+            pasteResume(index, resume);
+            size++;
+            return;
         } else {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return storage[index];
-        }
-        throw new NotExistStorageException(uuid);
+    @Override
+    protected Resume doGet(int index) {
+        return storage[index];
+    }
+
+    @Override
+    protected void doDelete(int index) {
+        deleteFromArray(index);
+        storage[size - 1] = null;
+        size--;
+    }
+
+    protected void doUpdate(int index, Resume resume) {
+        storage[index] = resume;
     }
 
     public Resume[] getAll() {
@@ -54,25 +52,6 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     public void clear() {
         fill(storage, 0, size, null);
         size = 0;
-    }
-
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            doDelete(index);
-            size--;
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
-    }
-
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            storage[index] = resume;
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
     }
 
 

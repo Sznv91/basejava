@@ -1,5 +1,7 @@
 package ru.topjava.basejava.storage;
 
+import ru.topjava.basejava.exeption.ExistStorageException;
+import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
@@ -8,10 +10,51 @@ public abstract class AbstractStorage implements Storage {
 
     public abstract int size();
 
-    public abstract Resume get(String uuid);
+    protected abstract void doSave(int index ,Resume resume);
 
-    public abstract void update(Resume resume);
+    protected abstract Resume doGet(int index);
 
-    public abstract void delete(String uuid);
+    protected abstract void doDelete(int index);
 
+    protected abstract void doUpdate(int index, Resume resume);
+
+    @Override
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            throw new ExistStorageException(resume.getUuid());
+        } else {
+            doSave(index, resume);
+        }
+    }
+
+    @Override
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        } else {
+            return doGet(index);
+        }
+    }
+
+    @Override
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        } else {
+            doDelete(index);
+        }
+    }
+
+    @Override
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0) {
+            throw new NotExistStorageException(resume.getUuid());
+        } else {
+            doUpdate(index,resume);
+        }
+    }
 }

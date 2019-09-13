@@ -1,7 +1,5 @@
 package ru.topjava.basejava.storage;
 
-import ru.topjava.basejava.exeption.ExistStorageException;
-import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
 import java.util.ArrayList;
@@ -13,9 +11,34 @@ public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected int getIndex(String uuid) {
-        Resume resume = new Resume(uuid);
-        return Collections.binarySearch(storage, resume);
+    protected void doSave(int index, Resume resume) {
+        storage.add(resume);
+    }
+
+    @Override
+    protected Resume doGet(int index) {
+        return storage.get(index);
+    }
+
+    @Override
+    protected void doDelete(int index) {
+        storage.remove(index);
+    }
+
+    @Override
+    protected void doUpdate(int index, Resume resume) {
+        storage.add(index,resume);
+    }
+
+    @Override
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[storage.size()]);
+    }
+
+
+    @Override
+    public void clear() {
+        storage.clear();
     }
 
 
@@ -25,54 +48,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return storage.get(index);
-        }
-    }
-
-
-    @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            storage.add(index,resume);
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            storage.remove(index);
-        }
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
-    }
-
-    @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            storage.add(resume);
-        }
-
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+    protected int getIndex(String uuid) {
+        Resume resume = new Resume(uuid);
+        return Collections.binarySearch(storage, resume);
     }
 }
