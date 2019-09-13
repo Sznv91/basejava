@@ -23,7 +23,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         } else {
             storage[index] = null;
         }
-        size--;
     }
 
     @Override

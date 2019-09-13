@@ -1,6 +1,7 @@
 package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.ExistStorageException;
+import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
 
@@ -15,6 +16,9 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     private static final int STORAGE_LIMIT = 10_000;
     final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
+
+    protected abstract void doDelete(int index);
+    protected abstract void doSave(int index, Resume resume);
 
     public void save(Resume resume) {
         if (size < STORAGE_LIMIT) {
@@ -35,6 +39,14 @@ abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            return storage[index];
+        }
+        throw new NotExistStorageException(uuid);
+    }
+
     public Resume[] getAll() {
         return copyOfRange(storage, 0, size);
     }
@@ -44,17 +56,27 @@ abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    @Override
-    protected Resume doGet(int index) {
-        return storage[index];
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            doDelete(index);
+            size--;
+        } else {
+            throw new NotExistStorageException(uuid);
+        }
     }
 
-    @Override
-    protected void doUpdate(Resume resume, int index) {
-        storage[index] = resume;
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            storage[index] = resume;
+        } else {
+            throw new NotExistStorageException(resume.getUuid());
+        }
     }
 
-    public int size(){
+
+    public int size() {
         return size;
     }
 

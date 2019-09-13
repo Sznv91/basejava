@@ -1,9 +1,11 @@
 package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.ExistStorageException;
+import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -13,26 +15,9 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected int getIndex(String uuid) {
         Resume resume = new Resume(uuid);
-        if (storage.contains(resume)) {
-            return storage.indexOf(resume);
-        }
-        return -1;
+        return Collections.binarySearch(storage, resume);
     }
 
-    @Override
-    protected Resume doGet(int index) {
-        return storage.get(index);
-    }
-
-    @Override
-    protected void doSave(int index, Resume resume) {
-        storage.add(resume);
-    }
-
-    @Override
-    protected void doUpdate(Resume resume, int index) {
-        storage.set(index,resume);
-    }
 
     @Override
     public int size() {
@@ -40,8 +25,34 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(int index) {
-        storage.remove(index);
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        } else {
+            return storage.get(index);
+        }
+    }
+
+
+    @Override
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            storage.add(index,resume);
+        } else {
+            throw new NotExistStorageException(resume.getUuid());
+        }
+    }
+
+    @Override
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        } else {
+            storage.remove(index);
+        }
     }
 
     @Override
@@ -51,20 +62,17 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public void save(Resume resume) {
-        if (storage.contains(resume)) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-           doSave(0,resume); // 0 - not use
+            storage.add(resume);
         }
 
     }
 
     @Override
     public Resume[] getAll() {
-        Resume[] massive = new Resume[storage.size()];
-        for (int i = 0; i < storage.size(); i ++){
-            massive [i] = storage.get(i);
-        }
-        return massive;
+        return storage.toArray(new Resume[storage.size()]);
     }
 }

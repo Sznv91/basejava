@@ -74,7 +74,7 @@ abstract class AbstractArrayStorageTest {
     void update() {
         Resume r6 = new Resume(UUID_3);
         storage.update(r6);
-        assertEquals(r6, storage.get(UUID_3));
+        assertSame(r6, storage.get(UUID_3));
     }
 
     @Test
