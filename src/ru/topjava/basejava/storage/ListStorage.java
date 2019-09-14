@@ -12,7 +12,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doSave(int index, Resume resume) {
-        storage.add(resume);
+        int position = (index * (-1)) - 1;
+        storage.add(position, resume);
     }
 
     @Override
@@ -27,7 +28,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(int index, Resume resume) {
-        storage.add(index,resume);
+        storage.remove(index);
+        storage.add(index, resume);
     }
 
     @Override
