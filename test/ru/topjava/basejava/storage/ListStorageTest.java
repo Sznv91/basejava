@@ -30,12 +30,12 @@ public class ListStorageTest {
     @BeforeEach
     void setUp() {
         storage.clear();
-        storage.save(R_4);
-        storage.save(R_2);
         storage.save(R_1);
+        storage.save(R_2);
         storage.save(R_3);
-        storage.save(R_7);
+        storage.save(R_4);
         storage.save(R_6);
+        storage.save(R_7);
     }
 
     @Test

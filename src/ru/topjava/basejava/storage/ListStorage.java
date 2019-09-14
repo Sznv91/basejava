@@ -3,7 +3,6 @@ package ru.topjava.basejava.storage;
 import ru.topjava.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -12,8 +11,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doSave(int index, Resume resume) {
-        int position = (index * (-1)) - 1;
-        storage.add(position, resume);
+        storage.add(resume);
     }
 
     @Override
@@ -28,13 +26,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(int index, Resume resume) {
-        storage.remove(index);
-        storage.add(index, resume);
+        storage.set(index, resume);
     }
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+        return storage.toArray(new Resume[0]);
     }
 
 
@@ -51,7 +48,13 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        Resume resume = new Resume(uuid);
-        return Collections.binarySearch(storage, resume);
+        int counter = 0;
+        for (Resume resume : storage) {
+            if (resume.getUuid().equals(uuid)) {
+                return counter;
+            }
+            counter++;
+        }
+        return -1;
     }
 }

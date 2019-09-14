@@ -23,7 +23,6 @@ abstract class AbstractArrayStorage extends AbstractStorage {
         if (size < STORAGE_LIMIT) {
             pasteResume(index, resume);
             size++;
-            return;
         } else {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
