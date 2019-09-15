@@ -19,7 +19,7 @@ public class MapStorage extends AbstractStorage {
         return null;
     }
 
-    protected Resume doGet(int index, String uuid) {
+    private Resume doGet(int index, String uuid) {
         return storage.get(uuid);
     }
 
@@ -28,7 +28,7 @@ public class MapStorage extends AbstractStorage {
 
     }
 
-    protected void doDelete(int index, String uuid) {
+    private void doDelete(int index, String uuid) {
         storage.remove(uuid);
     }
 
