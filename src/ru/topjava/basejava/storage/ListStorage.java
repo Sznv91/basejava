@@ -15,12 +15,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(int index) {
+    protected Resume doGet(int index, String uuid) {
         return storage.get(index);
     }
 
     @Override
-    protected void doDelete(int index) {
+    protected void doDelete(int index, String uuid) {
         storage.remove(index);
     }
 
