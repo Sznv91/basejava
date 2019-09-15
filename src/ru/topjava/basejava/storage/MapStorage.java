@@ -1,6 +1,5 @@
 package ru.topjava.basejava.storage;
 
-import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
+    protected boolean isExist(Object uuid) {
         return storage.containsKey(uuid);
     }
 }

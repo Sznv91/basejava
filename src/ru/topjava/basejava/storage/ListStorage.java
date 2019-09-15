@@ -57,8 +57,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        Resume resume = new Resume(uuid);
-        return storage.contains(resume);
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 }

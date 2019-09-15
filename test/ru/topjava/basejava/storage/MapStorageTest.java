@@ -1,6 +1,7 @@
 package ru.topjava.basejava.storage;
 
 import org.junit.jupiter.api.Test;
+import ru.topjava.basejava.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,6 +28,16 @@ public class MapStorageTest extends AbstractCollectionStorageTest {
         assertNotNull(storage.get("UUID_999"));
         storage.delete("UUID_999");
         assertEquals(0,storage.size());
+    }
+
+    @Test
+    void testTime(){
+        storage.clear();
+        for (int i = 0; i < 10_000; i++){
+            Resume resume = new Resume();
+            storage.save(resume);
+        }
+        assertEquals(10_000,storage.size());
     }
 
 }

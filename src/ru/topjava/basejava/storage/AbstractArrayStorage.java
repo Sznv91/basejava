@@ -60,7 +60,7 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        return (int) searchKey(uuid) >= 0;
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 }
