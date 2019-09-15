@@ -10,31 +10,24 @@ public class MapStorage extends AbstractStorage {
 
     private final Map<String, Resume> storage = new HashMap<>();
 
-    protected void doSave(int index, Resume resume) {
-        storage.put(resume.getUuid(), resume);
+    @Override
+    protected void doSave(Object indOrRes, Resume resume) {
+        storage.put((String) indOrRes, resume);
     }
 
     @Override
-    protected Resume doGet(int index) {
-        return null;
-    }
-
-    private Resume doGet(int index, String uuid) {
-        return storage.get(uuid);
+    protected Resume doGet(Object indOrRes) {
+        return storage.get(indOrRes);
     }
 
     @Override
-    protected void doDelete(int index) {
-
-    }
-
-    private void doDelete(int index, String uuid) {
-        storage.remove(uuid);
+    protected void doDelete(Object indOrRes) {
+        storage.remove(indOrRes);
     }
 
     @Override
-    protected void doUpdate(int index, Resume resume) {
-        storage.replace(resume.getUuid(), resume);
+    protected void doUpdate(Object indOrRes, Resume resume) {
+        storage.replace((String) indOrRes, resume);
     }
 
     @Override
@@ -53,35 +46,16 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        int counter = 0;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getValue().getUuid().equals(uuid)) {
-                return counter;
-            }
-            counter++;
-        }
-        return -1;
+    protected Object getIndex(String uuid) {
+        return uuid;
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
+    protected boolean isExist(String uuid) {
+        if (storage.containsKey(uuid)) {
+            return true;
         } else {
-            return doGet(index, uuid);
+            return false;
         }
     }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            doDelete(index, uuid);
-        }
-    }
-
 }

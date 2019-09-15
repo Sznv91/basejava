@@ -6,55 +6,55 @@ import ru.topjava.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getIndex(String uuid);
 
     public abstract int size();
 
-    protected abstract void doSave(int index, Resume resume);
+    protected abstract void doSave(Object indOrRes, Resume resume);
 
-    protected abstract Resume doGet(int index);
+    protected abstract Resume doGet(Object indOrRes);
 
-    protected abstract void doDelete(int index);
+    protected abstract void doDelete(Object indOrRes);
 
-    protected abstract void doUpdate(int index, Resume resume);
+    protected abstract void doUpdate(Object indOrRes, Resume resume);
+
+    protected abstract boolean isExist(String uuid);
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
+        if (isExist(resume.getUuid())){
             throw new ExistStorageException(resume.getUuid());
-        } else {
-            doSave(index, resume);
+        }
+        else {
+            doSave(getIndex(resume.getUuid()), resume);
         }
     }
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
+        if (!isExist(uuid)){
             throw new NotExistStorageException(uuid);
-        } else {
-            return doGet(index);
+        }
+        else {
+            return doGet(getIndex(uuid));
         }
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
+        if (!isExist(uuid)) {
             throw new NotExistStorageException(uuid);
         } else {
-            doDelete(index);
+            doDelete(getIndex(uuid));
         }
     }
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
+        if (!isExist(resume.getUuid())) {
             throw new NotExistStorageException(resume.getUuid());
         } else {
-            doUpdate(index, resume);
+            doUpdate(getIndex(resume.getUuid()), resume);
         }
     }
 
