@@ -28,4 +28,5 @@ public class MapStorageTest extends AbstractCollectionStorageTest {
         storage.delete("UUID_999");
         assertEquals(0,storage.size());
     }
+
 }

@@ -10,33 +10,6 @@ public class MapStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected int getIndex(String uuid) {
-        int counter = 0;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getValue().getUuid().equals(uuid)) {
-                return counter;
-            }
-            counter++;
-        }
-        return -1;
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
-    }
-
-    @Override
     protected void doSave(int index, Resume resume) {
         storage.put(resume.getUuid(), resume);
     }
@@ -55,4 +28,32 @@ public class MapStorage extends AbstractStorage {
     protected void doUpdate(int index, Resume resume) {
         storage.replace(resume.getUuid(), resume);
     }
+
+    @Override
+    public Resume[] getAll() {
+        return storage.values().toArray(new Resume[0]);
+    }
+
+    @Override
+    public void clear() {
+        storage.clear();
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
+    }
+
+    @Override
+    protected int getIndex(String uuid) {
+        int counter = 0;
+        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
+            if (entry.getValue().getUuid().equals(uuid)) {
+                return counter;
+            }
+            counter++;
+        }
+        return -1;
+    }
+
 }

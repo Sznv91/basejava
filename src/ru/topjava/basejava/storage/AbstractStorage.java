@@ -57,4 +57,5 @@ public abstract class AbstractStorage implements Storage {
             doUpdate(index,resume);
         }
     }
+
 }
