@@ -11,23 +11,23 @@ public class MapStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected void doSave(Object indOrRes, Resume resume) {
-        storage.put((String) indOrRes, resume);
+    protected void doSave(Object searchKey, Resume resume) {
+        storage.put((String) searchKey, resume);
     }
 
     @Override
-    protected Resume doGet(Object indOrRes) {
-        return storage.get(indOrRes);
+    protected Resume doGet(Object searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
-    protected void doDelete(Object indOrRes) {
-        storage.remove(indOrRes);
+    protected void doDelete(Object searchKey) {
+        storage.remove(searchKey);
     }
 
     @Override
-    protected void doUpdate(Object indOrRes, Resume resume) {
-        storage.replace((String) indOrRes, resume);
+    protected void doUpdate(Object searchKey, Resume resume) {
+        storage.replace((String) searchKey, resume);
     }
 
     @Override
@@ -46,16 +46,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getIndex(String uuid) {
+    protected Object searchKey(String uuid) {
         return uuid;
     }
 
     @Override
     protected boolean isExist(String uuid) {
-        if (storage.containsKey(uuid)) {
-            return true;
-        } else {
-            return false;
-        }
+        return storage.containsKey(uuid);
     }
 }
