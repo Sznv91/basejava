@@ -15,29 +15,13 @@ public class MapStorageTest extends AbstractCollectionStorageTest {
     @Test
     void getAll() {
         assertEquals(6, storage.size());
-        assertNotNull(storage.get("UUID_1"));
         storage.delete("UUID_1");
-        assertNotNull(storage.get("UUID_2"));
         storage.delete("UUID_2");
-        assertNotNull(storage.get("UUID_3"));
         storage.delete("UUID_3");
-        assertNotNull(storage.get("UUID_4"));
         storage.delete("UUID_4");
-        assertNotNull(storage.get("UUID_99"));
         storage.delete("UUID_99");
-        assertNotNull(storage.get("UUID_999"));
         storage.delete("UUID_999");
         assertEquals(0,storage.size());
-    }
-
-    @Test
-    void testTime(){
-        storage.clear();
-        for (int i = 0; i < 10_000; i++){
-            Resume resume = new Resume();
-            storage.save(resume);
-        }
-        assertEquals(10_000,storage.size());
     }
 
 }
