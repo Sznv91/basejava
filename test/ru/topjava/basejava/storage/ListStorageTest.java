@@ -1,6 +1,6 @@
 package ru.topjava.basejava.storage;
 
-class ListStorageTest extends AbstractCollectionStorageTest {
+class ListStorageTest extends AbstractStorageTest {
 
     public ListStorageTest() {
         super(new ListStorage());

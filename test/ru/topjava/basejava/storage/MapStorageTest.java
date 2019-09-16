@@ -6,7 +6,7 @@ import ru.topjava.basejava.model.Resume;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class MapStorageTest extends AbstractCollectionStorageTest {
+public class MapStorageTest extends AbstractStorageTest {
     MapStorageTest(){
         super(new MapStorage());
     }
