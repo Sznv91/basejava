@@ -7,6 +7,7 @@ import ru.topjava.basejava.storage.Storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Interactive test for ru.topjava.basejava.storage.ArrayStorage implementation
@@ -37,7 +38,7 @@ class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume(uuid);
+                    r = new Resume(uuid, "");
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
@@ -53,7 +54,7 @@ class MainArray {
                     printAll();
                     break;
                 case "update":
-                    Resume updateResume = new Resume(uuid);
+                    Resume updateResume = new Resume(uuid, "");
                     ARRAY_STORAGE.update(updateResume);
                     break;
                 case "exit":
@@ -66,9 +67,9 @@ class MainArray {
     }
 
     private static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.isEmpty()) {
             System.out.println("Empty");
         } else {
             for (Resume r : all) {

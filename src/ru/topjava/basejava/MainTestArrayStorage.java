@@ -11,10 +11,10 @@ class MainTestArrayStorage {
     private static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("uuid1");
-        Resume r2 = new Resume("uuid2");
-        Resume r3 = new Resume("uuid3");
-        Resume r4 = new Resume("uuid4");
+        Resume r1 = new Resume("uuid1", "");
+        Resume r2 = new Resume("uuid2", "");
+        Resume r3 = new Resume("uuid3", "");
+        Resume r4 = new Resume("uuid4", "");
 
 
         ARRAY_STORAGE.save(r1);
@@ -42,7 +42,7 @@ class MainTestArrayStorage {
 
     private static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
     }

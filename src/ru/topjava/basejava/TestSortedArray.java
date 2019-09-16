@@ -10,11 +10,11 @@ class TestSortedArray {
 
     public static void main(String[] args) {
 
-        Resume r1 = new Resume("uuid3");
-        Resume r2 = new Resume("uuid6");
-        Resume r3 = new Resume("uuid23");
-        Resume r4 = new Resume("uuid16");
-        Resume r5 = new Resume("uuid6");
+        Resume r1 = new Resume("uuid3", "");
+        Resume r2 = new Resume("uuid6", "");
+        Resume r3 = new Resume("uuid23", "");
+        Resume r4 = new Resume("uuid16","");
+        Resume r5 = new Resume("uuid6", "");
 
         sortArray.save(r3);
         sortArray.save(r1);
@@ -46,7 +46,7 @@ class TestSortedArray {
 
     private static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : sortArray.getAll()) {
+        for (Resume r : sortArray.getAllSorted()) {
             System.out.println(r);
         }
     }

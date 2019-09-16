@@ -9,16 +9,31 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
+    private String fullName;
 
-    public Resume(){
-        this (UUID.randomUUID().toString());
+    public Resume() {
+        this(UUID.randomUUID().toString(), "");
     }
 
-    public Resume(String uuid) {
+    public Resume(String uuid, String name) {
         this.uuid = uuid;
+        this.fullName = name;
     }
 
     public String getUuid() {
+        return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    @Override
+    public String toString() {
         return uuid;
     }
 
@@ -31,17 +46,13 @@ public class Resume {
             return false;
         }
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
-    }
-
-    @Override
-    public String toString() {
-        return uuid;
+        return Objects.hash(uuid, fullName);
     }
 
 }

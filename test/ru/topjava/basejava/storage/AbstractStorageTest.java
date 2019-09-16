@@ -6,6 +6,9 @@ import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractStorageTest {
@@ -17,11 +20,11 @@ abstract class AbstractStorageTest {
     private static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-    private static final Resume R_1 = new Resume(UUID_1);
-    private static final Resume R_2 = new Resume(UUID_2);
-    private static final Resume R_3 = new Resume(UUID_3);
-    private static final Resume R_4 = new Resume(UUID_4);
-    private static final Resume R_5 = new Resume(UUID_5);
+    private static final Resume R_1 = new Resume(UUID_1, "Anton");
+    private static final Resume R_2 = new Resume(UUID_2, "Boris");
+    private static final Resume R_3 = new Resume(UUID_3, "Carl");
+    private static final Resume R_4 = new Resume(UUID_4, "Daniel");
+    private static final Resume R_5 = new Resume(UUID_5, "Eugen");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -45,7 +48,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void saveExist() {
-        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(ExistStorageException.class, () -> storage.save(R_1));
     }
 
     @Test
@@ -62,7 +65,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume r6 = new Resume(UUID_3);
+        Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
         storage.update(r6);
         assertSame(r6, storage.get(UUID_3));
     }
@@ -86,14 +89,19 @@ abstract class AbstractStorageTest {
     }
 
     @Test
-    void getAll() {
-        Resume[] expect = new Resume[4];
-        expect[0] = R_1;
-        expect[1] = R_2;
-        expect[2] = R_3;
-        expect[3] = R_4;
+    void getAllSorted() {
+        clear();
+        storage.save(R_3);
+        storage.save(R_1);
+        storage.save(R_4);
+        storage.save(R_2);
 
-        assertArrayEquals(expect, storage.getAll());
+        List<Resume> expect = new ArrayList<>();
+        expect.add(R_1);
+        expect.add(R_2);
+        expect.add(R_3);
+        expect.add(R_4);
+        assertEquals(expect, storage.getAllSorted());
         assertEquals(4, storage.size());
     }
 

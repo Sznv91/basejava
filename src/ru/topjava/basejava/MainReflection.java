@@ -16,7 +16,7 @@ class MainReflection {
         Field field = r.getClass().getDeclaredFields()[0];
         field.setAccessible(true);
         field.set(r, "new_uuid");
-        // TODO : invoke r.toString via reflection
+
         Method toString = clazz.getDeclaredMethod("toString");
         System.out.println("Reflection invoke " + toString.invoke(r));
 

@@ -2,6 +2,8 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.model.Resume;
 
+import java.util.List;
+
 /**
  * Array based storage for Resumes
  */
@@ -17,7 +19,8 @@ public interface Storage {
 
     void delete(String uuid);
 
-    Resume[] getAll();
+    //Resume[] getAllSorted();
+    List<Resume> getAllSorted();
 
     int size();
 

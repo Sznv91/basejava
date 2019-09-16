@@ -3,8 +3,11 @@ package ru.topjava.basejava.storage;
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
 
-import static java.util.Arrays.copyOfRange;
-import static java.util.Arrays.fill;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static java.util.Arrays.*;
 
 /**
  * Array based storage for Resumes
@@ -46,8 +49,10 @@ abstract class AbstractArrayStorage extends AbstractStorage {
         storage[(int) searchKey] = resume;
     }
 
-    public Resume[] getAll() {
-        return copyOfRange(storage, 0, size);
+    public List<Resume> getAllSorted() {
+        List<Resume> result = new ArrayList<>(asList(copyOfRange(storage,0,size)));
+        result.sort(Comparator.comparing(Resume::getFullName));
+        return result;
     }
 
     public void clear() {
