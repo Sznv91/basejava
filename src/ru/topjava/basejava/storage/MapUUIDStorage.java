@@ -4,18 +4,26 @@ import ru.topjava.basejava.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapUUIDStorage extends AbstractStorage {
 
-    private final Map<String, Resume> storage = new HashMap<>();
+    protected final Map storage;
+
+    public MapUUIDStorage() {
+        this(new HashMap<String, Resume>());
+    }
+
+    public MapUUIDStorage(Map type) {
+        this.storage = type;
+    }
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
-        storage.put((String) searchKey, resume);
+        storage.put(searchKey, resume);
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return storage.get(searchKey);
+        return (Resume) storage.get(searchKey);
     }
 
     @Override
@@ -25,7 +33,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Object searchKey, Resume resume) {
-        storage.replace((String) searchKey, resume);
+        storage.replace(searchKey, resume);
     }
 
     @Override
