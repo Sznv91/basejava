@@ -1,12 +1,10 @@
 package ru.topjava.basejava.storage;
 
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@SelectPackages({ArrayStorage.class,
-        SortedArrayStorageTest.class,
-        ListStorageTest.class,
-        MapUUIDStorageTest.class,
-        MapHashStorageTest.class})
+@SelectPackages("ru.topjava.basejava.storage.Suite")
 public class AllStorageTest {
 }

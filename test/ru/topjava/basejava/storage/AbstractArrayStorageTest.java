@@ -6,7 +6,7 @@ import ru.topjava.basejava.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-abstract class AbstractArrayStorageTest extends AbstractStorageTest {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     private final Storage storage;
 
