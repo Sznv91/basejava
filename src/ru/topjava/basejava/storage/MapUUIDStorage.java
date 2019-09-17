@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MapUUIDStorage extends AbstractStorage {
 
-    protected final Map storage;
+    private final Map storage;
 
     public MapUUIDStorage() {
         this(new HashMap<String, Resume>());

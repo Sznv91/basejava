@@ -1,4 +1,4 @@
-package ru.topjava.basejava.storage.Suite;
+package ru.topjava.basejava.storage.suite;
 
 import ru.topjava.basejava.storage.AbstractArrayStorageTest;
 import ru.topjava.basejava.storage.ArrayStorage;
