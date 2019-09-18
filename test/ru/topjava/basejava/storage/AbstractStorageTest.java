@@ -77,10 +77,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getElement() {
-        assertEquals(R_1, storage.get(UUID_1));
-        assertEquals(R_2, storage.get(UUID_2));
         assertEquals(R_3, storage.get(UUID_3));
-        assertEquals(R_4, storage.get(UUID_4));
     }
 
     @Test
@@ -90,12 +87,6 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() {
-        clear();
-        storage.save(R_3);
-        storage.save(R_1);
-        storage.save(R_4);
-        storage.save(R_2);
-
         List<Resume> expect = new ArrayList<>();
         expect.add(R_1);
         expect.add(R_2);
