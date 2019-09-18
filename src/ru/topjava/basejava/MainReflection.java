@@ -10,7 +10,7 @@ import java.util.Arrays;
 class MainReflection {
 
     public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Resume r = new Resume();
+        Resume r = new Resume("Main Reflection");
         Class clazz = r.getClass();
         System.out.println(Arrays.toString(clazz.getDeclaredMethods()));
         Field field = r.getClass().getDeclaredFields()[0];

@@ -20,9 +20,9 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test
     void saveOverflow() {
         while (storage.size() < STORAGE_LIMIT) {
-            storage.save(new Resume());
+            storage.save(new Resume("Test to Overflow"));
         }
-        assertThrows(StorageException.class, () -> storage.save(new Resume()));
+        assertThrows(StorageException.class, () -> storage.save(new Resume("Exception")));
     }
 
 }
