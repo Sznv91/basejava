@@ -4,7 +4,6 @@ import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.*;
@@ -49,17 +48,18 @@ abstract class AbstractArrayStorage extends AbstractStorage {
         storage[(int) searchKey] = resume;
     }
 
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(asList(copyOfRange(storage,0,size)));
-        result.sort(Comparator.comparing(Resume::getFullName));
-        return result;
+    @Override
+    protected List<Resume> doGetAllSorted() {
+        return new ArrayList<>(asList(copyOfRange(storage, 0, size)));
     }
 
+    @Override
     public void clear() {
         fill(storage, 0, size, null);
         size = 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
