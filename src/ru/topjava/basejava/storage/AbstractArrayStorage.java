@@ -3,7 +3,6 @@ package ru.topjava.basejava.storage;
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.*;
@@ -50,7 +49,7 @@ abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> doGetAllSorted() {
-        return new ArrayList<>(asList(copyOfRange(storage, 0, size)));
+        return asList(copyOfRange(storage, 0, size));
     }
 
     @Override
