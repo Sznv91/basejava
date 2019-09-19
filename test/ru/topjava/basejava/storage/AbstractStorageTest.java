@@ -6,9 +6,9 @@ import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
@@ -87,11 +87,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() {
-        List<Resume> expect = new ArrayList<>();
-        expect.add(R_1);
-        expect.add(R_2);
-        expect.add(R_3);
-        expect.add(R_4);
+        List<Resume> expect = asList(R_1,R_2,R_3,R_4);
         assertEquals(expect, storage.getAllSorted());
         assertEquals(4, storage.size());
     }
