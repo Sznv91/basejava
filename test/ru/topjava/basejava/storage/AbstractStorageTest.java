@@ -17,14 +17,14 @@ public abstract class AbstractStorageTest {
 
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
-    private static final String UUID_3 = "UUID_3";
+    public static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-    private static final Resume R_1 = new Resume(UUID_1, "Anton");
+    public static final Resume R_1 = new Resume(UUID_1, "Anton");
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
-    private static final Resume R_3 = new Resume(UUID_3, "Carl");
+    public static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");
-    private static final Resume R_5 = new Resume(UUID_5, "Eugen");
+    public static final Resume R_5 = new Resume(UUID_5, "Eugen");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -40,7 +40,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void save() {
+    public void save() {
         storage.save(R_5);
         assertEquals(5, storage.size());
         assertEquals(R_5, storage.get(UUID_5));
@@ -52,7 +52,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void delete() {
+    public void delete() {
         storage.delete(UUID_1);
         assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
         assertEquals(3, storage.size());
@@ -64,10 +64,11 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void update() {
+    public void update() {
         Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
         storage.update(r6);
         assertSame(r6, storage.get(UUID_3));
+        assertEquals(4, storage.size());
     }
 
     @Test
@@ -76,7 +77,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void getElement() {
+    public void getElement() {
         assertEquals(R_3, storage.get(UUID_3));
     }
 

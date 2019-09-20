@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract Object getSearchKey(Resume resume);
 
     public abstract int size();
 
@@ -27,40 +27,53 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        Object searchKey = getNotExistKey(resume.getUuid());
+        Object searchKey = getNotExistKey(resume);
         doSave(searchKey, resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        Object searchKey = getExistKey(uuid);
+        Resume resume = new Resume(uuid, "");
+        Object searchKey = getExistKey(resume);
+        return doGet(searchKey);
+    }
+
+    public Resume get(Resume resume) {
+        Object searchKey = getExistKey(resume);
         return doGet(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
-        Object searchKey = getExistKey(uuid);
+        Resume resume = new Resume(uuid, "");
+        Object searchKey = getExistKey(resume);
+        doDelete(searchKey);
+    }
+
+    @Override
+    public void delete(Resume resume) {
+        Object searchKey = getExistKey(resume);
         doDelete(searchKey);
     }
 
     @Override
     public void update(Resume resume) {
-        Object searchKey = getExistKey(resume.getUuid());
+        Object searchKey = getExistKey(resume);
         doUpdate(searchKey, resume);
     }
 
-    private Object getExistKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private Object getExistKey(Resume resume) {
+        Object searchKey = getSearchKey(resume);
         if (!isExist(searchKey)) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(resume.getUuid());
         }
         return searchKey;
     }
 
-    private Object getNotExistKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private Object getNotExistKey(Resume resume) {
+        Object searchKey = getSearchKey(resume);
         if (isExist(searchKey)) {
-            throw new ExistStorageException(uuid);
+            throw new ExistStorageException(resume.getUuid());
         }
         return searchKey;
     }
