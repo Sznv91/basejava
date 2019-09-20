@@ -19,14 +19,19 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Object getSearchKey(Resume resume) {
+        //todo make exception Non Support argument
+        return null;
+    }
+
+    @Override
+    protected Object getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(resume.getUuid())) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
         return -1;
     }
-
 
 
 }

@@ -17,6 +17,12 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
+    protected Object getSearchKey(String uuid) {
+        //todo make exception Non Support argument
+        return null;
+    }
+
+    @Override
     public void clear() {
         storage.clear();
     }
@@ -24,6 +30,12 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    public void save(Resume resume) {
+        Object searchKey = getNotExistKey(resume);
+        doSave(searchKey, resume);
     }
 
     @Override
