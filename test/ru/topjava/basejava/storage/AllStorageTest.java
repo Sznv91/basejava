@@ -5,6 +5,6 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@SelectPackages("ru.topjava.basejava.storage.suite")
+@SelectPackages("ru.topjava.basejava.storage.testAllStorageType")
 public class AllStorageTest {
 }

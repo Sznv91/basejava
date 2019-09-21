@@ -1,4 +1,4 @@
-package ru.topjava.basejava.storage.suite;
+package ru.topjava.basejava.storage.testAllStorageType;
 
 import org.junit.jupiter.api.Test;
 import ru.topjava.basejava.exeption.NotExistStorageException;
@@ -21,6 +21,7 @@ class MapResumeStorageTest extends AbstractStorageTest {
     }
 
     @Override
+    @Test
     public void save(){
         storage.save(R_5);
         assertEquals(5, storage.size());
@@ -36,10 +37,18 @@ class MapResumeStorageTest extends AbstractStorageTest {
     }
 
     @Override
+    @Test
     public void update() {
         Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
         storage.update(r6);
         assertSame(r6, storage.get(r6));
         assertEquals(4, storage.size());
+    }
+
+    @Override
+    @Test
+    public void getNotExist() {
+        Resume neverUsedBefore = new Resume(UUID_3, "NeverUsedBefore");
+        assertThrows(NotExistStorageException.class, () -> storage.get(neverUsedBefore));
     }
 }

@@ -30,26 +30,14 @@ public abstract class AbstractStorage implements Storage {
     }
 
     @Override
-    public Resume get(String uuid) {
-        Object searchKey = getExistKey(uuid);
+    public Resume get(Object uuidOrResume) {
+        Object searchKey = getExistKey(uuidOrResume);
         return doGet(searchKey);
     }
 
     @Override
-    public Resume get(Resume resume) {
-        Object searchKey = getExistKey(resume);
-        return doGet(searchKey);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        Object searchKey = getExistKey(uuid);
-        doDelete(searchKey);
-    }
-
-    @Override
-    public void delete(Resume resume) {
-        Object searchKey = getExistKey(resume);
+    public void delete(Object uuidOrResume) {
+        Object searchKey = getExistKey(uuidOrResume);
         doDelete(searchKey);
     }
 
@@ -59,30 +47,27 @@ public abstract class AbstractStorage implements Storage {
         doUpdate(searchKey, resume);
     }
 
-    private Object getExistKey(Object key) {
-
+    protected Object getExistKey(Object key) {
         Object searchKey = getSearchKey(key);
         if (!isExist(searchKey)) {
             try {
                 throw new NotExistStorageException(((Resume) key).getUuid());
-            } catch (Exception e) {
+            } catch (ClassCastException e) {
                 throw new NotExistStorageException((String) key);
             }
         }
-
-
         return searchKey;
     }
 
     protected Object getNotExistKey(Object key) {
+        //todo Use instanceof
         Object searchKey = getSearchKey(key);
         if (isExist(searchKey)) {
             try {
                 throw new ExistStorageException(((Resume) key).getUuid());
-            } catch (Exception e) {
+            } catch (ClassCastException e) {
                 throw new ExistStorageException((String) key);
             }
-
         }
         return searchKey;
     }
@@ -90,6 +75,17 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> result = doGetAllSorted();
+        //http://qaru.site/questions/68187/how-to-sort-by-two-fields-in-java
+        result.sort(new Comparator<Resume>() {
+            @Override
+            public int compare(Resume o1, Resume o2) {
+                if (o1.getFullName().compareTo(o2.getFullName()) != 0) {
+                    return o1.getFullName().compareTo(o2.getFullName());
+                } else {
+                    return o1.getUuid().compareTo(o2.getUuid());
+                }
+            }
+        });
         result.sort(Comparator.comparing(Resume::getFullName));
         return result;
     }

@@ -82,7 +82,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void getNotExist() {
+    public void getNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.get("uuid-1"));
     }
 
