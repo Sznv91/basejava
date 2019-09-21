@@ -12,7 +12,7 @@ public class MapResumeStorage extends AbstractStorage {
 
 
     @Override
-    protected Object getSearchKey(Object resume) {
+    protected Resume getSearchKey(Object resume) {
         return (Resume) resume;
     }
 

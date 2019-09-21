@@ -85,7 +85,6 @@ public abstract class AbstractStorage implements Storage {
                 }
             }
         });
-        result.sort(Comparator.comparing(Resume::getFullName));
         return result;
     }
 
