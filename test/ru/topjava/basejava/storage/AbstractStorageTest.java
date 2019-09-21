@@ -17,14 +17,14 @@ public abstract class AbstractStorageTest {
 
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
-    public static final String UUID_3 = "UUID_3";
+    protected static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-    public static final Resume R_1 = new Resume(UUID_1, "Anton");
+    protected static final Resume R_1 = new Resume(UUID_1, "Anton");
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
-    public static final Resume R_3 = new Resume(UUID_3, "Carl");
+    protected static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");
-    public static final Resume R_5 = new Resume(UUID_5, "Eugen");
+    protected static final Resume R_5 = new Resume(UUID_5, "Eugen");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -88,9 +88,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() {
-        Resume R_7 = new Resume("UUID_7", "Boris");
-        storage.save(R_7);
-        List<Resume> expect = asList(R_1, R_2, R_7, R_3, R_4);
+        List<Resume> expect = asList(R_1, R_2, R_3, R_4, R_5);
+        storage.save(R_5);
         assertEquals(expect, storage.getAllSorted());
         assertEquals(5, storage.size());
     }
