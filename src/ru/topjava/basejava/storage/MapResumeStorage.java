@@ -12,14 +12,8 @@ public class MapResumeStorage extends AbstractStorage {
 
 
     @Override
-    protected Object getSearchKey(Resume resume) {
+    protected Object getSearchKey(Object resume) {
         return (Resume) resume;
-    }
-
-    @Override
-    protected Object getSearchKey(String uuid) {
-        //todo make exception Non Support argument
-        return null;
     }
 
     @Override

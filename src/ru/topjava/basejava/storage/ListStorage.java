@@ -45,7 +45,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected Object getSearchKey(Object uuid) {
         int counter = 0;
         for (Resume searchResume : storage) {
             if (searchResume.getUuid().equals(uuid)) {
@@ -54,12 +54,6 @@ public class ListStorage extends AbstractStorage {
             counter++;
         }
         return -1;
-    }
-
-    @Override
-    protected Object getSearchKey(Resume resume) {
-        //todo make exception Non Support argument
-        return null;
     }
 
     @Override
