@@ -60,7 +60,6 @@ public abstract class AbstractStorage implements Storage {
     }
 
     protected Object getNotExistKey(Object key) {
-        //todo Use instanceof
         Object searchKey = getSearchKey(key);
         if (isExist(searchKey)) {
             try {

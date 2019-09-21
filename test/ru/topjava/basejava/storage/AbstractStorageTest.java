@@ -40,7 +40,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void save() {
+    protected void save() {
         storage.save(R_5);
         assertEquals(5, storage.size());
         assertEquals(R_5, storage.get(UUID_5));
@@ -52,19 +52,19 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void delete() {
+    protected void delete() {
         storage.delete(UUID_1);
         assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
         assertEquals(3, storage.size());
     }
 
     @Test
-    void deleteNotExist() {
+    protected void deleteNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_5));
     }
 
     @Test
-    public void update() {
+    protected void update() {
         Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
         storage.update(r6);
         assertSame(r6, storage.get(UUID_3));
@@ -72,17 +72,17 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    void updateNotExist() {
+    protected void updateNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.update(R_5));
     }
 
     @Test
-    public void getElement() {
+    protected void getElement() {
         assertEquals(R_3, storage.get(UUID_3));
     }
 
     @Test
-    public void getNotExist() {
+    protected void getNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.get("uuid-1"));
     }
 

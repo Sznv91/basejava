@@ -16,13 +16,13 @@ class MapResumeStorageTest extends AbstractStorageTest {
 
     @Override
     @Test
-    public void getElement(){
+    protected void getElement() {
         assertEquals(R_3, storage.get(R_3));
     }
 
     @Override
     @Test
-    public void save(){
+    protected void save() {
         storage.save(R_5);
         assertEquals(5, storage.size());
         assertEquals(R_5, storage.get(R_5));
@@ -30,24 +30,32 @@ class MapResumeStorageTest extends AbstractStorageTest {
 
     @Override
     @Test
-    public void delete() {
+    protected void deleteNotExist() {
+        Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
+        assertThrows(NotExistStorageException.class, () -> storage.delete(r6));
+    }
+
+    @Override
+    @Test
+    protected void delete() {
         storage.delete(R_1);
         assertThrows(NotExistStorageException.class, () -> storage.get(R_1));
         assertEquals(3, storage.size());
     }
 
     @Override
-    @Test
-    public void update() {
-        Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
-        storage.update(r6);
-        assertSame(r6, storage.get(r6));
-        assertEquals(4, storage.size());
+    protected void update() {
+
+    }
+
+    @Override
+    protected void updateNotExist() {
+
     }
 
     @Override
     @Test
-    public void getNotExist() {
+    protected void getNotExist() {
         Resume neverUsedBefore = new Resume(UUID_3, "NeverUsedBefore");
         assertThrows(NotExistStorageException.class, () -> storage.get(neverUsedBefore));
     }
