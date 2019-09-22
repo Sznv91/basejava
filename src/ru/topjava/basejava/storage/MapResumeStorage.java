@@ -2,6 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.model.Resume;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Object keyResume, Resume resume) {
-        storage.put(((Resume) keyResume).getUuid(), resume);
+        storage.put(((Resume) resume).getUuid(), resume);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object resume) {
-        storage.remove((Resume) resume).getUuid();
+        storage.remove(((Resume) resume).getUuid());
     }
 
     @Override
@@ -36,12 +37,12 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object resume) {
-        return storage.containsKey(((Resume) resume).getUuid());
+        return resume != null;
     }
 
     @Override
     protected List<Resume> doGetAllSorted() {
-        return null;
+        return new ArrayList<Resume> (storage.values());
     }
 
     @Override
