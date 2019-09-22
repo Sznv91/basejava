@@ -15,9 +15,9 @@ public interface Storage {
 
     void save(Resume resume);
 
-    Resume get(Object object);
+    Resume get(String uuid);
 
-    void delete(Object object);
+    void delete(String uuid);
 
     List<Resume> getAllSorted();
 

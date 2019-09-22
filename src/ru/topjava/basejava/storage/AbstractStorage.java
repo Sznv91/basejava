@@ -30,14 +30,14 @@ public abstract class AbstractStorage implements Storage {
     }
 
     @Override
-    public Resume get(Object uuidOrResume) {
-        Object searchKey = getExistKey(uuidOrResume);
+    public Resume get(String uuid) {
+        Object searchKey = getExistKey(uuid);
         return doGet(searchKey);
     }
 
     @Override
-    public void delete(Object uuidOrResume) {
-        Object searchKey = getExistKey(uuidOrResume);
+    public void delete(String uuid) {
+        Object searchKey = getExistKey(uuid);
         doDelete(searchKey);
     }
 
@@ -47,26 +47,18 @@ public abstract class AbstractStorage implements Storage {
         doUpdate(searchKey, resume);
     }
 
-    protected Object getExistKey(Object key) {
+    private Object getExistKey(String key) {
         Object searchKey = getSearchKey(key);
         if (!isExist(searchKey)) {
-            try {
-                throw new NotExistStorageException(((Resume) key).getUuid());
-            } catch (ClassCastException e) {
-                throw new NotExistStorageException((String) key);
-            }
+            throw new NotExistStorageException((String) key);
         }
         return searchKey;
     }
 
-    protected Object getNotExistKey(Object key) {
+    private Object getNotExistKey(String key) {
         Object searchKey = getSearchKey(key);
         if (isExist(searchKey)) {
-            try {
-                throw new ExistStorageException(((Resume) key).getUuid());
-            } catch (ClassCastException e) {
-                throw new ExistStorageException((String) key);
-            }
+            throw new ExistStorageException(key);
         }
         return searchKey;
     }
