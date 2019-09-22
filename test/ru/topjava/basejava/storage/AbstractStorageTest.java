@@ -13,18 +13,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
 
-    protected final Storage storage;
+    private final Storage storage;
 
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
-    protected static final String UUID_3 = "UUID_3";
+    private static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-    protected static final Resume R_1 = new Resume(UUID_1, "Anton");
+    private static final Resume R_1 = new Resume(UUID_1, "Anton");
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
-    protected static final Resume R_3 = new Resume(UUID_3, "Carl");
+    private static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");
-    protected static final Resume R_5 = new Resume(UUID_5, "Eugen");
+    private static final Resume R_5 = new Resume(UUID_5, "Eugen");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -40,7 +40,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    protected void save() {
+    void save() {
         storage.save(R_5);
         assertEquals(5, storage.size());
         assertEquals(R_5, storage.get(UUID_5));
@@ -52,19 +52,19 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    protected void delete() {
+    void delete() {
         storage.delete(UUID_1);
         assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
         assertEquals(3, storage.size());
     }
 
     @Test
-    protected void deleteNotExist() {
+    void deleteNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_5));
     }
 
     @Test
-    protected void update() {
+    void update() {
         Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
         storage.update(r6);
         assertSame(r6, storage.get(UUID_3));
@@ -72,17 +72,17 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    protected void updateNotExist() {
+    void updateNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.update(R_5));
     }
 
     @Test
-    protected void getElement() {
+    void getElement() {
         assertEquals(R_3, storage.get(UUID_3));
     }
 
     @Test
-    protected void getNotExist() {
+    void getNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.get("uuid-1"));
     }
 

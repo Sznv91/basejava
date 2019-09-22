@@ -6,19 +6,11 @@ import java.util.*;
 
 public class MapUUIDStorage extends AbstractStorage {
 
-    private final Map storage;
-
-    public MapUUIDStorage() {
-        this(new HashMap<String, Resume>());
-    }
-
-    public MapUUIDStorage(Map type) {
-        this.storage = type;
-    }
+    private final HashMap<String, Resume> storage = new HashMap<>();
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
-        storage.put(searchKey, resume);
+        storage.put((String) searchKey, resume);
     }
 
     @Override
@@ -33,7 +25,7 @@ public class MapUUIDStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Object searchKey, Resume resume) {
-        storage.replace(searchKey, resume);
+        storage.replace((String) searchKey, resume);
     }
 
     @Override
