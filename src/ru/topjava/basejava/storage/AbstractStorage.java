@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract Object getSearchKey(Object searchKey);
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract void doSave(Object searchKey, Resume resume);
 
@@ -47,18 +47,18 @@ public abstract class AbstractStorage implements Storage {
         doUpdate(searchKey, resume);
     }
 
-    private Object getExistKey(Object key) { //String
+    private Object getExistKey(String key) {
         Object searchKey = getSearchKey(key);
         if (!isExist(searchKey)) {
-            throw new NotExistStorageException((String) key);
+            throw new NotExistStorageException(key);
         }
         return searchKey;
     }
 
-    private Object getNotExistKey(Object key) { //String
+    private Object getNotExistKey(String key) {
         Object searchKey = getSearchKey(key);
         if (isExist(searchKey)) {
-            throw new ExistStorageException((String)key);
+            throw new ExistStorageException(key);
         }
         return searchKey;
     }
