@@ -4,40 +4,39 @@ import ru.topjava.basejava.model.Resume;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage {
 
-    private final Map storage = new HashMap<String,Resume>();
+    private final HashMap<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected Object getSearchKey(Object searchKey) {
-        return null;
+    protected Resume getSearchKey(Object uuid) {
+        return storage.get((String) uuid);
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
-
+    protected void doSave(Object keyResume, Resume resume) {
+        storage.put(((Resume) keyResume).getUuid(), resume);
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return null;
+    protected Resume doGet(Object resume) {
+        return storage.get(((Resume) resume).getUuid());
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-
+    protected void doDelete(Object resume) {
+        storage.remove((Resume) resume).getUuid();
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-
+    protected void doUpdate(Object keyResume, Resume resume) {
+        storage.replace(((Resume) keyResume).getUuid(), resume);
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return false;
+    protected boolean isExist(Object resume) {
+        return storage.containsKey(((Resume) resume).getUuid());
     }
 
     @Override
@@ -47,11 +46,11 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     public void clear() {
-
+        storage.clear();
     }
 
     @Override
     public int size() {
-        return 0;
+        return storage.size();
     }
 }
