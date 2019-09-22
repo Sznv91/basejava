@@ -44,13 +44,12 @@ class MapResumeStorageTest extends AbstractStorageTest {
     }
 
     @Override
+    @Test
     protected void update() {
-
-    }
-
-    @Override
-    protected void updateNotExist() {
-
+    Resume r6 = new Resume(UUID_3, "NeverUsedBefore");
+        storage.update(r6);
+    assertSame(r6, storage.get(r6));
+    assertEquals(4, storage.size());
     }
 
     @Override
