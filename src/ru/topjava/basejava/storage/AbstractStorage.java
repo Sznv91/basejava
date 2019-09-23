@@ -65,23 +65,13 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        class ResumeNameComparator implements Comparator<Resume> {
-
-            @Override
-            public int compare(Resume o1, Resume o2) {
-                return o1.getFullName().compareTo(o2.getFullName());
-            }
-        }
-        class ResumeUUIDComparator implements Comparator<Resume> {
-
-            @Override
-            public int compare(Resume o1, Resume o2) {
-                return o1.getUuid().compareTo(o2.getUuid());
-            }
-        }
         List<Resume> result = doGetAllSorted();
-        //http://qaru.site/questions/68187/how-to-sort-by-two-fields-in-java
-        result.sort(new ResumeNameComparator().thenComparing(new ResumeUUIDComparator()));
+        //https://www.baeldung.com/java-8-comparator-comparing
+        Comparator<Resume> resume_Age_Name_Comparator
+                = Comparator.comparing(Resume::getFullName)
+                .thenComparing(Resume::getUuid);
+
+        result.sort(resume_Age_Name_Comparator);
         return result;
     }
 
