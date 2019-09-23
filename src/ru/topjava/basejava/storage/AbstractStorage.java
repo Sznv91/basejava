@@ -48,18 +48,18 @@ public abstract class AbstractStorage implements Storage {
         doUpdate(searchKey, resume);
     }
 
-    private Object getExistKey(String key) {
-        Object searchKey = getSearchKey(key);
+    private Object getExistKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
-            throw new NotExistStorageException(key);
+            throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private Object getNotExistKey(String key) {
-        Object searchKey = getSearchKey(key);
+    private Object getNotExistKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
-            throw new ExistStorageException(key);
+            throw new ExistStorageException(uuid);
         }
         return searchKey;
     }

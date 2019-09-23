@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
 
-    private final Storage storage;
+    protected final Storage storage;
 
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
@@ -88,10 +88,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() {
-        List<Resume> expect = asList(R_1, R_2, R_3, R_4, R_5);
-        storage.save(R_5);
+        List<Resume> expect = asList(R_1, R_2, R_3, R_4);
         assertEquals(expect, storage.getAllSorted());
-        assertEquals(5, storage.size());
     }
 
     @Test

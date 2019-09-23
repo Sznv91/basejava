@@ -8,11 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
-    private final Storage storage;
-
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
-        this.storage = storage;
     }
 
     private static final int STORAGE_LIMIT = 10000;

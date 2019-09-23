@@ -17,12 +17,12 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Object keyResume, Resume resume) {
-        storage.put(((Resume) resume).getUuid(), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected Resume doGet(Object resume) {
-        return storage.get(((Resume) resume).getUuid());
+        return (Resume) resume;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> doGetAllSorted() {
-        return new ArrayList<Resume>(storage.values());
+        return new ArrayList<>(storage.values());
     }
 
     @Override
