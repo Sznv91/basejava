@@ -5,10 +5,11 @@ import ru.topjava.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractMapStorage <SC> extends AbstractStorage <SC> {
 
-    protected final HashMap<String, Resume> storage = new HashMap<>();
+    protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected List<Resume> doGetAllSorted() {
