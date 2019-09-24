@@ -67,11 +67,11 @@ public abstract class AbstractStorage <SearchKey> implements Storage {
     public List<Resume> getAllSorted() {
         List<Resume> result = doGetAllSorted();
         //https://www.baeldung.com/java-8-comparator-comparing
-        Comparator<Resume> resumeAgeThanNameComparator
+        Comparator<Resume> resumeNameThanUUIDComparator
                 = Comparator.comparing(Resume::getFullName)
                 .thenComparing(Resume::getUuid);
 
-        result.sort(resumeAgeThanNameComparator);
+        result.sort(resumeNameThanUUIDComparator);
         return result;
     }
 
