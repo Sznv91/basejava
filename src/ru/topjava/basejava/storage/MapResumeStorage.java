@@ -2,13 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.model.Resume;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-public class MapResumeStorage extends AbstractStorage {
-
-    private final HashMap<String, Resume> storage = new HashMap<>();
+public class MapResumeStorage extends AbstractMapStorage<Resume> {
 
     @Override
     protected Resume getSearchKey(String uuid) {
@@ -16,42 +10,28 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Object keyResume, Resume resume) {
+    protected void doSave(Resume keyResume, Resume resume) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume doGet(Object resume) {
-        return (Resume) resume;
+    protected Resume doGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected void doDelete(Object resume) {
-        storage.remove(((Resume) resume).getUuid());
+    protected void doDelete(Resume resume) {
+        storage.remove(resume.getUuid());
     }
 
     @Override
-    protected void doUpdate(Object keyResume, Resume resume) {
-        storage.replace(((Resume) keyResume).getUuid(), resume);
+    protected void doUpdate(Resume keyResume, Resume resume) {
+        storage.replace(keyResume.getUuid(), resume);
     }
 
     @Override
-    protected boolean isExist(Object resume) {
+    protected boolean isExist(Resume resume) {
         return resume != null;
     }
 
-    @Override
-    protected List<Resume> doGetAllSorted() {
-        return new ArrayList<>(storage.values());
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
-    }
 }

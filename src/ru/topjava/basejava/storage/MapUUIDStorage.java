@@ -2,46 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.model.Resume;
 
-import java.util.*;
-
-public class MapUUIDStorage extends AbstractStorage {
-
-    private final HashMap<String, Resume> storage = new HashMap<>();
-
-    @Override
-    protected void doSave(Object searchKey, Resume resume) {
-        storage.put((String) searchKey, resume);
-    }
-
-    @Override
-    protected Resume doGet(Object searchKey) {
-        return (Resume) storage.get(searchKey);
-    }
-
-    @Override
-    protected void doDelete(Object searchKey) {
-        storage.remove(searchKey);
-    }
-
-    @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage.replace((String) searchKey, resume);
-    }
-
-    @Override
-    protected List<Resume> doGetAllSorted() {
-        return new ArrayList<>(storage.values());
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
-    }
+public class MapUUIDStorage extends AbstractMapStorage<String> {
 
     @Override
     protected String getSearchKey(String uuid) {
@@ -49,7 +10,28 @@ public class MapUUIDStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object uuid) {
+    protected void doSave(String searchKey, Resume resume) {
+        storage.put(searchKey, resume);
+    }
+
+    @Override
+    protected Resume doGet(String searchKey) {
+        return storage.get(searchKey);
+    }
+
+    @Override
+    protected void doDelete(String searchKey) {
+        storage.remove(searchKey);
+    }
+
+    @Override
+    protected void doUpdate(String searchKey, Resume resume) {
+        storage.replace(searchKey, resume);
+    }
+
+    @Override
+    protected boolean isExist(String uuid) {
         return storage.containsKey(uuid);
     }
+
 }

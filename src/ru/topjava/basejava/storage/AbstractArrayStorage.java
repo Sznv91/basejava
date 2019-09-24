@@ -10,7 +10,7 @@ import static java.util.Arrays.*;
 /**
  * Array based storage for Resumes
  */
-abstract class AbstractArrayStorage extends AbstractStorage {
+abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
 
     private static final int STORAGE_LIMIT = 10_000;
     final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -21,9 +21,9 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void pasteResume(int index, Resume resume);
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
+    protected void doSave(Integer searchKey, Resume resume) {
         if (size < STORAGE_LIMIT) {
-            pasteResume((int) searchKey, resume);
+            pasteResume(searchKey, resume);
             size++;
         } else {
             throw new StorageException("Storage overflow", resume.getUuid());
@@ -31,20 +31,20 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
+    protected Resume doGet(Integer searchKey) {
         return storage[(int) searchKey];
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        deleteFromArray((int) searchKey);
+    protected void doDelete(Integer searchKey) {
+        deleteFromArray(searchKey);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage[(int) searchKey] = resume;
+    protected void doUpdate(Integer searchKey, Resume resume) {
+        storage[searchKey] = resume;
     }
 
     @Override
@@ -64,7 +64,7 @@ abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 }
