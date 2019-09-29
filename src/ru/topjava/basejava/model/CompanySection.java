@@ -6,10 +6,17 @@ import java.util.Map;
 public class CompanySection extends Section {
     private Map<String, Company> companies = new HashMap<>();
 
-    public void addCompany(String companyName, Company company){
-        companies.put(companyName,company);
+    public void addCompany(Company company){
+        companies.put(company.getName(),company);
     }
     public Company getCompany(String companyName){
         return companies.get(companyName);
+    }
+
+    @Override
+    public String toString() {
+        return "CompanySection{" +
+                "companies=" + companies +
+                '}';
     }
 }

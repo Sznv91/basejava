@@ -10,11 +10,26 @@ public class Company {
     private final String url;
 
     public Company(String companyName, YearMonth startDate, YearMonth endDate,
-                          String description, String url){
+                   String description, String url) {
         this.companyName = companyName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
         this.url = url;
+    }
+
+    public String getName() {
+        return companyName;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", description='" + description + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }
