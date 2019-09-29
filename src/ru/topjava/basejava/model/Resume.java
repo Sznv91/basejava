@@ -13,9 +13,9 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
-    //private final String fullName;
-    private Section sectionCollector;
-    private Map<Contacts, String> contacts = new EnumMap<Contacts, String>(Contacts.class);
+    //private Section sectionCollector;
+    private Map<ContactType, String> contacts = new EnumMap<ContactType, String>(ContactType.class);
+    private Map<SectionType, Section> sections = new EnumMap<SectionType, Section>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -25,24 +25,18 @@ public class Resume {
         Objects.requireNonNull(fullName,"Full Name must not be null");
         Objects.requireNonNull(uuid, "UUID must not be null");
         this.uuid = uuid;
-        contacts.put(Contacts.FULL_NAME,fullName);
-    }
-
-    public Resume (String uuid, String fullName, String personal){
-        this.uuid = uuid;
-        contacts.put(Contacts.FULL_NAME,fullName);
-        sectionCollector = new Section(personal);
+        contacts.put(ContactType.FULL_NAME,fullName);
     }
 
     public Section getSection (@NotNull SectionType type){
-        return sectionCollector.getSection(type);
+        return sections.get(type);
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public String getContact(Contacts type) {
+    public String getContact(ContactType type) {
         return contacts.get(type);
     }
 
@@ -57,12 +51,12 @@ public class Resume {
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
         return uuid.equals(resume.uuid) &&
-                Objects.equals(sectionCollector, resume.sectionCollector) &&
-                Objects.equals(contacts, resume.contacts);
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, sectionCollector, contacts);
+        return Objects.hash(uuid, contacts, sections);
     }
 }
