@@ -32,6 +32,10 @@ public class Resume {
         return sections.get(type);
     }
 
+    public void setSection (SectionType type, Section section){
+        sections.put(type, section);
+    }
+
     public String getUuid() {
         return uuid;
     }

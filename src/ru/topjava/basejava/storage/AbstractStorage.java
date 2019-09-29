@@ -7,6 +7,8 @@ import ru.topjava.basejava.model.Resume;
 import java.util.Comparator;
 import java.util.List;
 
+import static ru.topjava.basejava.model.ContactType.FULL_NAME;
+
 public abstract class AbstractStorage <SearchKey> implements Storage {
 
     protected abstract SearchKey getSearchKey(String uuid);
@@ -66,11 +68,27 @@ public abstract class AbstractStorage <SearchKey> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> result = doGetAllSorted();
-        //https://www.baeldung.com/java-8-comparator-comparing
-        Comparator<Resume> resumeNameThanUUIDComparator
-                = Comparator.comparing(Resume::getFullName)
-                .thenComparing(Resume::getUuid);
+        class NameComparator implements Comparator<Resume>{
 
+            @Override
+            public int compare(Resume o1, Resume o2) {
+                return o1.getContact(FULL_NAME).compareTo(o2.getContact(FULL_NAME));
+            }
+        }
+
+        class UUIDComparator implements Comparator<Resume>{
+
+            @Override
+            public int compare(Resume o1, Resume o2) {
+                return o1.getUuid().compareTo(o2.getUuid());
+            }
+        }
+        //https://www.baeldung.com/java-8-comparator-comparing
+        /*Comparator<Resume> resumeNameThanUUIDComparator
+                = (o1, o2) -> o1.getContact(FULL_NAME).compare(o2.getContact(FULL_NAME));
+                .thenComparing(Resume::getUuid);
+*/
+        Comparator<Resume> resumeNameThanUUIDComparator = new NameComparator().thenComparing(new UUIDComparator());
         result.sort(resumeNameThanUUIDComparator);
         return result;
     }
