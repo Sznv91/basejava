@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CompanySection extends Section {
-    private Map<String, Company> companies = new HashMap<>();
+    private Map<Company, CompanyPeriod> companies = new HashMap<>();
 
-    public void addCompany(Company company){
-        companies.put(company.getName(),company);
+    public void addCompany(Company company, CompanyPeriod period){
+        companies.put(company,period);
     }
-    public Company getCompany(String companyName){
-        return companies.get(companyName);
+    public CompanyPeriod getCompany(Company company){
+        return companies.get(company);
     }
 
     @Override

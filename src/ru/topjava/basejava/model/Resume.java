@@ -1,6 +1,6 @@
 package ru.topjava.basejava.model;
 
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.internal.NotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -42,6 +42,10 @@ public class Resume {
 
     public String getContact(ContactType type) {
         return contacts.get(type);
+    }
+
+    public void setContact (ContactType type, String content){
+        contacts.put(type, content);
     }
 
     @Override
