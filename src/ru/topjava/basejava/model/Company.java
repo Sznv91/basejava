@@ -41,4 +41,24 @@ public class Company {
                 "companyPeriods=" + companyPeriods +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Company company = (Company) o;
+
+        if (!companyPeriods.equals(company.companyPeriods)) return false;
+        if (!companyName.equals(company.companyName)) return false;
+        return url != null ? url.equals(company.url) : company.url == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = companyPeriods.hashCode();
+        result = 31 * result + companyName.hashCode();
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        return result;
+    }
 }

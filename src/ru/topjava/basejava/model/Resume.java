@@ -13,7 +13,6 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
-    //private Section sectionCollector;
     private Map<ContactType, String> contacts = new EnumMap<ContactType, String>(ContactType.class);
     private Map<SectionType, Section> sections = new EnumMap<SectionType, Section>(SectionType.class);
 
@@ -57,14 +56,19 @@ public class Resume {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) &&
-                Objects.equals(contacts, resume.contacts) &&
-                Objects.equals(sections, resume.sections);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        if (!contacts.equals(resume.contacts)) return false;
+        return sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, contacts, sections);
+        int result = uuid.hashCode();
+        result = 31 * result + contacts.hashCode();
+        result = 31 * result + sections.hashCode();
+        return result;
     }
 }

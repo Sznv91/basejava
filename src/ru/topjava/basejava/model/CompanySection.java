@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanySection extends Section {
-    //private Map<Company, CompanyPeriod> companies = new HashMap<>();
     private List<Company> companies = new ArrayList<>();
 
     public void addCompany(Company company) {
@@ -16,5 +15,20 @@ public class CompanySection extends Section {
         return "CompanySection{" +
                 "companies=" + companies +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompanySection that = (CompanySection) o;
+
+        return companies.equals(that.companies);
+    }
+
+    @Override
+    public int hashCode() {
+        return companies.hashCode();
     }
 }
