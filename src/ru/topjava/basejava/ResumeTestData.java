@@ -6,7 +6,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class TestGetSection {
+public class ResumeTestData {
 
     public static void main(String args[]) {
         Resume r1 = new Resume("Григорий Кислин");
