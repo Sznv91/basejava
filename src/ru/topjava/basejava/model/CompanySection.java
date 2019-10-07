@@ -1,16 +1,14 @@
 package ru.topjava.basejava.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanySection extends Section {
-    private Map<Company, CompanyPeriod> companies = new HashMap<>();
+    //private Map<Company, CompanyPeriod> companies = new HashMap<>();
+    private List<Company> companies = new ArrayList<>();
 
-    public void addCompany(Company company, CompanyPeriod period){
-        companies.put(company,period);
-    }
-    public CompanyPeriod getCompany(Company company){
-        return companies.get(company);
+    public void addCompany(Company company) {
+        companies.add(company);
     }
 
     @Override
