@@ -13,25 +13,25 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
-    private Map<ContactType, String> contacts = new EnumMap<ContactType, String>(ContactType.class);
-    private Map<SectionType, Section> sections = new EnumMap<SectionType, Section>(SectionType.class);
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
-        Objects.requireNonNull(fullName,"Full Name must not be null");
+        Objects.requireNonNull(fullName, "Full Name must not be null");
         Objects.requireNonNull(uuid, "UUID must not be null");
         this.uuid = uuid;
-        contacts.put(ContactType.FULL_NAME,fullName);
+        contacts.put(ContactType.FULL_NAME, fullName);
     }
 
-    public Section getSection (@NotNull SectionType type){
+    public Section getSection(@NotNull SectionType type) {
         return sections.get(type);
     }
 
-    public void setSection (SectionType type, Section section){
+    public void setSection(SectionType type, Section section) {
         sections.put(type, section);
     }
 
@@ -43,7 +43,7 @@ public class Resume {
         return contacts.get(type);
     }
 
-    public void setContact (ContactType type, String content){
+    public void setContact(ContactType type, String content) {
         contacts.put(type, content);
     }
 
