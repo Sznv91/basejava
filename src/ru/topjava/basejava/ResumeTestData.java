@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class ResumeTestData {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Resume r1 = new Resume("Григорий Кислин");
 
         r1.setContact(ContactType.PHONE, "+7(921) 855-0482");
