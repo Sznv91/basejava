@@ -13,6 +13,7 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
+    private final String FULL_NAME;
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
@@ -24,7 +25,7 @@ public class Resume {
         Objects.requireNonNull(fullName, "Full Name must not be null");
         Objects.requireNonNull(uuid, "UUID must not be null");
         this.uuid = uuid;
-        contacts.put(ContactType.FULL_NAME, fullName);
+        this.FULL_NAME = fullName;
     }
 
     public Section getSection(@NotNull SectionType type) {
@@ -37,6 +38,10 @@ public class Resume {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public String getFULL_NAME() {
+        return FULL_NAME;
     }
 
     public String getContact(ContactType type) {
