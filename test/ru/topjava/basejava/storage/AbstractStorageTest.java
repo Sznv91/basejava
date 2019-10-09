@@ -83,12 +83,13 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.get("uuid-1"));
+        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_5));
     }
 
     @Test
     void getAllSorted() {
         List<Resume> expect = asList(R_1, R_2, R_3, R_4);
+        assertEquals(expect.size(),storage.size());
         assertEquals(expect, storage.getAllSorted());
     }
 
