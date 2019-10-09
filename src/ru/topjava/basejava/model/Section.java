@@ -1,4 +1,4 @@
 package ru.topjava.basejava.model;
 
-public class Section{
+public abstract class Section {
 }
