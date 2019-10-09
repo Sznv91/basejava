@@ -7,38 +7,38 @@ import java.util.Objects;
 
 public class Company {
 
-    private final List<CompanyPeriod> companyPeriods = new ArrayList<>();
+    private final List<Period> periods = new ArrayList<>();
 
-    private final String companyName;
+    private final String name;
     private String url;
 
-    public Company(String companyName, String url, CompanyPeriod... periods) {
+    public Company(String name, String url, Period... periods) {
         Objects.nonNull(periods);
-        this.companyName = companyName;
+        this.name = name;
         this.url = url;
-        companyPeriods.addAll(Arrays.asList(periods));
+        this.periods.addAll(Arrays.asList(periods));
     }
 
-    public Company(String companyName, CompanyPeriod... periods) {
+    public Company(String name, Period... periods) {
         Objects.nonNull(periods);
-        this.companyName = companyName;
-        companyPeriods.addAll(Arrays.asList(periods));
+        this.name = name;
+        this.periods.addAll(Arrays.asList(periods));
     }
 
-    public void addPeriod(CompanyPeriod... periods) {
-        companyPeriods.addAll(Arrays.asList(periods));
+    public void addPeriod(Period... periods) {
+        this.periods.addAll(Arrays.asList(periods));
     }
 
     public String getName() {
-        return companyName;
+        return name;
     }
 
     @Override
     public String toString() {
         return "Company{" +
-                "companyName='" + companyName + '\'' +
+                "companyName='" + name + '\'' +
                 ", url='" + url + '\'' +
-                "companyPeriods=" + companyPeriods +
+                "companyPeriods=" + periods +
                 '}';
     }
 
@@ -49,15 +49,15 @@ public class Company {
 
         Company company = (Company) o;
 
-        if (!companyPeriods.equals(company.companyPeriods)) return false;
-        if (!companyName.equals(company.companyName)) return false;
+        if (!periods.equals(company.periods)) return false;
+        if (!name.equals(company.name)) return false;
         return url != null ? url.equals(company.url) : company.url == null;
     }
 
     @Override
     public int hashCode() {
-        int result = companyPeriods.hashCode();
-        result = 31 * result + companyName.hashCode();
+        int result = periods.hashCode();
+        result = 31 * result + name.hashCode();
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }

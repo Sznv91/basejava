@@ -2,19 +2,19 @@ package ru.topjava.basejava.model;
 
 import java.time.YearMonth;
 
-public class CompanyPeriod {
+public class Period {
     private final YearMonth startDate;
     private final YearMonth endDate;
     private final String title;
     private String description;
 
-    public CompanyPeriod(YearMonth startDate, YearMonth endDate, String title) {
+    public Period(YearMonth startDate, YearMonth endDate, String title) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
     }
 
-    public CompanyPeriod(YearMonth startDate, YearMonth endDate, String title, String description) {
+    public Period(YearMonth startDate, YearMonth endDate, String title, String description) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
@@ -36,7 +36,7 @@ public class CompanyPeriod {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompanyPeriod that = (CompanyPeriod) o;
+        Period that = (Period) o;
 
         if (!startDate.equals(that.startDate)) return false;
         if (!endDate.equals(that.endDate)) return false;
