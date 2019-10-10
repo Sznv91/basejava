@@ -68,7 +68,7 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
         List<Resume> result = doGetAllSorted();
         //https://www.baeldung.com/java-8-comparator-comparing
         Comparator<Resume> resumeNameThanUUIDComparator
-                = Comparator.comparing(Resume::getFULL_NAME)
+                = Comparator.comparing(Resume::getFullName)
                 .thenComparing(Resume::getUuid);
 
         result.sort(resumeNameThanUUIDComparator);
