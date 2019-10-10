@@ -49,15 +49,15 @@ public class Company {
 
         Company company = (Company) o;
 
-        if (!periods.equals(company.periods)) return false;
-        if (!name.equals(company.name)) return false;
+        if (periods != null ? !periods.equals(company.periods) : company.periods != null) return false;
+        if (name != null ? !name.equals(company.name) : company.name != null) return false;
         return url != null ? url.equals(company.url) : company.url == null;
     }
 
     @Override
     public int hashCode() {
-        int result = periods.hashCode();
-        result = 31 * result + name.hashCode();
+        int result = periods != null ? periods.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }

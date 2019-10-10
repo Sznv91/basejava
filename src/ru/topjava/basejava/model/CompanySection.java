@@ -3,7 +3,7 @@ package ru.topjava.basejava.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanySection extends Section {
+public class CompanySection extends AbstractSection {
     private List<Company> companies = new ArrayList<>();
 
     public void addCompany(Company company) {
@@ -24,11 +24,11 @@ public class CompanySection extends Section {
 
         CompanySection that = (CompanySection) o;
 
-        return companies.equals(that.companies);
+        return companies != null ? companies.equals(that.companies) : that.companies == null;
     }
 
     @Override
     public int hashCode() {
-        return companies.hashCode();
+        return companies != null ? companies.hashCode() : 0;
     }
 }

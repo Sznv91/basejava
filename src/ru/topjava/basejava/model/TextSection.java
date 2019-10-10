@@ -1,6 +1,6 @@
 package ru.topjava.basejava.model;
 
-public class TextSection extends Section {
+public class TextSection extends AbstractSection {
     private final String content;
 
     public TextSection(String content) {
@@ -21,11 +21,11 @@ public class TextSection extends Section {
 
         TextSection that = (TextSection) o;
 
-        return content.equals(that.content);
+        return content != null ? content.equals(that.content) : that.content == null;
     }
 
     @Override
     public int hashCode() {
-        return content.hashCode();
+        return content != null ? content.hashCode() : 0;
     }
 }

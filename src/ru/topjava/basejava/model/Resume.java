@@ -15,7 +15,7 @@ public class Resume {
     private final String uuid;
     private final String fullName;
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -28,11 +28,11 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    public Section getSection(@NotNull SectionType type) {
+    public AbstractSection getSection(@NotNull SectionType type) {
         return sections.get(type);
     }
 
-    public void setSection(SectionType type, Section section) {
+    public void setSection(SectionType type, AbstractSection section) {
         sections.put(type, section);
     }
 
@@ -64,16 +64,18 @@ public class Resume {
 
         Resume resume = (Resume) o;
 
-        if (!uuid.equals(resume.uuid)) return false;
-        if (!contacts.equals(resume.contacts)) return false;
-        return sections.equals(resume.sections);
+        if (uuid != null ? !uuid.equals(resume.uuid) : resume.uuid != null) return false;
+        if (fullName != null ? !fullName.equals(resume.fullName) : resume.fullName != null) return false;
+        if (contacts != null ? !contacts.equals(resume.contacts) : resume.contacts != null) return false;
+        return sections != null ? sections.equals(resume.sections) : resume.sections == null;
     }
 
     @Override
     public int hashCode() {
-        int result = uuid.hashCode();
-        result = 31 * result + contacts.hashCode();
-        result = 31 * result + sections.hashCode();
+        int result = uuid != null ? uuid.hashCode() : 0;
+        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
+        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
+        result = 31 * result + (sections != null ? sections.hashCode() : 0);
         return result;
     }
 }

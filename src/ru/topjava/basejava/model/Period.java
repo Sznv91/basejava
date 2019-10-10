@@ -36,19 +36,19 @@ public class Period {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Period that = (Period) o;
+        Period period = (Period) o;
 
-        if (!startDate.equals(that.startDate)) return false;
-        if (!endDate.equals(that.endDate)) return false;
-        if (!title.equals(that.title)) return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+        if (startDate != null ? !startDate.equals(period.startDate) : period.startDate != null) return false;
+        if (endDate != null ? !endDate.equals(period.endDate) : period.endDate != null) return false;
+        if (title != null ? !title.equals(period.title) : period.title != null) return false;
+        return description != null ? description.equals(period.description) : period.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
-        result = 31 * result + title.hashCode();
+        int result = startDate != null ? startDate.hashCode() : 0;
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }

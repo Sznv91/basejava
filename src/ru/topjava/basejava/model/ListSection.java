@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ListSection extends Section {
+public class ListSection extends AbstractSection {
     private final List<String> content;
 
     public ListSection(List<String> content) {
@@ -29,11 +29,11 @@ public class ListSection extends Section {
 
         ListSection that = (ListSection) o;
 
-        return content.equals(that.content);
+        return content != null ? content.equals(that.content) : that.content == null;
     }
 
     @Override
     public int hashCode() {
-        return content.hashCode();
+        return content != null ? content.hashCode() : 0;
     }
 }
