@@ -1,7 +1,10 @@
 package ru.topjava.basejava;
 
 import ru.topjava.basejava.model.*;
+import ru.topjava.basejava.storage.FileStorage;
+import ru.topjava.basejava.storage.Storage;
 
+import java.io.File;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,7 @@ public class ResumeTestData {
         r1.setContact(ContactType.SKYPE, "grigory.kislin");
         r1.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
         r1.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        r1.setContact(ContactType.GITHUB, "Профиль GitHub");
+        r1.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         r1.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         r1.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
@@ -115,6 +118,10 @@ public class ResumeTestData {
         r1.setSection(SectionType.EDUCATION, education);
 
         System.out.println(r1.getSection(SectionType.EDUCATION));
+
+        Storage fs = new FileStorage(new File("./storage"));
+        fs.clear();
+        fs.save(r1);
     }
 
 }

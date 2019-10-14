@@ -48,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-
+        file.delete();
     }
 
     @Override
@@ -68,12 +68,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        //TODO delete all files from "directory"
+        File path = new File("./storage");
+        File[] files = path.listFiles();
+        for (File currentFile : files) {
+            currentFile.delete();
+        }
     }
 
     @Override
     public int size() {
-        //TODO calc count files in directory
-        return 0;
+        File path = new File("./storage");
+        return path.listFiles().length;
     }
 }
