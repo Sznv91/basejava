@@ -117,11 +117,13 @@ public class ResumeTestData {
         r1.setSection(SectionType.EXPERIENCE, experience);
         r1.setSection(SectionType.EDUCATION, education);
 
-        System.out.println(r1.getSection(SectionType.EDUCATION));
+        //System.out.println(r1.getSection(SectionType.EDUCATION));
 
         Storage fs = new FileStorage(new File("./storage"));
         fs.clear();
         fs.save(r1);
+        Resume r2 = fs.get(r1.getUuid());
+        System.out.println(r2.getSection(SectionType.QUALIFICATIONS));
     }
 
 }

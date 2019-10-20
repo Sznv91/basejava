@@ -23,6 +23,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     protected abstract void doWrite(Resume resume, File file);
+    protected abstract Resume doRead(File file);
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -43,7 +44,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         //TODO doRead
-        return null;
+
+        return doRead(file);
     }
 
     @Override
