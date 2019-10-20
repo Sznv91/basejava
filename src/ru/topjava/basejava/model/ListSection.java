@@ -17,9 +17,12 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "ListSection{" +
-                "content=" + content +
-                '}';
+        String result = "";
+        for (String item : content){
+            result += item + System.lineSeparator();
+        }
+        result = result.substring(0, result.length()-2);
+        return result;
     }
 
     @Override

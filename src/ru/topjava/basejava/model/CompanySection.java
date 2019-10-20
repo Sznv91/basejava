@@ -12,9 +12,12 @@ public class CompanySection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "CompanySection{" +
-                "companies=" + companies +
-                '}';
+        String result = "";
+        for (Company item : companies) {
+            result += item + System.lineSeparator();
+        }
+        result = result.substring(0, result.length() - 2);
+        return result;
     }
 
     @Override

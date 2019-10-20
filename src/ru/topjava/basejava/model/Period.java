@@ -23,12 +23,12 @@ public class Period {
 
     @Override
     public String toString() {
-        return "CompanyPeriod{" +
-                "startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "<CompanyPeriod>" + System.lineSeparator() +
+                startDate + System.lineSeparator() +
+                endDate + System.lineSeparator() +
+                title + System.lineSeparator() +
+                description + System.lineSeparator() +
+                "</CompanyPeriod>";
     }
 
     @Override

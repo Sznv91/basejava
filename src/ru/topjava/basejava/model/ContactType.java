@@ -1,7 +1,6 @@
 package ru.topjava.basejava.model;
 
 public enum ContactType {
-    FULL_NAME("Полное имя"),
     PHONE("Телефон"),
     SKYPE("Skype"),
     EMAIL("Почта"),

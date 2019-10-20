@@ -35,11 +35,16 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "companyName='" + name + '\'' +
-                ", url='" + url + '\'' +
-                "companyPeriods=" + periods +
-                '}';
+        String resultPeriods = "";
+        for (Period item : periods) {
+            resultPeriods += item + System.lineSeparator();
+        }
+        resultPeriods = resultPeriods.substring(0, resultPeriods.length() - 2);
+        return "<company>" + System.lineSeparator() +
+                name + System.lineSeparator() +
+                url + System.lineSeparator() +
+                resultPeriods + System.lineSeparator() +
+                "</company>";
     }
 
     @Override

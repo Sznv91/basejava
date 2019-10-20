@@ -9,9 +9,7 @@ public class TextSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "TextSection{" +
-                "content='" + content + '\'' +
-                '}';
+        return content;
     }
 
     @Override
