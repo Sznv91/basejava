@@ -3,6 +3,8 @@ package ru.topjava.basejava.storage;
 import ru.topjava.basejava.model.*;
 
 import java.io.*;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +75,18 @@ public class FileStorage extends AbstractFileStorage {
                 (SectionType.ACHIEVEMENT), readFromFile));
         ListSection qualification = new ListSection(searchSection(String.valueOf
                 (SectionType.QUALIFICATIONS), readFromFile));
-        result.setSection(SectionType.ACHIEVEMENT,achievements);
-        result.setSection(SectionType.QUALIFICATIONS,qualification);
+        result.setSection(SectionType.ACHIEVEMENT, achievements);
+        result.setSection(SectionType.QUALIFICATIONS, qualification);
+
+        List expSection = searchSection(String.valueOf(SectionType.EXPERIENCE), readFromFile);
+        System.out.println(expSection);
+        List<Company> companyList = searchCompany(expSection);
+
+        CompanySection companySection = new CompanySection();
+        for (Company company : companyList) {
+            companySection.addCompany(company);
+        }
+        result.setSection(SectionType.EXPERIENCE, companySection);
         return result;
     }
 
@@ -100,6 +112,39 @@ public class FileStorage extends AbstractFileStorage {
                     startSearch++;
                 } else {
                     break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<Company> searchCompany(List<String> original) {
+        int counterCompany = 0;
+        List<Company> result = new ArrayList<>();
+        String openTag = "<company>";
+        String closeTag = "</company>";
+        for (int i = 0; i < original.size(); i++) {
+            if (original.get(i).equals(openTag)) {
+                counterCompany++;
+                String name = original.get(i + 1);
+                String url = original.get(i + 2);
+                List<Period> companyPeriods = new ArrayList<>();
+                i += 2;
+                i = i + 1;
+                while (!original.get(i).equals(closeTag)) {
+                    if (original.get(i).equals("<CompanyPeriod>")) {
+                        i++;
+                        companyPeriods.add(new Period(
+                                YearMonth.of(Integer.parseInt(original.get(i)), Month.valueOf(original.get(i + 1))),
+                                YearMonth.of(Integer.parseInt(original.get(i + 2)), Month.valueOf(original.get(i + 3))),
+                                original.get(i + 4), original.get(i + 5)));
+                        i += 5;
+                        // System.out.println(name);
+                        // System.out.println(original.get(i));
+                    } else {
+                        i++;
+                    }
+                    result.add(new Company(name, url, companyPeriods.toArray(new Period[companyPeriods.size()])));
                 }
             }
         }

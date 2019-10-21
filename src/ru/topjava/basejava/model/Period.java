@@ -24,8 +24,10 @@ public class Period {
     @Override
     public String toString() {
         return "<CompanyPeriod>" + System.lineSeparator() +
-                startDate + System.lineSeparator() +
-                endDate + System.lineSeparator() +
+                startDate.getYear() + System.lineSeparator() +
+                startDate.getMonth() + System.lineSeparator() +
+                endDate.getYear() + System.lineSeparator() +
+                endDate.getMonth() + System.lineSeparator() +
                 title + System.lineSeparator() +
                 description + System.lineSeparator() +
                 "</CompanyPeriod>";
