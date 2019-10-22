@@ -123,7 +123,7 @@ public class ResumeTestData {
         fs.clear();
         fs.save(r1);
         Resume r2 = fs.get(r1.getUuid());
-        System.out.println(r2.getSection(SectionType.EXPERIENCE));
+        System.out.println(r2.getSection(SectionType.EDUCATION));
     }
 
 }

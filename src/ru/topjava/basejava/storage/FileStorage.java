@@ -79,7 +79,6 @@ public class FileStorage extends AbstractFileStorage {
         result.setSection(SectionType.QUALIFICATIONS, qualification);
 
         List expSection = searchSection(String.valueOf(SectionType.EXPERIENCE), readFromFile);
-        System.out.println(expSection);
         List<Company> companyList = searchCompany(expSection);
 
         CompanySection companySection = new CompanySection();
@@ -87,6 +86,14 @@ public class FileStorage extends AbstractFileStorage {
             companySection.addCompany(company);
         }
         result.setSection(SectionType.EXPERIENCE, companySection);
+
+        List eduSection = searchSection(String.valueOf(SectionType.EDUCATION), readFromFile);
+        List<Company> educationList = searchCompany(eduSection);
+        companySection = new CompanySection();
+        for (Company company : educationList) {
+            companySection.addCompany(company);
+        }
+        result.setSection(SectionType.EDUCATION, companySection);
         return result;
     }
 
@@ -124,7 +131,7 @@ public class FileStorage extends AbstractFileStorage {
         String openTag = "<company>";
         String closeTag = "</company>";
         for (int i = 0; i < original.size(); i++) {
-            if (original.get(i).equals(openTag)) {
+            if (original.get(i).equals(openTag) || i < original.size()) {
                 counterCompany++;
                 String name = original.get(i + 1);
                 String url = original.get(i + 2);
@@ -139,12 +146,11 @@ public class FileStorage extends AbstractFileStorage {
                                 YearMonth.of(Integer.parseInt(original.get(i + 2)), Month.valueOf(original.get(i + 3))),
                                 original.get(i + 4), original.get(i + 5)));
                         i += 5;
-                        // System.out.println(name);
-                        // System.out.println(original.get(i));
                     } else {
                         i++;
                     }
                     result.add(new Company(name, url, companyPeriods.toArray(new Period[companyPeriods.size()])));
+                    //i++; //
                 }
             }
         }
