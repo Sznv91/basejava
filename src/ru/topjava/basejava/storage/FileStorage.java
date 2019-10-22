@@ -126,16 +126,15 @@ public class FileStorage extends AbstractFileStorage {
     }
 
     private List<Company> searchCompany(List<String> original) {
-        int counterCompany = 0;
         List<Company> result = new ArrayList<>();
+        List<Period> companyPeriods = null;
         String openTag = "<company>";
         String closeTag = "</company>";
         for (int i = 0; i < original.size(); i++) {
-            if (original.get(i).equals(openTag) || i < original.size()) {
-                counterCompany++;
+            if (original.get(i).equals(openTag)) {
                 String name = original.get(i + 1);
                 String url = original.get(i + 2);
-                List<Period> companyPeriods = new ArrayList<>();
+                companyPeriods = new ArrayList<>();
                 i += 2;
                 i = i + 1;
                 while (!original.get(i).equals(closeTag)) {
@@ -149,9 +148,8 @@ public class FileStorage extends AbstractFileStorage {
                     } else {
                         i++;
                     }
-                    result.add(new Company(name, url, companyPeriods.toArray(new Period[companyPeriods.size()])));
-                    //i++; //
                 }
+                result.add(new Company(name, url, companyPeriods.toArray(new Period[companyPeriods.size()])));
             }
         }
         return result;

@@ -117,13 +117,27 @@ public class ResumeTestData {
         r1.setSection(SectionType.EXPERIENCE, experience);
         r1.setSection(SectionType.EDUCATION, education);
 
-        //System.out.println(r1.getSection(SectionType.EDUCATION));
-
         Storage fs = new FileStorage(new File("./storage"));
         fs.clear();
         fs.save(r1);
         Resume r2 = fs.get(r1.getUuid());
+        System.out.println(r2.getUuid());
+        System.out.println(r2.getFullName());
+        System.out.println(r2.getContact(ContactType.PHONE));
+        System.out.println(r2.getContact(ContactType.SKYPE));
+        System.out.println(r2.getContact(ContactType.EMAIL));
+        System.out.println(r2.getContact(ContactType.LINKEDIN));
+        System.out.println(r2.getContact(ContactType.GITHUB));
+        System.out.println(r2.getContact(ContactType.STACKOVERFLOW));
+        System.out.println(r2.getContact(ContactType.HOMEPAGE));
+
+        System.out.println(r2.getSection(SectionType.PERSONAL));
+        System.out.println(r2.getSection(SectionType.OBJECTIVE));
+        System.out.println(r2.getSection(SectionType.ACHIEVEMENT));
+        System.out.println(r2.getSection(SectionType.QUALIFICATIONS));
+        System.out.println(r2.getSection(SectionType.EXPERIENCE));
         System.out.println(r2.getSection(SectionType.EDUCATION));
+
     }
 
 }
