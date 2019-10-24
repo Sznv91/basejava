@@ -1,6 +1,7 @@
 package ru.topjava.basejava;
 
 import java.io.File;
+import java.util.Objects;
 
 public class MainFile {
 
@@ -12,9 +13,9 @@ public class MainFile {
     }
 
     //http://www.cyberforum.ru/post13277622.html
-    public void fileWalk(File file) {
+    private void fileWalk(File file) {
         File[] files = file.listFiles();
-        for (File currentFile : files) {
+        for (File currentFile : Objects.requireNonNull(files)) {
             if (!currentFile.isDirectory()) {
                 System.out.println(currentFile.getName());
             }
