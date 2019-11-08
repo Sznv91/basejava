@@ -17,10 +17,10 @@ public class FileStorage extends AbstractFileStorage {
     }
 
     @Override
-    protected void doWrite(Resume resume, File file) {
+    protected void doWrite(Resume resume, FileOutputStream fileOutputStream) {
         FileWriter writer = null;
         try {
-            writer = new FileWriter(file, false);
+            writer = new FileWriter(fileOutputStream, false);
             writer.write(resume.getUuid() + System.lineSeparator());
             writer.write(resume.getFullName() + System.lineSeparator());
 
@@ -45,7 +45,7 @@ public class FileStorage extends AbstractFileStorage {
     }
 
     @Override
-    protected Resume doRead(File file) {
+    protected Resume doRead(InputStream file) {
         List<String> readFromFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
