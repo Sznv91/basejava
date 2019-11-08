@@ -79,19 +79,19 @@ public class FileStorage extends AbstractFileStorage {
         result.setSection(SectionType.QUALIFICATIONS, qualification);
 
         List expSection = searchSection(String.valueOf(SectionType.EXPERIENCE), readFromFile);
-        List<Company> companyList = searchCompany(expSection);
+        List<Organization> organizationList = searchCompany(expSection);
 
         CompanySection companySection = new CompanySection();
-        for (Company company : companyList) {
-            companySection.addCompany(company);
+        for (Organization organization : organizationList) {
+            companySection.addCompany(organization);
         }
         result.setSection(SectionType.EXPERIENCE, companySection);
 
         List eduSection = searchSection(String.valueOf(SectionType.EDUCATION), readFromFile);
-        List<Company> educationList = searchCompany(eduSection);
+        List<Organization> educationList = searchCompany(eduSection);
         companySection = new CompanySection();
-        for (Company company : educationList) {
-            companySection.addCompany(company);
+        for (Organization organization : educationList) {
+            companySection.addCompany(organization);
         }
         result.setSection(SectionType.EDUCATION, companySection);
         return result;
@@ -125,22 +125,22 @@ public class FileStorage extends AbstractFileStorage {
         return result;
     }
 
-    private List<Company> searchCompany(List<String> original) {
-        List<Company> result = new ArrayList<>();
-        List<Period> companyPeriods = null;
+    private List<Organization> searchCompany(List<String> original) {
+        List<Organization> result = new ArrayList<>();
+        List<Organization.Position> companyPositions = null;
         String openTag = "<company>";
         String closeTag = "</company>";
         for (int i = 0; i < original.size(); i++) {
             if (original.get(i).equals(openTag)) {
                 String name = original.get(i + 1);
                 String url = original.get(i + 2);
-                companyPeriods = new ArrayList<>();
+                companyPositions = new ArrayList<>();
                 i += 2;
                 i = i + 1;
                 while (!original.get(i).equals(closeTag)) {
                     if (original.get(i).equals("<CompanyPeriod>")) {
                         i++;
-                        companyPeriods.add(new Period(
+                        companyPositions.add(new Organization.Position(
                                 YearMonth.of(Integer.parseInt(original.get(i)), Month.valueOf(original.get(i + 1))),
                                 YearMonth.of(Integer.parseInt(original.get(i + 2)), Month.valueOf(original.get(i + 3))),
                                 original.get(i + 4), original.get(i + 5)));
@@ -149,7 +149,7 @@ public class FileStorage extends AbstractFileStorage {
                         i++;
                     }
                 }
-                result.add(new Company(name, url, companyPeriods.toArray(new Period[companyPeriods.size()])));
+                result.add(new Organization(name, url, companyPositions.toArray(new Organization.Position[companyPositions.size()])));
             }
         }
         return result;

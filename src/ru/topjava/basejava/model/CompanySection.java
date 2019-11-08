@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanySection extends AbstractSection {
-    private List<Company> companies = new ArrayList<>();
+    private List<Organization> companies = new ArrayList<>();
 
-    public void addCompany(Company company) {
-        companies.add(company);
+    public void addCompany(Organization organization) {
+        companies.add(organization);
     }
 
     @Override
     public String toString() {
         String result = "";
-        for (Company item : companies) {
+        for (Organization item : companies) {
             result += item + System.lineSeparator();
         }
         result = result.substring(0, result.length() - 2);
