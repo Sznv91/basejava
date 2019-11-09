@@ -2,6 +2,7 @@ package ru.topjava.basejava.model;
 
 import com.sun.istack.internal.NotNull;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
@@ -10,8 +11,9 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final String uuid;
     private final String fullName;
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);

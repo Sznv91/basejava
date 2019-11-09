@@ -1,15 +1,7 @@
 package ru.topjava.basejava.storage;
 
-import ru.topjava.basejava.model.*;
-
-import java.io.*;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-
-public class FileStorage extends AbstractFileStorage {
-
+public class FileStorage { //public class FileStorage extends AbstractFileStorage
+/*
     private int readCounter;
 
     public FileStorage(File directory) {
@@ -154,4 +146,6 @@ public class FileStorage extends AbstractFileStorage {
         }
         return result;
     }
+
+ */
 }

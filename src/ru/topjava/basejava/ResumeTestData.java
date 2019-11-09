@@ -1,10 +1,7 @@
 package ru.topjava.basejava;
 
 import ru.topjava.basejava.model.*;
-import ru.topjava.basejava.storage.FileStorage;
-import ru.topjava.basejava.storage.Storage;
 
-import java.io.File;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,7 +114,7 @@ public class ResumeTestData {
         r1.setSection(SectionType.EXPERIENCE, experience);
         r1.setSection(SectionType.EDUCATION, education);
 
-        Storage fs = new FileStorage(new File("./storage"));
+        /*Storage fs = new FileStorage(new File("./storage"));
         fs.clear();
         fs.save(r1);
         Resume r2 = fs.get(r1.getUuid());
@@ -138,6 +135,8 @@ public class ResumeTestData {
         System.out.println(r2.getSection(SectionType.EXPERIENCE));
         System.out.println(r2.getSection(SectionType.EDUCATION));
 
+
+         */
     }
 
 }
