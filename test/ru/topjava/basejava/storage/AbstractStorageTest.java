@@ -6,15 +6,15 @@ import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
-import java.io.File;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File("./storage");
+    protected static final String STORAGE_DIR = "./storage";
 
     protected final Storage storage;
 

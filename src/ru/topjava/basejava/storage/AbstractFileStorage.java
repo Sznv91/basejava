@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
+
     private File directory;
 
     protected abstract void doWrite(Resume r, OutputStream fileOutputStream) throws IOException;
 
     protected abstract Resume doRead(InputStream file) throws IOException;
 
-    protected AbstractFileStorage(File directory) {
+    protected AbstractFileStorage(String dir) {
+        File directory = new File(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
