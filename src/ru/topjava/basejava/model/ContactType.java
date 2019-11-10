@@ -1,6 +1,8 @@
 package ru.topjava.basejava.model;
 
-public enum ContactType {
+import java.io.Serializable;
+
+public enum ContactType implements Serializable {
     PHONE("Телефон"),
     SKYPE("Skype"),
     EMAIL("Почта"),

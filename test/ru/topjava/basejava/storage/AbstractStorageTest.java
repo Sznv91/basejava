@@ -2,6 +2,7 @@ package ru.topjava.basejava.storage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.topjava.basejava.ResumeTestData;
 import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
@@ -23,7 +24,9 @@ public abstract class AbstractStorageTest {
     private static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-    private static final Resume R_1 = new Resume(UUID_1, "Anton");
+
+    static ResumeTestData rtd = new ResumeTestData();
+    private static final Resume R_1 = rtd.getR1(); //new Resume(UUID_1, "Anton");
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
     private static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");
@@ -56,8 +59,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     void delete() {
-        storage.delete(UUID_1);
-        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_1));
+        storage.delete(UUID_2);
+        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_2));
         assertEquals(3, storage.size());
     }
 
@@ -91,7 +94,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAllSorted() {
-        List<Resume> expect = asList(R_1, R_2, R_3, R_4);
+        List<Resume> expect = asList(R_2, R_3, R_4, R_1);
         assertEquals(expect.size(), storage.size());
         assertEquals(expect, storage.getAllSorted());
     }

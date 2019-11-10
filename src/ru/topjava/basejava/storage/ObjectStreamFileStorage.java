@@ -5,9 +5,9 @@ import ru.topjava.basejava.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage {
+public class ObjectStreamFileStorage extends AbstractFileStorage {
 
-    public ObjectStreamStorage(String directory) {
+    public ObjectStreamFileStorage(String directory) {
         super(directory);
     }
 

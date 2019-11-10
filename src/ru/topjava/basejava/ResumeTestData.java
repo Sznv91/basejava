@@ -8,8 +8,18 @@ import java.util.Arrays;
 
 public class ResumeTestData {
 
-    public static void main(String[] args) {
-        Resume r1 = new Resume("Григорий Кислин");
+    public ResumeTestData() {
+        fillResume();
+    }
+
+    private static Resume r1;
+
+    public Resume getR1() {
+        return r1;
+    }
+
+    private void fillResume() {
+        r1 = new Resume("UUID_1", "Григорий Кислин");
 
         r1.setContact(ContactType.PHONE, "+7(921) 855-0482");
         r1.setContact(ContactType.SKYPE, "grigory.kislin");
@@ -113,30 +123,5 @@ public class ResumeTestData {
         r1.setSection(SectionType.QUALIFICATIONS, qualification);
         r1.setSection(SectionType.EXPERIENCE, experience);
         r1.setSection(SectionType.EDUCATION, education);
-
-        /*Storage fs = new FileStorage(new File("./storage"));
-        fs.clear();
-        fs.save(r1);
-        Resume r2 = fs.get(r1.getUuid());
-        System.out.println(r2.getUuid());
-        System.out.println(r2.getFullName());
-        System.out.println(r2.getContact(ContactType.PHONE));
-        System.out.println(r2.getContact(ContactType.SKYPE));
-        System.out.println(r2.getContact(ContactType.EMAIL));
-        System.out.println(r2.getContact(ContactType.LINKEDIN));
-        System.out.println(r2.getContact(ContactType.GITHUB));
-        System.out.println(r2.getContact(ContactType.STACKOVERFLOW));
-        System.out.println(r2.getContact(ContactType.HOMEPAGE));
-
-        System.out.println(r2.getSection(SectionType.PERSONAL));
-        System.out.println(r2.getSection(SectionType.OBJECTIVE));
-        System.out.println(r2.getSection(SectionType.ACHIEVEMENT));
-        System.out.println(r2.getSection(SectionType.QUALIFICATIONS));
-        System.out.println(r2.getSection(SectionType.EXPERIENCE));
-        System.out.println(r2.getSection(SectionType.EDUCATION));
-
-
-         */
     }
-
 }

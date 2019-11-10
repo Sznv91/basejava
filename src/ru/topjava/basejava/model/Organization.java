@@ -1,12 +1,13 @@
 package ru.topjava.basejava.model;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Organization {
+public class Organization implements Serializable {
 
     private final List<Position> positions = new ArrayList<>();
 
@@ -68,7 +69,7 @@ public class Organization {
         return result;
     }
 
-    public static class Position {
+    public static class Position implements Serializable {
         private final YearMonth startDate;
         private final YearMonth endDate;
         private final String title;
