@@ -2,6 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
+import ru.topjava.basejava.storage.ObjectStreamStorage.StorageStrategy;
 
 import java.io.*;
 import java.nio.file.*;
@@ -10,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
+
+    private StorageStrategy strategy;
 
     private Path directory;
 
-    protected abstract void doWrite(Resume r, OutputStream PathOutputStream) throws IOException;
-
-    protected abstract Resume doRead(InputStream Path) throws IOException;
-
-    protected AbstractPathStorage(String dir) {
+    public PathStorage(String dir, StorageStrategy strategy) {
+        Objects.requireNonNull(dir, "directory must not be null");
+        Objects.requireNonNull(strategy, "Strategy must not be null");
         directory = Paths.get(dir);
-        Objects.requireNonNull(directory, "directory must not be null");
+        this.strategy = strategy;
 
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(directory.toAbsolutePath().toString() + " is not directory or not writable");
@@ -45,7 +46,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path filePath) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(filePath)));
+            return strategy.doRead(new BufferedInputStream(Files.newInputStream(filePath)));
         } catch (IOException e) {
             throw new StorageException("Path read error", filePath.getFileName().toString(), e);
         }
@@ -56,14 +57,14 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             Files.deleteIfExists(file);
         } catch (IOException e) {
-            throw new StorageException("file doest'n delete. I/O Exception", null, e);
+            throw new StorageException("file doest'n delete. I/O Exception", file.getFileName().toString(), e);
         }
     }
 
     @Override
     protected void doUpdate(Path path, Resume r) {
         try {
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            strategy.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path write error", r.getUuid(), e);
         }
