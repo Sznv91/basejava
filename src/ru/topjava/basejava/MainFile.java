@@ -14,14 +14,20 @@ public class MainFile {
 
     //http://www.cyberforum.ru/post13277622.html
     private void fileWalk(File file) {
+        int deepCounter = 0;
         File[] files = file.listFiles();
         for (File currentFile : Objects.requireNonNull(files)) {
             if (!currentFile.isDirectory()) {
-                System.out.println(currentFile.getName());
+                String indentation = "";
+                for (int i = 0; i <= deepCounter; i++){
+                    indentation += " ";
+                }
+                System.out.println(indentation + "Is File " + currentFile.getName());
             }
             if (currentFile.isDirectory()) {
                 try {
-                    System.out.println(currentFile.getName() + " Is Directory");
+                    System.out.println("Is Directory " + currentFile.getName());
+                    deepCounter++;
                     fileWalk(currentFile);
                 } catch (Exception e) {
                     e.printStackTrace();
