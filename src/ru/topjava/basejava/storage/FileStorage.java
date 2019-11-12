@@ -2,7 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
-import ru.topjava.basejava.storage.ObjectStreamStorage.StorageStrategy;
+import ru.topjava.basejava.storage.objectStreamStorage.StorageStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
 
-    private StorageStrategy strategy;
+    private final StorageStrategy strategy;
 
     private File directory;
 
@@ -37,6 +37,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doSave(File file, Resume r) {
         try {
+            //noinspection ResultOfMethodCallIgnored
             file.createNewFile();
         } catch (IOException e) {
             throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);

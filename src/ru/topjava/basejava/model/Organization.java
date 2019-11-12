@@ -37,11 +37,11 @@ public class Organization implements Serializable {
 
     @Override
     public String toString() {
-        String resultPeriods = "";
+        StringBuilder resultPeriods = new StringBuilder();
         for (Position item : positions) {
-            resultPeriods += item + System.lineSeparator();
+            resultPeriods.append(item).append(System.lineSeparator());
         }
-        resultPeriods = resultPeriods.substring(0, resultPeriods.length() - 2);
+        resultPeriods = new StringBuilder(resultPeriods.substring(0, resultPeriods.length() - 2));
         return "<company>" + System.lineSeparator() +
                 name + System.lineSeparator() +
                 url + System.lineSeparator() +
@@ -56,14 +56,14 @@ public class Organization implements Serializable {
 
         Organization organization = (Organization) o;
 
-        if (positions != null ? !positions.equals(organization.positions) : organization.positions != null) return false;
-        if (name != null ? !name.equals(organization.name) : organization.name != null) return false;
-        return url != null ? url.equals(organization.url) : organization.url == null;
+        if (!positions.equals(organization.positions)) return false;
+        if (!Objects.equals(name, organization.name)) return false;
+        return Objects.equals(url, organization.url);
     }
 
     @Override
     public int hashCode() {
-        int result = positions != null ? positions.hashCode() : 0;
+        int result = positions.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
@@ -110,10 +110,10 @@ public class Organization implements Serializable {
 
             Position position = (Position) o;
 
-            if (startDate != null ? !startDate.equals(position.startDate) : position.startDate != null) return false;
-            if (endDate != null ? !endDate.equals(position.endDate) : position.endDate != null) return false;
-            if (title != null ? !title.equals(position.title) : position.title != null) return false;
-            return description != null ? description.equals(position.description) : position.description == null;
+            if (!Objects.equals(startDate, position.startDate)) return false;
+            if (!Objects.equals(endDate, position.endDate)) return false;
+            if (!Objects.equals(title, position.title)) return false;
+            return Objects.equals(description, position.description);
         }
 
         @Override

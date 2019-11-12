@@ -1,5 +1,7 @@
 package ru.topjava.basejava.model;
 
+import java.util.Objects;
+
 public class TextSection extends AbstractSection {
     private final String content;
 
@@ -19,7 +21,7 @@ public class TextSection extends AbstractSection {
 
         TextSection that = (TextSection) o;
 
-        return content != null ? content.equals(that.content) : that.content == null;
+        return Objects.equals(content, that.content);
     }
 
     @Override

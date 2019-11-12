@@ -2,7 +2,7 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
-import ru.topjava.basejava.storage.ObjectStreamStorage.StorageStrategy;
+import ru.topjava.basejava.storage.objectStreamStorage.StorageStrategy;
 
 import java.io.*;
 import java.nio.file.*;
@@ -13,9 +13,9 @@ import java.util.Objects;
 
 public class PathStorage extends AbstractStorage<Path> {
 
-    private StorageStrategy strategy;
+    private final StorageStrategy strategy;
 
-    private Path directory;
+    private final Path directory;
 
     public PathStorage(String dir, StorageStrategy strategy) {
         Objects.requireNonNull(dir, "directory must not be null");

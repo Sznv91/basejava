@@ -3,7 +3,7 @@ package ru.topjava.basejava;
 import java.io.File;
 import java.util.Objects;
 
-public class MainFile {
+class MainFile {
 
     public static void main(String[] args) {
         File path = new File(".//");

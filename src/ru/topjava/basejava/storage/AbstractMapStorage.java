@@ -9,7 +9,7 @@ import java.util.Map;
 
 public abstract class AbstractMapStorage <SC> extends AbstractStorage <SC> {
 
-    protected final Map<String, Resume> storage = new HashMap<>();
+    final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected List<Resume> doGetAllSorted() {

@@ -14,7 +14,7 @@ abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
 
     private static final int STORAGE_LIMIT = 10_000;
     final Resume[] storage = new Resume[STORAGE_LIMIT];
-    protected int size;
+    int size;
 
     protected abstract void deleteFromArray(int index);
 
@@ -32,7 +32,7 @@ abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
 
     @Override
     protected Resume doGet(Integer searchKey) {
-        return storage[(int) searchKey];
+        return storage[searchKey];
     }
 
     @Override

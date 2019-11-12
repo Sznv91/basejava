@@ -5,7 +5,7 @@ import ru.topjava.basejava.storage.MapResumeStorage;
 
 class MapResumeStorageTest extends AbstractStorageTest {
 
-    public MapResumeStorageTest() {
+    MapResumeStorageTest() {
         super(new MapResumeStorage());
     }
 }

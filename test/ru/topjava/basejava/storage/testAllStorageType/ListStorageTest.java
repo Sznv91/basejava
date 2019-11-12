@@ -5,7 +5,7 @@ import ru.topjava.basejava.storage.ListStorage;
 
 class ListStorageTest extends AbstractStorageTest {
 
-    public ListStorageTest() {
+    ListStorageTest() {
         super(new ListStorage());
     }
 

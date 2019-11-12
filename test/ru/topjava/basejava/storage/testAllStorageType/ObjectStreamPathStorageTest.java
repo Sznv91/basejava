@@ -2,11 +2,11 @@ package ru.topjava.basejava.storage.testAllStorageType;
 
 import ru.topjava.basejava.storage.PathStorage;
 import ru.topjava.basejava.storage.AbstractStorageTest;
-import ru.topjava.basejava.storage.ObjectStreamStorage.ObjectStreamStrategyStorage;
+import ru.topjava.basejava.storage.objectStreamStorage.ObjectStreamStrategyStorage;
 
 class ObjectStreamPathStorageTest extends AbstractStorageTest {
 
-    public ObjectStreamPathStorageTest() {
+    ObjectStreamPathStorageTest() {
         super(new PathStorage(STORAGE_DIR, new ObjectStreamStrategyStorage()));
     }
 

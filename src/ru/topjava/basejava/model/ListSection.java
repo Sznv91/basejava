@@ -3,6 +3,7 @@ package ru.topjava.basejava.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ListSection extends AbstractSection {
     private final List<String> content;
@@ -17,12 +18,12 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (String item : content){
-            result += item + System.lineSeparator();
+            result.append(item).append(System.lineSeparator());
         }
-        result = result.substring(0, result.length()-2);
-        return result;
+        result = new StringBuilder(result.substring(0, result.length() - 2));
+        return result.toString();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ListSection extends AbstractSection {
 
         ListSection that = (ListSection) o;
 
-        return content != null ? content.equals(that.content) : that.content == null;
+        return Objects.equals(content, that.content);
     }
 
     @Override

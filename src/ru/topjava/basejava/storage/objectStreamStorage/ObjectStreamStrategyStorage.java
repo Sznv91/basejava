@@ -1,4 +1,4 @@
-package ru.topjava.basejava.storage.ObjectStreamStorage;
+package ru.topjava.basejava.storage.objectStreamStorage;
 
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
