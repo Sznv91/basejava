@@ -18,9 +18,9 @@ public class MainFile {
         File[] files = file.listFiles();
         for (File currentFile : Objects.requireNonNull(files)) {
             if (!currentFile.isDirectory()) {
-                String indentation = "";
+                StringBuilder indentation = new StringBuilder();
                 for (int i = 0; i <= deepCounter; i++){
-                    indentation += " ";
+                    indentation.append(" ");
                 }
                 System.out.println(indentation + "Is File " + currentFile.getName());
             }
