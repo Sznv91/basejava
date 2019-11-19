@@ -25,8 +25,8 @@ public abstract class AbstractStorageTest {
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
 
-    private static final ResumeTestData rtd = new ResumeTestData();
-    private static final Resume R_1 = rtd.getR1(); //new Resume(UUID_1, "Anton");
+    private static final ResumeTestData rtd = new ResumeTestData(UUID_1,"Григорий Кислин");
+    private static final Resume R_1 = rtd.getR1();
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
     private static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");

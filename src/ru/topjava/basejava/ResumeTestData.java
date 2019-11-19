@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class ResumeTestData {
 
-    public ResumeTestData() {
-        fillResume();
+    public ResumeTestData(String uuid, String fullName) {
+        fillResume(uuid, fullName);
     }
 
     private static Resume r1;
@@ -18,8 +18,8 @@ public class ResumeTestData {
         return r1;
     }
 
-    private void fillResume() {
-        r1 = new Resume("UUID_1", "Григорий Кислин");
+    private void fillResume(String uuid, String fullName) {
+        r1 = new Resume(uuid, fullName);
 
         r1.setContact(ContactType.PHONE, "+7(921) 855-0482");
         r1.setContact(ContactType.SKYPE, "grigory.kislin");
