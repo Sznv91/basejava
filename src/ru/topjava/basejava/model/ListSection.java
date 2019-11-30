@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
-    private final List<String> content;
+
+    public ListSection() {
+    }
+
+    private List<String> content;
 
     public ListSection(List<String> content) {
         this.content = content;
@@ -19,7 +23,7 @@ public class ListSection extends AbstractSection {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (String item : content){
+        for (String item : content) {
             result.append(item).append(System.lineSeparator());
         }
         result = new StringBuilder(result.substring(0, result.length() - 2));

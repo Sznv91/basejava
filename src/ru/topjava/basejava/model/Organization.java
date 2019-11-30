@@ -1,5 +1,10 @@
 package ru.topjava.basejava.model;
 
+import ru.topjava.basejava.utils.DateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -7,11 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
+
+    public Organization() {
+    }
 
     private final List<Position> positions = new ArrayList<>();
 
-    private final String name;
+    private String name;
     private String url;
 
     public Organization(String name, String url, Position... positions) {
@@ -69,10 +78,16 @@ public class Organization implements Serializable {
         return result;
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private final YearMonth startDate;
-        private final YearMonth endDate;
-        private final String title;
+
+        public Position() {
+        }
+        @XmlJavaTypeAdapter(DateAdapter.class)
+        private YearMonth startDate;
+        @XmlJavaTypeAdapter(DateAdapter.class)
+        private YearMonth endDate;
+        private String title;
         private String description;
 
         public Position(YearMonth startDate, YearMonth endDate, String title) {

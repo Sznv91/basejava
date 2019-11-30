@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends AbstractSection {
+
+    public CompanySection() {
+    }
+
     private final List<Organization> companies = new ArrayList<>();
 
     public void addCompany(Organization organization) {

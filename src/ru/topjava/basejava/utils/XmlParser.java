@@ -8,8 +8,8 @@ import java.io.Reader;
 import java.io.Writer;
 
 public class XmlParser {
-    private Marshaller marshaller;
-    private Unmarshaller unmarshaller;
+    private final Marshaller marshaller;
+    private final Unmarshaller unmarshaller;
 
     public XmlParser(Class... classesToBeBound) {
         try {
@@ -20,13 +20,13 @@ public class XmlParser {
 
             unmarshaller = ctx.createUnmarshaller();
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
     }
 
-    public void  marshall(Object instance, Writer writer) {
+    public void marshall(Object instance, Writer writer) {
         try {
-            marshaller.marshal(instance,writer);
+            marshaller.marshal(instance, writer);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
