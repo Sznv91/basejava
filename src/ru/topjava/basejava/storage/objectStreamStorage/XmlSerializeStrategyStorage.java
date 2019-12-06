@@ -5,7 +5,7 @@ import ru.topjava.basejava.utils.XmlParser;
 
 import java.io.*;
 
-public class XmlStreamStrategyStorage implements StorageStrategy {
+public class XmlSerializeStrategyStorage implements StorageStrategy {
 
     private XmlParser parser;
 

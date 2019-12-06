@@ -8,7 +8,7 @@ import ru.topjava.basejava.utils.JsonAbstractSectionAdapter;
 
 import java.io.*;
 
-public class JsonSerializeStrategy implements StorageStrategy {
+public class JsonSerializeStrategyStorage implements StorageStrategy {
 
     private static Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
