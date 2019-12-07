@@ -20,6 +20,14 @@ public class ListSection extends AbstractSection {
         content = new ArrayList<>(Arrays.asList(item));
     }
 
+    public List getContent (){
+        return content;
+    }
+
+    public void addContent(String string){
+        content.add(string);
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

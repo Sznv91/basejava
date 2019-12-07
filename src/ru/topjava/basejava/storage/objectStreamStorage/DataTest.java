@@ -23,5 +23,7 @@ public class DataTest {
         System.out.println(tst.getUuid());
         System.out.println(tst.getContact(ContactType.GITHUB));
         System.out.println(tst.getSection(SectionType.PERSONAL));
+        System.out.println(tst.getSection(SectionType.ACHIEVEMENT));
+        System.out.println(tst.getSection(SectionType.QUALIFICATIONS));
     }
 }
