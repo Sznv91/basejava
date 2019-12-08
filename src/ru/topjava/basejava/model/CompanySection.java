@@ -11,6 +11,10 @@ public class CompanySection extends AbstractSection {
 
     private final List<Organization> companies = new ArrayList<>();
 
+    public List<Organization> getCompanies() {
+        return companies;
+    }
+
     public void addCompany(Organization organization) {
         companies.add(organization);
     }

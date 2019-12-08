@@ -3,7 +3,9 @@ package ru.topjava.basejava.storage.objectStreamStorage;
 import ru.topjava.basejava.model.*;
 
 import java.io.*;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
@@ -35,14 +37,13 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
                     writeListSection(dos, (ListSection) r.getSection(entry.getKey()));
                     break;
                 case 4:
-                    break;
                 case 5:
+                    writeCompanySections(dos, ((CompanySection) r.getSection(entry.getKey())).getCompanies());
                     break;
                 default:
                     break;
             }
         }
-
         dos.close();
     }
 
@@ -60,10 +61,14 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         }
 
         int sectionCounter = dis.readInt();
-        result.setSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
-        result.setSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
-        result.setSection(SectionType.ACHIEVEMENT, readListSection(dis));
-        result.setSection(SectionType.QUALIFICATIONS, readListSection(dis));
+        if (sectionCounter > 0) {
+            result.setSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
+            result.setSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
+            result.setSection(SectionType.ACHIEVEMENT, readListSection(dis));
+            result.setSection(SectionType.QUALIFICATIONS, readListSection(dis));
+            result.setSection(SectionType.EXPERIENCE, readCompanySection(dis));
+            result.setSection(SectionType.EDUCATION, readCompanySection(dis));
+        }
         dis.close();
         return result;
     }
@@ -83,6 +88,55 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             result.add(inputStream.readUTF());
         }
         return new ListSection(result);
+    }
+
+    private void writeCompanySections(DataOutputStream dataOutputStream, List<Organization> orgList) throws IOException {
+        dataOutputStream.writeInt(orgList.size());
+        for (Organization org : orgList) {
+            dataOutputStream.writeInt(org.getPositionsList().size());
+            dataOutputStream.writeUTF(org.getName());
+            dataOutputStream.writeUTF(org.getUrl()); //If "empty" then in the reader to assign null
+            for (Organization.Position position : org.getPositionsList()) {
+                dataOutputStream.writeUTF(position.getTitle());
+                dataOutputStream.writeUTF(position.getDescription()); //If" empty " then in the reader to assign null
+                dataOutputStream.writeUTF(position.getStartDate());
+                dataOutputStream.writeUTF(position.getEndDate());
+            }
+        }
+    }
+
+    private CompanySection readCompanySection(DataInputStream dataInputStream) throws IOException {
+        List<Organization.Position> positionList = new ArrayList<>();
+        List<Organization> organizationList = new ArrayList<>();
+        int companyCount = dataInputStream.readInt();
+        int positionCount;
+        for (int i = 0; i < companyCount; i++) {
+            positionCount = dataInputStream.readInt();
+            String name = dataInputStream.readUTF();
+            String url = dataInputStream.readUTF();
+            if (url.equals("empty")) {
+                url = null;
+            }
+            for (int u = 0; u < positionCount; u++) {
+                String title = dataInputStream.readUTF();
+                String descriptionPosition = dataInputStream.readUTF();
+                if (descriptionPosition.equals("empty")) {
+                    descriptionPosition = null;
+                }
+                String startDate = dataInputStream.readUTF();
+                String endDte = dataInputStream.readUTF();
+                positionList.add(new Organization.Position(
+                        YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
+            }
+            organizationList.add(new Organization(name, url, positionList));
+            positionList.clear();
+        }
+        CompanySection result = new CompanySection();
+        for (Organization company : organizationList) {
+            result.addCompany(company);
+        }
+
+        return result;
     }
 
 }

@@ -31,9 +31,20 @@ public class Organization implements Serializable {
     }
 
     public Organization(String name, Position... positions) {
-        Objects.requireNonNull(positions,"Position must not be null");
+        Objects.requireNonNull(positions, "Position must not be null");
         this.name = name;
         this.positions.addAll(Arrays.asList(positions));
+    }
+
+    public Organization(String name, String url, List<Position> positions) {
+        Objects.requireNonNull(positions, "Position must not be null");
+        this.name = name;
+        this.url = url;
+        this.positions.addAll(positions);
+    }
+
+    public List<Position> getPositionsList() {
+        return positions;
     }
 
     public void addPeriod(Position... positions) {
@@ -44,18 +55,20 @@ public class Organization implements Serializable {
         return name;
     }
 
+    public String getUrl() {
+        if (url == null) {
+            return "empty";
+        }
+        return url;
+    }
+
     @Override
     public String toString() {
-        StringBuilder resultPeriods = new StringBuilder();
-        for (Position item : positions) {
-            resultPeriods.append(item).append(System.lineSeparator());
-        }
-        resultPeriods = new StringBuilder(resultPeriods.substring(0, resultPeriods.length() - 2));
-        return "<company>" + System.lineSeparator() +
-                name + System.lineSeparator() +
-                url + System.lineSeparator() +
-                resultPeriods + System.lineSeparator() +
-                "</company>";
+        return "Organization{" +
+                "positions=" + positions +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 
     @Override
@@ -83,6 +96,7 @@ public class Organization implements Serializable {
 
         public Position() {
         }
+
         @XmlJavaTypeAdapter(DateAdapter.class)
         private YearMonth startDate;
         @XmlJavaTypeAdapter(DateAdapter.class)
@@ -104,6 +118,25 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
+        }
+
+        public String getStartDate() {
+            return startDate.toString();
+        }
+
+        public String getEndDate() {
+            return endDate.toString();
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            if (description == null) {
+                return "empty";
+            }
+            return description;
         }
 
         @Override
