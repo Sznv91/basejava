@@ -20,7 +20,7 @@ public class ListSection extends AbstractSection {
         content = new ArrayList<>(Arrays.asList(item));
     }
 
-    public List getContent (){
+    public List<String> getContent (){
         return content;
     }
 

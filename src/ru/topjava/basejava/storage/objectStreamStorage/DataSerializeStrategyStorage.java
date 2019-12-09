@@ -132,9 +132,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             positionList.clear();
         }
         CompanySection result = new CompanySection();
-        for (Organization company : organizationList) {
-            result.addCompany(company);
-        }
+        result.setCompaniesList(organizationList);
 
         return result;
     }
