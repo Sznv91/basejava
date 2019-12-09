@@ -108,8 +108,8 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
                 for (Organization.Position position : org.getPositionsList()) {
                     dataOutputStream.writeUTF(position.getTitle());
                     dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
-                    dataOutputStream.writeUTF(position.getStartDate());
-                    dataOutputStream.writeUTF(position.getEndDate());
+                    dataOutputStream.writeUTF(position.getStartDate().toString());
+                    dataOutputStream.writeUTF(position.getEndDate().toString());
                 }
             }
         } else {
