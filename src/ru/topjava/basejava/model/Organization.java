@@ -24,10 +24,9 @@ public class Organization implements Serializable {
     private String url;
 
     public Organization(String name, String url, Position... positions) {
+        this(name, positions);
         Objects.requireNonNull(positions, "Position must not be null");
-        this.name = name;
         this.url = url;
-        this.positions.addAll(Arrays.asList(positions));
     }
 
     public Organization(String name, Position... positions) {
@@ -37,9 +36,8 @@ public class Organization implements Serializable {
     }
 
     public Organization(String name, String url, List<Position> positions) {
+        this(name, url);
         Objects.requireNonNull(positions, "Position must not be null");
-        this.name = name;
-        this.url = url;
         this.positions.addAll(positions);
     }
 
@@ -57,7 +55,7 @@ public class Organization implements Serializable {
 
     public String getUrl() {
         if (url == null) {
-            return "empty";
+            return "";
         }
         return url;
     }
@@ -134,7 +132,7 @@ public class Organization implements Serializable {
 
         public String getDescription() {
             if (description == null) {
-                return "empty";
+                return "";
             }
             return description;
         }

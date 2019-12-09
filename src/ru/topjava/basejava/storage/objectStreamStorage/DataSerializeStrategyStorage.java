@@ -95,10 +95,10 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         for (Organization org : orgList) {
             dataOutputStream.writeInt(org.getPositionsList().size());
             dataOutputStream.writeUTF(org.getName());
-            dataOutputStream.writeUTF(org.getUrl()); //If "empty" then in the reader to assign null
+            dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
             for (Organization.Position position : org.getPositionsList()) {
                 dataOutputStream.writeUTF(position.getTitle());
-                dataOutputStream.writeUTF(position.getDescription()); //If" empty " then in the reader to assign null
+                dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
                 dataOutputStream.writeUTF(position.getStartDate());
                 dataOutputStream.writeUTF(position.getEndDate());
             }
@@ -114,13 +114,13 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             positionCount = dataInputStream.readInt();
             String name = dataInputStream.readUTF();
             String url = dataInputStream.readUTF();
-            if (url.equals("empty")) {
+            if (url.equals("")) {
                 url = null;
             }
             for (int u = 0; u < positionCount; u++) {
                 String title = dataInputStream.readUTF();
                 String descriptionPosition = dataInputStream.readUTF();
-                if (descriptionPosition.equals("empty")) {
+                if (descriptionPosition.equals("")) {
                     descriptionPosition = null;
                 }
                 String startDate = dataInputStream.readUTF();
