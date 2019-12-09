@@ -12,31 +12,31 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
     @Override
     public void doWrite(Resume r, OutputStream outputStream) throws IOException {
-        int contactCount = r.getContacts().size();
-        int sectionCount = r.getSections().size();
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
+            int contactCount = r.getContacts().size();
             dos.writeInt(contactCount);
 
             for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
+            int sectionCount = r.getSections().size();
             dos.writeInt(sectionCount);
 
             for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
-                switch (entry.getKey().ordinal()) {
-                    case 0:
-                    case 1:
+                switch (entry.getKey().name()) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
                         dos.writeUTF(String.valueOf(entry.getValue()));
                         break;
-                    case 2:
-                    case 3:
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
                         writeListSection(dos, (ListSection) r.getSection(entry.getKey()));
                         break;
-                    case 4:
-                    case 5:
+                    case "EXPERIENCE":
+                    case "EDUCATION":
                         writeCompanySections(dos, ((CompanySection) r.getSection(entry.getKey())).getCompanies());
                         break;
                     default:
@@ -75,8 +75,8 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
     private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
         dataOutputStream.writeInt(section.getContent().size());
-        for (Object content : section.getContent()) {
-            dataOutputStream.writeUTF((String) content);
+        for (String content : section.getContent()) {
+            dataOutputStream.writeUTF(content);
         }
     }
 
@@ -105,17 +105,18 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
     }
 
     private CompanySection readCompanySection(DataInputStream dataInputStream) throws IOException {
-        List<Organization.Position> positionList = new ArrayList<>();
         List<Organization> organizationList = new ArrayList<>();
         int companyCount = dataInputStream.readInt();
-        int positionCount;
         for (int i = 0; i < companyCount; i++) {
+            int positionCount;
             positionCount = dataInputStream.readInt();
             String name = dataInputStream.readUTF();
             String url = dataInputStream.readUTF();
             if (url.equals("")) {
                 url = null;
             }
+            List<Organization.Position> positionList = new ArrayList<>();
+
             for (int u = 0; u < positionCount; u++) {
                 String title = dataInputStream.readUTF();
                 String descriptionPosition = dataInputStream.readUTF();
@@ -124,6 +125,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
                 }
                 String startDate = dataInputStream.readUTF();
                 String endDte = dataInputStream.readUTF();
+
                 positionList.add(new Organization.Position(
                         YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
             }
