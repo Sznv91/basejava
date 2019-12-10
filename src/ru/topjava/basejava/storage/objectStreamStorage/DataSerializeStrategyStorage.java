@@ -64,7 +64,6 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             }
 
             int sectionCounter = dis.readInt();
-            System.out.println(sectionCounter + " Section Counter");
             for (int i = 0; i < sectionCounter; i++) {
                 SectionType type = SectionType.valueOf(dis.readUTF());
                 result.setSection(type, sectionSelector(dis, type));
