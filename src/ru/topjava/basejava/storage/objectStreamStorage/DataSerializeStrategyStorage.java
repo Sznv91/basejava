@@ -143,11 +143,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         switch (type.name()) {
             case "PERSONAL":
             case "OBJECTIVE":
-                String readText = dis.readUTF();
-                if (readText.equals("null")) {
-                    return null;
-                }
-                return new TextSection(readText);
+                return new TextSection(dis.readUTF());
             case "ACHIEVEMENT":
             case "QUALIFICATIONS":
                 return readListSection(dis);
