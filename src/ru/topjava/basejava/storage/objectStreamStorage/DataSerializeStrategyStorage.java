@@ -26,18 +26,21 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             dos.writeInt(sectionCount);
 
             for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                switch (entry.getKey().name()) {
+                String name = entry.getKey().name();
+                switch (name) {
                     case "PERSONAL":
                     case "OBJECTIVE":
+                        dos.writeUTF(name);
                         dos.writeUTF(String.valueOf(entry.getValue()));
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
+                        dos.writeUTF(name);
                         writeListSection(dos, (ListSection) r.getSection(entry.getKey()));
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
+                        dos.writeUTF(name);
                         writeCompanySections(dos, ((CompanySection) r.getSection(entry.getKey())));
                         break;
                     default:
@@ -61,13 +64,10 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             }
 
             int sectionCounter = dis.readInt();
-            if (sectionCounter > 0) {
-                result.setSection(SectionType.PERSONAL, sectionSelector(dis, SectionType.PERSONAL));
-                result.setSection(SectionType.OBJECTIVE, sectionSelector(dis, SectionType.OBJECTIVE));
-                result.setSection(SectionType.ACHIEVEMENT, sectionSelector(dis, SectionType.ACHIEVEMENT));
-                result.setSection(SectionType.QUALIFICATIONS, sectionSelector(dis, SectionType.QUALIFICATIONS));
-                result.setSection(SectionType.EXPERIENCE, sectionSelector(dis, SectionType.EXPERIENCE));
-                result.setSection(SectionType.EDUCATION, sectionSelector(dis, SectionType.EDUCATION));
+            System.out.println(sectionCounter + " Section Counter");
+            for (int i = 0; i < sectionCounter; i++) {
+                SectionType type = SectionType.valueOf(dis.readUTF());
+                result.setSection(type, sectionSelector(dis, type));
             }
         }
         return result;
@@ -75,21 +75,15 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
 
     private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
-        if (section != null) {
-            dataOutputStream.writeInt(section.getContent().size());
-            for (String content : section.getContent()) {
-                dataOutputStream.writeUTF(content);
-            }
-        } else {
-            dataOutputStream.writeInt(0);
+        dataOutputStream.writeInt(section.getContent().size());
+        for (String content : section.getContent()) {
+            dataOutputStream.writeUTF(content);
         }
     }
 
     private ListSection readListSection(DataInputStream inputStream) throws IOException {
         int listCounter = inputStream.readInt();
-        if (listCounter == 0) {
-            return null;
-        }
+
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < listCounter; i++) {
             result.add(inputStream.readUTF());
@@ -97,87 +91,73 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return new ListSection(result);
     }
 
-    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
-        if (section != null) {
-            List<Organization> orgList = section.getCompanies();
-            dataOutputStream.writeInt(orgList.size());
-            for (Organization org : orgList) {
-                dataOutputStream.writeInt(org.getPositionsList().size());
-                dataOutputStream.writeUTF(org.getName());
-                dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
-                for (Organization.Position position : org.getPositionsList()) {
-                    dataOutputStream.writeUTF(position.getTitle());
-                    dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
-                    dataOutputStream.writeUTF(position.getStartDate().toString());
-                    dataOutputStream.writeUTF(position.getEndDate().toString());
-                }
+    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {List<Organization> orgList = section.getCompanies();
+        dataOutputStream.writeInt(orgList.size());
+        for (Organization org : orgList) {
+            dataOutputStream.writeInt(org.getPositionsList().size());
+            dataOutputStream.writeUTF(org.getName());
+            dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
+            for (Organization.Position position : org.getPositionsList()) {
+                dataOutputStream.writeUTF(position.getTitle());
+                dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
+                dataOutputStream.writeUTF(position.getStartDate().toString());
+                dataOutputStream.writeUTF(position.getEndDate().toString());
             }
-        } else {
-            dataOutputStream.writeInt(0);
         }
     }
 
     private CompanySection readCompanySection(DataInputStream dataInputStream) throws IOException {
-
         int companyCount = dataInputStream.readInt();
-        if (companyCount > 0) {
-            List<Organization> organizationList = new ArrayList<>();
-            for (int i = 0; i < companyCount; i++) {
-                int positionCount;
-                positionCount = dataInputStream.readInt();
-                String name = dataInputStream.readUTF();
-                String url = dataInputStream.readUTF();
-                if (url.equals("")) {
-                    url = null;
-                }
-                List<Organization.Position> positionList = new ArrayList<>();
-
-                for (int u = 0; u < positionCount; u++) {
-                    String title = dataInputStream.readUTF();
-                    String descriptionPosition = dataInputStream.readUTF();
-                    if (descriptionPosition.equals("")) {
-                        descriptionPosition = null;
-                    }
-                    String startDate = dataInputStream.readUTF();
-                    String endDte = dataInputStream.readUTF();
-
-                    positionList.add(new Organization.Position(
-                            YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
-                }
-                organizationList.add(new Organization(name, url, positionList));
-                positionList.clear();
+        List<Organization> organizationList = new ArrayList<>();
+        for (int i = 0; i < companyCount; i++) {
+            int positionCount;
+            positionCount = dataInputStream.readInt();
+            String name = dataInputStream.readUTF();
+            String url = dataInputStream.readUTF();
+            if (url.equals("")) {
+                url = null;
             }
-            CompanySection result = new CompanySection();
-            result.setCompaniesList(organizationList);
+            List<Organization.Position> positionList = new ArrayList<>();
 
-            return result;
-        } else {
-            return null;
+            for (int u = 0; u < positionCount; u++) {
+                String title = dataInputStream.readUTF();
+                String descriptionPosition = dataInputStream.readUTF();
+                if (descriptionPosition.equals("")) {
+                    descriptionPosition = null;
+                }
+                String startDate = dataInputStream.readUTF();
+                String endDte = dataInputStream.readUTF();
+
+                positionList.add(new Organization.Position(
+                        YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
+            }
+            organizationList.add(new Organization(name, url, positionList));
+            positionList.clear();
         }
+        CompanySection result = new CompanySection();
+        result.setCompaniesList(organizationList);
+
+        return result;
     }
 
     private AbstractSection sectionSelector(DataInputStream dis, SectionType type) throws IOException {
-        String sectionType = dis.readUTF();
-        if (sectionType.equals(type.name())) {
-            switch (sectionType) {
-                case "PERSONAL":
-                case "OBJECTIVE":
-                    String readText = dis.readUTF();
-                    if (readText.equals("null")) {
-                        return null;
-                    }
-                    return new TextSection(readText);
-                case "ACHIEVEMENT":
-                case "QUALIFICATIONS":
-                    return readListSection(dis);
-                case "EXPERIENCE":
-                case "EDUCATION":
-                    return readCompanySection(dis);
-                default:
+        switch (type.name()) {
+            case "PERSONAL":
+            case "OBJECTIVE":
+                String readText = dis.readUTF();
+                if (readText.equals("null")) {
                     return null;
-            }
+                }
+                return new TextSection(readText);
+            case "ACHIEVEMENT":
+            case "QUALIFICATIONS":
+                return readListSection(dis);
+            case "EXPERIENCE":
+            case "EDUCATION":
+                return readCompanySection(dis);
+            default:
+                return null;
         }
-        return null;
     }
 
 }
