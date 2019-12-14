@@ -4,9 +4,8 @@ import ru.topjava.basejava.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
 
@@ -18,35 +17,74 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             int contactCount = r.getContacts().size();
             dos.writeInt(contactCount);
 
-            for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
+            /*for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            }*/
+            r.getContacts().forEach((k, v) -> {
+                try {
+                    dos.writeUTF(k.name());
+                    dos.writeUTF(v);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
             int sectionCount = r.getSections().size();
             dos.writeInt(sectionCount);
 
-            for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
+            r.getSections().forEach((k, v) -> {
+                try {
+                    dos.writeUTF(k.name());
+                    switch (k.name()) {
+                        case "PERSONAL":
+                        case "OBJECTIVE":
+                            dos.writeUTF(String.valueOf(v));
+                            break;
+                        case "ACHIEVEMENT":
+                        case "QUALIFICATIONS":
+                            writeListSection(dos, (ListSection) v);
+                            break;
+                        case "EXPERIENCE":
+                        case "EDUCATION":
+                            writeCompanySections(dos, ((CompanySection) v));
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            SimpleFuncInterface<ContactType, String> sfc = new SimpleFuncInterface<ContactType, String>() {
+
+                @Override
+                public void doWork(BiConsumer<? super ContactType, ? super String> action) {
+
+                }
+            };
+
+            /*for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
                 String name = entry.getKey().name();
+                dos.writeUTF(name);
                 switch (name) {
                     case "PERSONAL":
                     case "OBJECTIVE":
-                        dos.writeUTF(name);
                         dos.writeUTF(String.valueOf(entry.getValue()));
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        dos.writeUTF(name);
                         writeListSection(dos, (ListSection) r.getSection(entry.getKey()));
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
-                        dos.writeUTF(name);
                         writeCompanySections(dos, ((CompanySection) r.getSection(entry.getKey())));
                         break;
                     default:
                         break;
                 }
-            }
+            }*/
         }
     }
 
@@ -66,12 +104,26 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             int sectionCounter = dis.readInt();
             for (int i = 0; i < sectionCounter; i++) {
                 SectionType type = SectionType.valueOf(dis.readUTF());
-                result.setSection(type, sectionSelector(dis, type));
+                switch (type.name()) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
+                        result.setSection(type, new TextSection(dis.readUTF()));
+                        break;
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
+                        result.setSection(type, readListSection(dis));
+                        break;
+                    case "EXPERIENCE":
+                    case "EDUCATION":
+                        result.setSection(type, readCompanySection(dis));
+                        break;
+                    default:
+                        return null;
+                }
             }
         }
         return result;
     }
-
 
     private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
         dataOutputStream.writeInt(section.getContent().size());
@@ -90,7 +142,8 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return new ListSection(result);
     }
 
-    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {List<Organization> orgList = section.getCompanies();
+    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
+        List<Organization> orgList = section.getCompanies();
         dataOutputStream.writeInt(orgList.size());
         for (Organization org : orgList) {
             dataOutputStream.writeInt(org.getPositionsList().size());
@@ -139,20 +192,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    private AbstractSection sectionSelector(DataInputStream dis, SectionType type) throws IOException {
-        switch (type.name()) {
-            case "PERSONAL":
-            case "OBJECTIVE":
-                return new TextSection(dis.readUTF());
-            case "ACHIEVEMENT":
-            case "QUALIFICATIONS":
-                return readListSection(dis);
-            case "EXPERIENCE":
-            case "EDUCATION":
-                return readCompanySection(dis);
-            default:
-                return null;
-        }
-    }
+    private void writeWithException(Collection collection, DataOutputStream dos, SimpleFuncInterface sfi) throws IOException {
 
+    }
 }
