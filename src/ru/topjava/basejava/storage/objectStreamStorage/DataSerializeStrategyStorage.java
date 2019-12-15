@@ -4,7 +4,8 @@ import ru.topjava.basejava.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
@@ -17,74 +18,26 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             int contactCount = r.getContacts().size();
             dos.writeInt(contactCount);
 
-            /*for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }*/
-            r.getContacts().forEach((k, v) -> {
+            BiConsumer contactsConsumer = (k, v) -> {
                 try {
-                    dos.writeUTF(k.name());
-                    dos.writeUTF(v);
+                    writeContactsWithException((ContactType) k, (String) v, dos);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
+            };
+            r.getContacts().forEach(contactsConsumer);
 
             int sectionCount = r.getSections().size();
             dos.writeInt(sectionCount);
 
-            r.getSections().forEach((k, v) -> {
+            BiConsumer sectionConsumer = (k, v) -> {
                 try {
-                    dos.writeUTF(k.name());
-                    switch (k.name()) {
-                        case "PERSONAL":
-                        case "OBJECTIVE":
-                            dos.writeUTF(String.valueOf(v));
-                            break;
-                        case "ACHIEVEMENT":
-                        case "QUALIFICATIONS":
-                            writeListSection(dos, (ListSection) v);
-                            break;
-                        case "EXPERIENCE":
-                        case "EDUCATION":
-                            writeCompanySections(dos, ((CompanySection) v));
-                            break;
-                        default:
-                            break;
-                    }
+                    writeSectionsWithException((SectionType) k, (AbstractSection) v, dos);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
-
-            SimpleFuncInterface<ContactType, String> sfc = new SimpleFuncInterface<ContactType, String>() {
-
-                @Override
-                public void doWork(BiConsumer<? super ContactType, ? super String> action) {
-
-                }
             };
-
-            /*for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
-                String name = entry.getKey().name();
-                dos.writeUTF(name);
-                switch (name) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
-                        dos.writeUTF(String.valueOf(entry.getValue()));
-                        break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
-                        writeListSection(dos, (ListSection) r.getSection(entry.getKey()));
-                        break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
-                        writeCompanySections(dos, ((CompanySection) r.getSection(entry.getKey())));
-                        break;
-                    default:
-                        break;
-                }
-            }*/
+            r.getSections().forEach(sectionConsumer);
         }
     }
 
@@ -192,7 +145,28 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    private void writeWithException(Collection collection, DataOutputStream dos, SimpleFuncInterface sfi) throws IOException {
+    private <K extends ContactType, V extends String> void writeContactsWithException(K key, V value, DataOutputStream dos) throws IOException {
+        dos.writeUTF(key.name());
+        dos.writeUTF(value);
+    }
 
+    private <K extends SectionType, V extends AbstractSection> void writeSectionsWithException(K key, V value, DataOutputStream dos) throws IOException {
+        dos.writeUTF(key.name());
+        switch (key.name()) {
+            case "PERSONAL":
+            case "OBJECTIVE":
+                dos.writeUTF(String.valueOf(value));
+                break;
+            case "ACHIEVEMENT":
+            case "QUALIFICATIONS":
+                writeListSection(dos, (ListSection) value);
+                break;
+            case "EXPERIENCE":
+            case "EDUCATION":
+                writeCompanySections(dos, ((CompanySection) value));
+                break;
+            default:
+                break;
+        }
     }
 }
