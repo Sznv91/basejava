@@ -6,7 +6,7 @@ import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Map;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
 
@@ -18,26 +18,15 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             int contactCount = r.getContacts().size();
             dos.writeInt(contactCount);
 
-            BiConsumer contactsConsumer = (k, v) -> {
-                try {
-                    writeContactsWithException((ContactType) k, (String) v, dos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            ExceptInterface exceptInterface = () -> {
             };
-            r.getContacts().forEach(contactsConsumer);
+
+            writeWithException(r.getContacts(), dos, exceptInterface);
 
             int sectionCount = r.getSections().size();
             dos.writeInt(sectionCount);
 
-            BiConsumer sectionConsumer = (k, v) -> {
-                try {
-                    writeSectionsWithException((SectionType) k, (AbstractSection) v, dos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            };
-            r.getSections().forEach(sectionConsumer);
+            writeWithException(r.getSections(),dos,exceptInterface);
         }
     }
 
@@ -78,7 +67,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
+    protected static void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
         dataOutputStream.writeInt(section.getContent().size());
         for (String content : section.getContent()) {
             dataOutputStream.writeUTF(content);
@@ -95,7 +84,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return new ListSection(result);
     }
 
-    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
+    protected static void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
         List<Organization> orgList = section.getCompanies();
         dataOutputStream.writeInt(orgList.size());
         for (Organization org : orgList) {
@@ -145,28 +134,14 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    private <K extends ContactType, V extends String> void writeContactsWithException(K key, V value, DataOutputStream dos) throws IOException {
-        dos.writeUTF(key.name());
-        dos.writeUTF(value);
-    }
+    private <K,V> void writeWithException(Map<K, V> map, DataOutputStream dos, ExceptInterface exceptInterface) throws IOException {
 
-    private <K extends SectionType, V extends AbstractSection> void writeSectionsWithException(K key, V value, DataOutputStream dos) throws IOException {
-        dos.writeUTF(key.name());
-        switch (key.name()) {
-            case "PERSONAL":
-            case "OBJECTIVE":
-                dos.writeUTF(String.valueOf(value));
-                break;
-            case "ACHIEVEMENT":
-            case "QUALIFICATIONS":
-                writeListSection(dos, (ListSection) value);
-                break;
-            case "EXPERIENCE":
-            case "EDUCATION":
-                writeCompanySections(dos, ((CompanySection) value));
-                break;
-            default:
-                break;
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getKey().getClass().equals(ContactType.class)){
+                exceptInterface.writeContacts((ContactType) entry.getKey(), (String) entry.getValue(), dos);
+            } else {
+                exceptInterface.writeSections((SectionType) entry.getKey(), (AbstractSection) entry.getValue(), dos);
+            }
         }
     }
 }
