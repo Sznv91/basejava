@@ -4,9 +4,7 @@ import ru.topjava.basejava.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
 
@@ -15,18 +13,62 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
-            int contactCount = r.getContacts().size();
-            dos.writeInt(contactCount);
 
-            ExceptInterface exceptInterface = () -> {
-            };
+            writeCollection(dos, r.getContacts(), (k, v) -> {
+                dos.writeUTF(k.name());
+                dos.writeUTF(v);
+            });
 
-            writeWithException(r.getContacts(), dos, exceptInterface);
+            writeCollection(dos, r.getSections(), (k, v) -> {
+                dos.writeUTF(k.name());
+                switch (k.name()) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
+                        dos.writeUTF(String.valueOf(v));
+                        break;
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
+                        writeListSection(dos, (ListSection) v);
+                        break;
+                    case "EXPERIENCE":
+                    case "EDUCATION":
+                        writeCompanySections(dos, ((CompanySection) v));
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+    }
 
-            int sectionCount = r.getSections().size();
-            dos.writeInt(sectionCount);
+    private <K, V> void writeCollection(DataOutputStream dos, Map<K, V> map, ElementWriter<K, V> writer) throws IOException {
 
-            writeWithException(r.getSections(),dos,exceptInterface);
+        dos.writeInt(map.size());
+        for (Map.Entry<K, V> item : map.entrySet()) {
+            writer.write(item.getKey(), item.getValue());
+        }
+    }
+
+    private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
+        dataOutputStream.writeInt(section.getContent().size());
+        for (String content : section.getContent()) {
+            dataOutputStream.writeUTF(content);
+        }
+    }
+
+    private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
+        List<Organization> orgList = section.getCompanies();
+        dataOutputStream.writeInt(orgList.size());
+        for (Organization org : orgList) {
+            dataOutputStream.writeInt(org.getPositionsList().size());
+            dataOutputStream.writeUTF(org.getName());
+            dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
+            for (Organization.Position position : org.getPositionsList()) {
+                dataOutputStream.writeUTF(position.getTitle());
+                dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
+                dataOutputStream.writeUTF(position.getStartDate().toString());
+                dataOutputStream.writeUTF(position.getEndDate().toString());
+            }
         }
     }
 
@@ -67,13 +109,6 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    protected static void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
-        dataOutputStream.writeInt(section.getContent().size());
-        for (String content : section.getContent()) {
-            dataOutputStream.writeUTF(content);
-        }
-    }
-
     private ListSection readListSection(DataInputStream inputStream) throws IOException {
         int listCounter = inputStream.readInt();
 
@@ -82,22 +117,6 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             result.add(inputStream.readUTF());
         }
         return new ListSection(result);
-    }
-
-    protected static void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
-        List<Organization> orgList = section.getCompanies();
-        dataOutputStream.writeInt(orgList.size());
-        for (Organization org : orgList) {
-            dataOutputStream.writeInt(org.getPositionsList().size());
-            dataOutputStream.writeUTF(org.getName());
-            dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
-            for (Organization.Position position : org.getPositionsList()) {
-                dataOutputStream.writeUTF(position.getTitle());
-                dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
-                dataOutputStream.writeUTF(position.getStartDate().toString());
-                dataOutputStream.writeUTF(position.getEndDate().toString());
-            }
-        }
     }
 
     private CompanySection readCompanySection(DataInputStream dataInputStream) throws IOException {
@@ -134,14 +153,4 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         return result;
     }
 
-    private <K,V> void writeWithException(Map<K, V> map, DataOutputStream dos, ExceptInterface exceptInterface) throws IOException {
-
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            if (entry.getKey().getClass().equals(ContactType.class)){
-                exceptInterface.writeContacts((ContactType) entry.getKey(), (String) entry.getValue(), dos);
-            } else {
-                exceptInterface.writeSections((SectionType) entry.getKey(), (AbstractSection) entry.getValue(), dos);
-            }
-        }
-    }
 }
