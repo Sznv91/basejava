@@ -14,25 +14,25 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
 
-            writeCollection(dos, r.getContacts(), (k, v) -> {
-                dos.writeUTF(k.name());
-                dos.writeUTF(v);
+            writeCollection(dos, r.getContacts().entrySet(), contacts -> {
+                dos.writeUTF(contacts.getKey().name());
+                dos.writeUTF(contacts.getValue());
             });
 
-            writeCollection(dos, r.getSections(), (k, v) -> {
-                dos.writeUTF(k.name());
-                switch (k.name()) {
+            writeCollection(dos, r.getSections().entrySet(), sections -> {
+                dos.writeUTF(sections.getKey().name());
+                switch (sections.getKey().name()) {
                     case "PERSONAL":
                     case "OBJECTIVE":
-                        dos.writeUTF(String.valueOf(v));
+                        dos.writeUTF(String.valueOf(sections.getValue()));
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        writeListSection(dos, (ListSection) v);
+                        writeListSection(dos, (ListSection) sections.getValue());
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
-                        writeCompanySections(dos, ((CompanySection) v));
+                        writeCompanySections(dos, ((CompanySection) sections.getValue()));
                         break;
                     default:
                         break;
@@ -41,11 +41,10 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         }
     }
 
-    private <K, V> void writeCollection(DataOutputStream dos, Map<K, V> map, ElementWriter<K, V> writer) throws IOException {
-
-        dos.writeInt(map.size());
-        for (Map.Entry<K, V> item : map.entrySet()) {
-            writer.write(item.getKey(), item.getValue());
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            writer.write(item);
         }
     }
 

@@ -3,7 +3,7 @@ package ru.topjava.basejava.storage.objectStreamStorage;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface ElementWriter<K,V> {
+public interface ElementWriter<T> {
 
-    void write(K key, V value) throws IOException;
+    void write(T t) throws IOException;
 }
