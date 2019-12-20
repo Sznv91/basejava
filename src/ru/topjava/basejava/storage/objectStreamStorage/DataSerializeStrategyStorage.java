@@ -49,26 +49,20 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
     }
 
     private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
-        dataOutputStream.writeInt(section.getContent().size());
-        for (String content : section.getContent()) {
-            dataOutputStream.writeUTF(content);
-        }
+        writeCollection(dataOutputStream, section.getContent(), content -> dataOutputStream.writeUTF(content));
     }
 
     private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
-        List<Organization> orgList = section.getCompanies();
-        dataOutputStream.writeInt(orgList.size());
-        for (Organization org : orgList) {
-            dataOutputStream.writeInt(org.getPositionsList().size());
-            dataOutputStream.writeUTF(org.getName());
-            dataOutputStream.writeUTF(org.getUrl()); //If "" (empty string) then in the reader to assign null
-            for (Organization.Position position : org.getPositionsList()) {
+        writeCollection(dataOutputStream, section.getCompanies(), organization -> {
+            dataOutputStream.writeUTF(organization.getName());
+            dataOutputStream.writeUTF(organization.getUrl());
+            writeCollection(dataOutputStream, organization.getPositionsList(), position -> {
                 dataOutputStream.writeUTF(position.getTitle());
-                dataOutputStream.writeUTF(position.getDescription()); //If "" then in the reader to assign null
+                dataOutputStream.writeUTF(position.getDescription());
                 dataOutputStream.writeUTF(position.getStartDate().toString());
                 dataOutputStream.writeUTF(position.getEndDate().toString());
-            }
-        }
+            });
+        });
     }
 
     @Override
@@ -122,8 +116,6 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         int companyCount = dataInputStream.readInt();
         List<Organization> organizationList = new ArrayList<>();
         for (int i = 0; i < companyCount; i++) {
-            int positionCount;
-            positionCount = dataInputStream.readInt();
             String name = dataInputStream.readUTF();
             String url = dataInputStream.readUTF();
             if (url.equals("")) {
@@ -131,6 +123,8 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             }
             List<Organization.Position> positionList = new ArrayList<>();
 
+            int positionCount;
+            positionCount = dataInputStream.readInt();
             for (int u = 0; u < positionCount; u++) {
                 String title = dataInputStream.readUTF();
                 String descriptionPosition = dataInputStream.readUTF();
