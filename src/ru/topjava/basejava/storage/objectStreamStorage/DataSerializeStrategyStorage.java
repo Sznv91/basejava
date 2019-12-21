@@ -4,7 +4,9 @@ import ru.topjava.basejava.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class DataSerializeStrategyStorage implements StorageStrategy {
 
@@ -41,15 +43,8 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         }
     }
 
-    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
-        dos.writeInt(collection.size());
-        for (T item : collection) {
-            writer.write(item);
-        }
-    }
-
     private void writeListSection(DataOutputStream dataOutputStream, ListSection section) throws IOException {
-        writeCollection(dataOutputStream, section.getContent(), content -> dataOutputStream.writeUTF(content));
+        writeCollection(dataOutputStream, section.getContent(), dataOutputStream::writeUTF);
     }
 
     private void writeCompanySections(DataOutputStream dataOutputStream, CompanySection section) throws IOException {
@@ -65,21 +60,25 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
         });
     }
 
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            writer.write(item);
+        }
+    }
+
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
         Resume result;
         try (DataInputStream dis = new DataInputStream(inputStream)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
+
             result = new Resume(uuid, fullName);
-            int contactCount = dis.readInt();
 
-            for (int i = 0; i < contactCount; i++) {
-                result.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            readCollection(dis, () -> result.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
-            int sectionCounter = dis.readInt();
-            for (int i = 0; i < sectionCounter; i++) {
+            readCollection(dis, () -> {
                 SectionType type = SectionType.valueOf(dis.readUTF());
                 switch (type.name()) {
                     case "PERSONAL":
@@ -95,27 +94,24 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
                         result.setSection(type, readCompanySection(dis));
                         break;
                     default:
-                        return null;
+                        break;
                 }
-            }
+            });
         }
         return result;
     }
 
     private ListSection readListSection(DataInputStream inputStream) throws IOException {
-        int listCounter = inputStream.readInt();
-
         ArrayList<String> result = new ArrayList<>();
-        for (int i = 0; i < listCounter; i++) {
-            result.add(inputStream.readUTF());
-        }
+        readCollection(inputStream, () -> result.add(inputStream.readUTF()));
+
         return new ListSection(result);
     }
 
     private CompanySection readCompanySection(DataInputStream dataInputStream) throws IOException {
-        int companyCount = dataInputStream.readInt();
         List<Organization> organizationList = new ArrayList<>();
-        for (int i = 0; i < companyCount; i++) {
+
+        readCollection(dataInputStream, () -> {
             String name = dataInputStream.readUTF();
             String url = dataInputStream.readUTF();
             if (url.equals("")) {
@@ -123,9 +119,7 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
             }
             List<Organization.Position> positionList = new ArrayList<>();
 
-            int positionCount;
-            positionCount = dataInputStream.readInt();
-            for (int u = 0; u < positionCount; u++) {
+            readCollection(dataInputStream, () -> {
                 String title = dataInputStream.readUTF();
                 String descriptionPosition = dataInputStream.readUTF();
                 if (descriptionPosition.equals("")) {
@@ -136,14 +130,23 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
                 positionList.add(new Organization.Position(
                         YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
-            }
+            });
             organizationList.add(new Organization(name, url, positionList));
             positionList.clear();
-        }
+        });
+
         CompanySection result = new CompanySection();
         result.setCompaniesList(organizationList);
 
         return result;
+    }
+
+    private void readCollection(DataInputStream dis, ElementReader elementReader) throws IOException {
+        int counter = dis.readInt();
+
+        for (int i = 0; i < counter; i++) {
+            elementReader.read();
+        }
     }
 
 }
