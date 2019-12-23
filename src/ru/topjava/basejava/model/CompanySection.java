@@ -6,10 +6,10 @@ import java.util.Objects;
 
 public class CompanySection extends AbstractSection {
 
+    private final List<Organization> companies = new ArrayList<>();
+
     public CompanySection() {
     }
-
-    private final List<Organization> companies = new ArrayList<>();
 
     public List<Organization> getCompanies() {
         return companies;

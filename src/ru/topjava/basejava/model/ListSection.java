@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class ListSection extends AbstractSection {
 
+    private List<String> content;
+
     public ListSection() {
     }
-
-    private List<String> content;
 
     public ListSection(List<String> content) {
         this.content = content;

@@ -42,7 +42,7 @@ public class Resume implements Serializable {
         return sections.get(type);
     }
 
-    public Map<SectionType, AbstractSection> getSections(){
+    public Map<SectionType, AbstractSection> getSections() {
         return sections;
     }
 
@@ -50,8 +50,16 @@ public class Resume implements Serializable {
         sections.put(type, section);
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public String getUuid() {
         return uuid;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getFullName() {

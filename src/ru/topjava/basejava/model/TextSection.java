@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class TextSection extends AbstractSection {
 
+    private String content;
+
     public TextSection() {
     }
-
-    private String content;
 
     public TextSection(String content) {
         this.content = content;

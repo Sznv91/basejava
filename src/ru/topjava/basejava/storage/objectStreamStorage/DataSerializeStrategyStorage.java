@@ -69,12 +69,10 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
-        Resume result;
+        Resume result = new Resume();
         try (DataInputStream dis = new DataInputStream(inputStream)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-
-            result = new Resume(uuid, fullName);
+            result.setUuid(dis.readUTF());
+            result.setFullName(dis.readUTF());
 
             readCollection(dis, () -> result.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
@@ -132,7 +130,6 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
                         YearMonth.parse(startDate), YearMonth.parse(endDte), title, descriptionPosition));
             });
             organizationList.add(new Organization(name, url, positionList));
-            positionList.clear();
         });
 
         CompanySection result = new CompanySection();

@@ -15,13 +15,13 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
 
-    public Organization() {
-    }
-
     private final List<Position> positions = new ArrayList<>();
 
     private String name;
     private String url;
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         Objects.requireNonNull(positions, "Position must not be null");
