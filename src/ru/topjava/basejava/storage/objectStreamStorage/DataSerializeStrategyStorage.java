@@ -69,10 +69,9 @@ public class DataSerializeStrategyStorage implements StorageStrategy {
 
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
-        Resume result = new Resume();
+        Resume result;
         try (DataInputStream dis = new DataInputStream(inputStream)) {
-            result.setUuid(dis.readUTF());
-            result.setFullName(dis.readUTF());
+            result = new Resume(dis.readUTF(), dis.readUTF());
 
             readCollection(dis, () -> result.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
