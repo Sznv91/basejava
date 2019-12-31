@@ -40,7 +40,7 @@ public class MainStream {
         Long endTimerOddOrEven = new Date().getTime();
 
         Long startTimerMinValueStream = new Date().getTime();
-        System.out.println(instance.minValueStream(testMassive) + " minValue Method Result");
+        System.out.println(instance.minValueStream(testMassive) + " minValue Stream Result");
         Long endTimerMinValueStream = new Date().getTime();
 
         Long startTimerStringOddOrEven = new Date().getTime();
