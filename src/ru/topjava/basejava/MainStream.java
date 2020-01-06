@@ -122,26 +122,18 @@ public class MainStream {
     }
 
     private int minValueStream(int[] values) {
-        AtomicInteger result = new AtomicInteger();
-        AtomicInteger counter = new AtomicInteger();
-
-        int[] localCopy = Arrays.stream(values).sorted().distinct().toArray();
-
-        Arrays.stream(localCopy).forEach(value -> {
-            int multiplier = (int) Math.pow(10, (localCopy.length - counter.get()) - 1);
-            int temporaryResult = value * multiplier;
-            result.addAndGet(temporaryResult);
-            counter.getAndIncrement();
-        });
-
-        return result.get();
+        return Arrays.stream(values)
+                .sorted()
+                .distinct()
+                .reduce((s1, s2) -> s1 * 10 + s2)
+                .orElse(0);
     }
 
     private List<Integer> oddOrEvenStream(List<Integer> integers) {
         int reduce = integers.stream().reduce(Integer::sum).orElse(0);
 
         return integers.stream()
-                .filter(o -> (reduce % 2 == 0) == (o % 2 != 0))
+                .filter(o -> reduce % 2 != o % 2)
                 .collect(Collectors.toList());
     }
 }
