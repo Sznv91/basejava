@@ -7,7 +7,7 @@ import ru.topjava.basejava.storage.objectStreamStorage.ObjectStreamStrategyStora
 class ObjectStreamPathStorageTest extends AbstractStorageTest {
 
     ObjectStreamPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR, new ObjectStreamStrategyStorage()));
+        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new ObjectStreamStrategyStorage()));
     }
 
 }

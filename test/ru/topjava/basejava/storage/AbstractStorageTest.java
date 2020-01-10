@@ -2,11 +2,13 @@ package ru.topjava.basejava.storage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.topjava.basejava.Config;
 import ru.topjava.basejava.ResumeTestData;
 import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
 
+import java.io.File;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractStorageTest {
 
-    protected static final String STORAGE_DIR = "./storage";
+    protected static final File STORAGE_DIR = Config.getInstance().getSTORAGE_DIR();
 
     final Storage storage;
 
@@ -26,7 +28,7 @@ public abstract class AbstractStorageTest {
     private static final String UUID_5 = "UUID_5";
 
     private static final ResumeTestData rtd = new ResumeTestData(UUID_1,"Григорий Кислин");
-    private static final Resume R_1 = rtd.getR1();
+    private static final Resume R_1 = new Resume(rtd.getR1().getUuid(), rtd.getR1().getFullName()); //rtd.getR1();
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
     private static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = new Resume(UUID_4, "Daniel");

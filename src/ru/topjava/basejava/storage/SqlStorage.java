@@ -1,0 +1,146 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.exeption.ExistStorageException;
+import ru.topjava.basejava.exeption.NotExistStorageException;
+import ru.topjava.basejava.exeption.StorageException;
+import ru.topjava.basejava.model.Resume;
+import ru.topjava.basejava.sql.ConnectionFactory;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SqlStorage implements Storage {
+    private final ConnectionFactory factory;
+
+    public SqlStorage(String urlDB, String userDB, String passwordDB) {
+        factory = () -> DriverManager.getConnection(urlDB, userDB, passwordDB);
+    }
+
+    @Override
+    public void update(Resume resume) {
+        try (Connection connection = factory.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
+            ps.setString(1, resume.getUuid());
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(resume.getUuid());
+            } else {
+                ps = connection.prepareStatement("UPDATE resume SET full_name=?WHERE uuid =?");
+                ps.setString(1, resume.getFullName());
+                ps.setString(2, resume.getUuid());
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void clear() {
+        try (Connection conn = factory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM resume")) {
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void save(Resume resume) {
+        try (Connection connection = factory.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
+            ps.setString(1, resume.getUuid());
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+
+                ps = connection.prepareStatement
+                        ("INSERT INTO resume (uuid, full_name) values (?,?)");
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, resume.getFullName());
+                ps.execute();
+            } else {
+                System.out.println(rs.getString("uuid"));
+                throw new ExistStorageException(resume.getUuid());
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Resume get(String uuid) {
+        try (Connection connection = factory.getConnection();
+             PreparedStatement ps = connection.prepareStatement
+                     ("SELECT * FROM resume WHERE uuid =?")) {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
+            }
+            return new Resume(uuid, rs.getString("full_name"));
+
+        } catch (SQLException e) {
+            throw new StorageException(e.getMessage(), uuid);
+        }
+    }
+
+    @Override
+    public void delete(String uuid) {
+        try (Connection connection = factory.getConnection();
+             PreparedStatement ps1 = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
+             PreparedStatement ps2 = connection.prepareStatement
+                     ("DELETE FROM resume WHERE uuid=?")) {
+
+            ps1.setString(1, uuid);
+            ps2.setString(1, uuid);
+            ResultSet rs = ps1.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
+            } else {
+                ps2.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+
+        List<Resume> result = new ArrayList<>();
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement ps = connection.prepareStatement
+                     ("SELECT REPLACE(uuid,' ','') as uuid, full_name  FROM resume ORDER BY full_name,uuid")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Resume
+                        (rs.getString("uuid")
+                                , rs.getString("full_name")));
+            }
+            return result;
+
+        } catch (SQLException e) {
+            throw new StorageException(e.getMessage(), "no resumes in database");
+        }
+    }
+
+    @Override
+    public int size() {
+        try (Connection connection = factory.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT count(*) FROM resume")) {
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException("DB hasn't any record");
+            }
+            return rs.getInt("count");
+
+        } catch (SQLException e) {
+            throw new StorageException(e.getMessage(),"DB hasn't any record");
+        }
+    }
+}

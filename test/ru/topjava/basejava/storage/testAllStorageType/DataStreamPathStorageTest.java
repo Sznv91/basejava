@@ -7,7 +7,7 @@ import ru.topjava.basejava.storage.objectStreamStorage.DataSerializeStrategyStor
 class DataStreamPathStorageTest extends AbstractStorageTest {
 
     DataStreamPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR, new DataSerializeStrategyStorage()));
+        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new DataSerializeStrategyStorage()));
     }
 
 }

@@ -7,7 +7,7 @@ import ru.topjava.basejava.storage.objectStreamStorage.JsonSerializeStrategyStor
 class JsonStreamPathStorageTest extends AbstractStorageTest {
 
     JsonStreamPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR, new JsonSerializeStrategyStorage()));
+        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new JsonSerializeStrategyStorage()));
     }
 
 }

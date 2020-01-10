@@ -7,7 +7,7 @@ import ru.topjava.basejava.storage.objectStreamStorage.XmlSerializeStrategyStora
 class XmlStreamPathStorageTest extends AbstractStorageTest {
 
     XmlStreamPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR, new XmlSerializeStrategyStorage()));
+        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new XmlSerializeStrategyStorage()));
     }
 
 }
