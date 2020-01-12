@@ -5,6 +5,7 @@ import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
+import ru.topjava.basejava.sql.BlockOfCode;
 import ru.topjava.basejava.sql.ConnectionFactory;
 
 import java.sql.*;
@@ -20,6 +21,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
+
         try (Connection connection = factory.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("UPDATE resume " +
                     "SET full_name = ? " +
@@ -117,7 +119,20 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        try (Connection connection = factory.getConnection();
+//        final int[] result = new int[1];
+
+        int result = transExec("SELECT count(*) FROM resume", new BlockOfCode<Integer>() {
+            @Override
+            public Integer exec(PreparedStatement ps) throws SQLException {
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()){
+                    return rs.getInt("count");
+                } else {
+                    return 0;
+                }
+            }
+        });
+        /*try (Connection connection = factory.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT count(*) FROM resume")) {
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -127,6 +142,19 @@ public class SqlStorage implements Storage {
 
         } catch (SQLException e) {
             throw new StorageException(e.getMessage(), "DB hasn't any record");
+        }*/
+
+        return result;
+    }
+
+    private <T> T transExec(String sqlReq, BlockOfCode<T> boc) {
+        try (Connection connection = factory.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlReq)) {
+             return boc.exec(ps);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);// e.printStackTrace();
         }
+        //boc.exec();
+        //return null;
     }
 }
