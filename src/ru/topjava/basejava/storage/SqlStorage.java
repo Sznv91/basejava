@@ -1,5 +1,6 @@
 package ru.topjava.basejava.storage;
 
+import org.postgresql.util.PSQLException;
 import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.exeption.StorageException;
@@ -20,21 +21,17 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume resume) {
         try (Connection connection = factory.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
-            ps.setString(1, resume.getUuid());
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
+            PreparedStatement ps = connection.prepareStatement("UPDATE resume " +
+                    "SET full_name = ? " +
+                    "WHERE uuid = ? ");
+            ps.setString(1, resume.getFullName());
+            ps.setString(2, resume.getUuid());
+            if (1 > ps.executeUpdate()) {
                 throw new NotExistStorageException(resume.getUuid());
-            } else {
-                ps = connection.prepareStatement("UPDATE resume SET full_name=?WHERE uuid =?");
-                ps.setString(1, resume.getFullName());
-                ps.setString(2, resume.getUuid());
-                ps.execute();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new StorageException("Can't update resume in DB", resume.getUuid(), e);
         }
-
     }
 
     @Override
@@ -43,7 +40,7 @@ public class SqlStorage implements Storage {
              PreparedStatement ps = conn.prepareStatement("DELETE FROM resume")) {
             ps.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new StorageException("can't make clear DB", "no uuid", e);
         }
 
     }
@@ -51,21 +48,15 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         try (Connection connection = factory.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
+            PreparedStatement ps = connection.prepareStatement
+                    ("INSERT " +
+                            "INTO resume (uuid, full_name) " +
+                            "VALUES (?,?)");
             ps.setString(1, resume.getUuid());
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-
-                ps = connection.prepareStatement
-                        ("INSERT INTO resume (uuid, full_name) values (?,?)");
-                ps.setString(1, resume.getUuid());
-                ps.setString(2, resume.getFullName());
-                ps.execute();
-            } else {
-                System.out.println(rs.getString("uuid"));
-                throw new ExistStorageException(resume.getUuid());
-
-            }
+            ps.setString(2, resume.getFullName());
+            ps.execute();
+        } catch (PSQLException q) {
+            throw new ExistStorageException(resume.getUuid());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,17 +82,12 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         try (Connection connection = factory.getConnection();
-             PreparedStatement ps1 = connection.prepareStatement("SELECT uuid FROM resume WHERE uuid=?");
-             PreparedStatement ps2 = connection.prepareStatement
-                     ("DELETE FROM resume WHERE uuid=?")) {
-
-            ps1.setString(1, uuid);
-            ps2.setString(1, uuid);
-            ResultSet rs = ps1.executeQuery();
-            if (!rs.next()) {
+             PreparedStatement ps = connection.prepareStatement("DELETE " +
+                     "FROM resume " +
+                     "WHERE uuid=?")) {
+            ps.setString(1, uuid);
+            if (1 > ps.executeUpdate()) {
                 throw new NotExistStorageException(uuid);
-            } else {
-                ps2.execute();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,7 +126,7 @@ public class SqlStorage implements Storage {
             return rs.getInt("count");
 
         } catch (SQLException e) {
-            throw new StorageException(e.getMessage(),"DB hasn't any record");
+            throw new StorageException(e.getMessage(), "DB hasn't any record");
         }
     }
 }
