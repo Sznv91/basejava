@@ -4,8 +4,8 @@ import org.postgresql.util.PSQLException;
 import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
 import ru.topjava.basejava.model.Resume;
-import ru.topjava.basejava.sql.BlockOfCode;
 import ru.topjava.basejava.sql.ConnectionFactory;
+import ru.topjava.basejava.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,74 +20,55 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-
-        transExec("UPDATE resume SET full_name = ? WHERE uuid = ? ", new BlockOfCode<Object>() {
-            @Override
-            public Object exec(PreparedStatement ps) throws SQLException {
-                ps.setString(1, resume.getFullName());
-                ps.setString(2, resume.getUuid());
-                if (1 > ps.executeUpdate()) {
-                    throw new NotExistStorageException(resume.getUuid());
-                }
-                return null;
+        execute("UPDATE resume SET full_name = ? WHERE uuid = ? ", ps -> {
+            ps.setString(1, resume.getFullName());
+            ps.setString(2, resume.getUuid());
+            if (1 > ps.executeUpdate()) {
+                throw new NotExistStorageException(resume.getUuid());
             }
+            return null;
         });
     }
 
     @Override
     public void clear() {
-        transExec("DELETE FROM resume", new BlockOfCode<Object>() {
-            @Override
-            public Object exec(PreparedStatement ps) throws SQLException {
-                return ps.executeUpdate();
-            }
-        });
+        execute("DELETE FROM resume", (SqlHelper<Object>) PreparedStatement::executeUpdate);
     }
 
     @Override
     public void save(Resume resume) {
-
-        transExec("INSERT INTO resume (uuid, full_name) VALUES (?,?)", new BlockOfCode<Object>() {
-            @Override
-            public Object exec(PreparedStatement ps) throws SQLException {
-                ps.setString(1, resume.getUuid());
-                ps.setString(2, resume.getFullName());
-                try {
-                    ps.execute();
-                } catch (PSQLException q) {
-                    throw new ExistStorageException(resume.getUuid());
-                }
-                return null;
+        execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
+            ps.setString(1, resume.getUuid());
+            ps.setString(2, resume.getFullName());
+            try {
+                ps.execute();
+            } catch (PSQLException q) {
+                throw new ExistStorageException(resume.getUuid());
             }
+            return null;
         });
     }
 
     @Override
     public Resume get(String uuid) {
-        return transExec("SELECT * FROM resume WHERE uuid =?", new BlockOfCode<Resume>() {
-            @Override
-            public Resume exec(PreparedStatement ps) throws SQLException {
-                ps.setString(1, uuid);
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    throw new NotExistStorageException(uuid);
-                }
-                return new Resume(uuid, rs.getString("full_name"));
+        return execute("SELECT * FROM resume WHERE uuid =?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
             }
+            return new Resume(uuid, rs.getString("full_name"));
         });
     }
 
     @Override
     public void delete(String uuid) {
-        transExec("DELETE FROM resume WHERE uuid=?", new BlockOfCode<Object>() {
-            @Override
-            public Object exec(PreparedStatement ps) throws SQLException {
-                ps.setString(1, uuid);
-                if (1 > ps.executeUpdate()) {
-                    throw new NotExistStorageException(uuid);
-                }
-                return null;
+        execute("DELETE FROM resume WHERE uuid=?", ps -> {
+            ps.setString(1, uuid);
+            if (1 > ps.executeUpdate()) {
+                throw new NotExistStorageException(uuid);
             }
+            return null;
         });
     }
 
@@ -95,16 +76,13 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         List<Resume> result = new ArrayList<>();
 
-        transExec("SELECT REPLACE(uuid,' ','') as uuid, full_name  FROM resume ORDER BY full_name,uuid",
-                new BlockOfCode<Resume>() {
-                    @Override
-                    public Resume exec(PreparedStatement ps) throws SQLException {
-                        ResultSet rs = ps.executeQuery();
-                        while (rs.next()) {
-                            result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
-                        }
-                        return null;
+        execute("SELECT REPLACE(uuid,' ','') as uuid, full_name  FROM resume ORDER BY full_name,uuid",
+                (SqlHelper<Resume>) ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
                     }
+                    return null;
                 });
 
         return result;
@@ -112,24 +90,21 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        int result = transExec("SELECT count(*) FROM resume", new BlockOfCode<Integer>() {
-            @Override
-            public Integer exec(PreparedStatement ps) throws SQLException {
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    return rs.getInt("count");
-                } else {
-                    return 0;
-                }
+        int result = execute("SELECT count(*) FROM resume", ps -> {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            } else {
+                return 0;
             }
         });
         return result;
     }
 
-    private <T> T transExec(String sqlReq, BlockOfCode<T> boc) {
+    private <T> T execute(String sqlReq, SqlHelper<T> helper) {
         try (Connection connection = factory.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlReq)) {
-            return boc.exec(ps);
+            return helper.exec(ps);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
