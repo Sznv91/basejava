@@ -1,15 +1,12 @@
 package ru.topjava.basejava.storage;
 
-import org.postgresql.util.PSQLException;
-import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.NotExistStorageException;
-import ru.topjava.basejava.exeption.StorageException;
 import ru.topjava.basejava.model.Resume;
-import ru.topjava.basejava.sql.ConnectionFactory;
-import ru.topjava.basejava.sql.BlocOfSqlCode;
 import ru.topjava.basejava.sql.SqlHelper;
 
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +14,7 @@ public class SqlStorage implements Storage {
     private final SqlHelper helper;
 
     public SqlStorage(String urlDB, String userDB, String passwordDB) {
-        helper = new SqlHelper(new ConnectionFactory() {
-            @Override
-            public Connection getConnection() throws SQLException {
-                return DriverManager.getConnection(urlDB, userDB, passwordDB);
-            }
-        });
+        helper = new SqlHelper(() -> DriverManager.getConnection(urlDB, userDB, passwordDB));
     }
 
     @Override
@@ -39,7 +31,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        helper.execute("DELETE FROM resume", (BlocOfSqlCode<Object>) PreparedStatement::executeUpdate);
+        helper.execute("DELETE FROM resume", PreparedStatement::executeUpdate);
     }
 
     @Override
@@ -47,16 +39,7 @@ public class SqlStorage implements Storage {
         helper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
-            try {
-                ps.execute();
-            } catch (PSQLException q) {
-                if (q.getSQLState().equals("23505")) {
-                    throw new ExistStorageException(resume.getUuid());
-                } else {
-                    throw new StorageException("SQL error", resume.getUuid(), q);
-                }
-            }
-            return null;
+            return ps.execute();
         });
     }
 
@@ -88,7 +71,7 @@ public class SqlStorage implements Storage {
         List<Resume> result = new ArrayList<>();
 
         helper.execute("SELECT uuid, full_name  FROM resume ORDER BY full_name,uuid",
-                (BlocOfSqlCode<Resume>) ps -> {
+                ps -> {
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
