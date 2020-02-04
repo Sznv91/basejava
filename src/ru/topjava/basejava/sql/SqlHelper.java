@@ -26,4 +26,18 @@ public class SqlHelper {
             throw new StorageException("SQL error", sqlReq, e);
         }
     }
+
+    public <T> T executeTransaction(BlocTransactionOfSqlCode<T> helper) {
+        try (Connection connection = factory.getConnection()) {
+            connection.setAutoCommit(false);
+            T res = helper.exec(connection);
+            connection.commit();
+            return res;
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                throw new ExistStorageException(e.getMessage());
+            }
+            throw new StorageException("SQL error", helper.toString(), e);
+        }
+    }
 }
