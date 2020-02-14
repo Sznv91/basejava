@@ -8,18 +8,29 @@ import java.util.Arrays;
 
 public class ResumeTestData {
 
+    private static Resume r1;
+    private static Resume r1WithoutSection;
+    private static Resume r4WithoutSection;
     public ResumeTestData(String uuid, String fullName) {
         fillResume(uuid, fullName);
     }
-
-    private static Resume r1;
 
     public Resume getR1() {
         return r1;
     }
 
+    public Resume getR1WithoutSection() {
+        return r1WithoutSection;
+    }
+
+    public Resume getR4WithoutSection() {
+        return r4WithoutSection;
+    }
+
     private void fillResume(String uuid, String fullName) {
         r1 = new Resume(uuid, fullName);
+        r1WithoutSection = new Resume(uuid, fullName);
+        r4WithoutSection = new Resume("UUID_4", "Daniel");
 
         r1.setContact(ContactType.PHONE, "+7(921) 855-0482");
         r1.setContact(ContactType.SKYPE, "grigory.kislin");
@@ -28,6 +39,22 @@ public class ResumeTestData {
         r1.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         r1.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         r1.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
+
+        r1WithoutSection.setContact(ContactType.PHONE, "+7(921)");
+        r1WithoutSection.setContact(ContactType.SKYPE, "grigory");
+        r1WithoutSection.setContact(ContactType.EMAIL, "gkislin@");
+        r1WithoutSection.setContact(ContactType.LINKEDIN, "/in/gkislin");
+        r1WithoutSection.setContact(ContactType.GITHUB, "gkislin");
+        r1WithoutSection.setContact(ContactType.STACKOVERFLOW, "users/548473");
+        r1WithoutSection.setContact(ContactType.HOMEPAGE, "gkislin.ru/");
+
+        r4WithoutSection.setContact(ContactType.PHONE, "+7(921) 855");
+        r4WithoutSection.setContact(ContactType.SKYPE, "kislin");
+        r4WithoutSection.setContact(ContactType.EMAIL, "@yandex.ru");
+        r4WithoutSection.setContact(ContactType.LINKEDIN, "https://www.linkedin.com");
+        r4WithoutSection.setContact(ContactType.GITHUB, "https://github.com/");
+        r4WithoutSection.setContact(ContactType.STACKOVERFLOW, "users/548473");
+        r4WithoutSection.setContact(ContactType.HOMEPAGE, "http://");
 
         TextSection personal = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
 

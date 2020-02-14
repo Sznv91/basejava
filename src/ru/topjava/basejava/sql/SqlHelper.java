@@ -23,7 +23,7 @@ public class SqlHelper {
             if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(e.getMessage());
             }
-            throw new StorageException("SQL error", sqlReq, e);
+            throw new StorageException("SQL error" + e.getMessage(), sqlReq, e);
         }
     }
 
