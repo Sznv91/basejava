@@ -91,9 +91,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>();
-
-        helper.execute("SELECT uuid, full_name,value,type " +
+        return helper.execute("SELECT uuid, full_name,value,type " +
                         "FROM resume r " +
                         "LEFT JOIN contact c " +
                         "ON r.uuid = c.resume_uuid " +
@@ -103,16 +101,18 @@ public class SqlStorage implements Storage {
                     Map<String, Resume> resumeMap = new LinkedHashMap<>();
                     while (rs.next()) {
                         String currentUuid = rs.getString("uuid");
-                        Resume currentResume = resumeMap.get(currentUuid);
-                        if (currentResume == null) {
-                            currentResume = new Resume(currentUuid, rs.getString("full_name"));
-                            resumeMap.put(currentUuid, currentResume);
-                        }
-                        SqlStorage.this.readContacts(currentResume, rs);
+                        Resume currentResume = resumeMap.computeIfAbsent(currentUuid, k -> {
+                            try {
+                                return new Resume(currentUuid, rs.getString("full_name"));
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            return resumeMap.get(k); //null
+                        });
+                        readContacts(currentResume, rs);
                     }
-                    return result.addAll(resumeMap.values());
+                    return new ArrayList<>(resumeMap.values());
                 });
-        return result;
     }
 
     @Override
