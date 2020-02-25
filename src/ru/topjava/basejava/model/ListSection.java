@@ -30,6 +30,11 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
+        /*String res = "";
+        for (String item: content){
+            res+=item+'\n';
+        }
+        return res;*/
         StringBuilder result = new StringBuilder();
         for (String item : content) {
             result.append(item).append(System.lineSeparator());

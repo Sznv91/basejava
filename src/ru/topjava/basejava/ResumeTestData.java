@@ -11,6 +11,7 @@ public class ResumeTestData {
     private static Resume r1;
     private static Resume r1WithoutSection;
     private static Resume r4WithoutSection;
+
     public ResumeTestData(String uuid, String fullName) {
         fillResume(uuid, fullName);
     }
@@ -145,9 +146,13 @@ public class ResumeTestData {
         education.addCompany(c14);
 
         r1.setSection(SectionType.PERSONAL, personal);
+        r1WithoutSection.setSection(SectionType.PERSONAL, personal);
         r1.setSection(SectionType.OBJECTIVE, objective);
+        r1WithoutSection.setSection(SectionType.OBJECTIVE, objective);
         r1.setSection(SectionType.ACHIEVEMENT, achievements);
+        r1WithoutSection.setSection(SectionType.ACHIEVEMENT, achievements);
         r1.setSection(SectionType.QUALIFICATIONS, qualification);
+        r1WithoutSection.setSection(SectionType.QUALIFICATIONS, qualification);
         r1.setSection(SectionType.EXPERIENCE, experience);
         r1.setSection(SectionType.EDUCATION, education);
     }
