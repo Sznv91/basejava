@@ -115,6 +115,27 @@ public class SqlStorage implements Storage {
                 });
     }
 
+    public List<Resume> getAllSortedTwoReq(){
+        List<Resume> result = new ArrayList<>();
+        helper.execute("SELECT * FROM resume", ps -> {
+            ResultSet resume = ps.executeQuery();
+            while (resume.next()){
+                Resume res = new Resume(resume.getString("uuid"),resume.getString("full_name"));
+                helper.execute("SELECT type,value FROM contact WHERE resume_uuid=?",ps1 ->{
+                   ps1.setString(1, resume.getString("uuid"));
+                   ResultSet contacts = ps1.executeQuery();
+                   while (contacts.next()){
+                       res.setContact(ContactType.valueOf(contacts.getString("type")),contacts.getString("value"));
+                   }
+                   result.add(res);
+                   return null;
+                });
+            }
+            return null;
+        });
+        return result;
+    }
+
     @Override
     public int size() {
         return helper.execute("SELECT count(*) FROM resume", ps -> {

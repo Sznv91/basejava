@@ -27,13 +27,21 @@ public class SqlHelper {
         }
     }
 
-    public <T> T executeTransaction(BlocTransactionOfSqlCode<T> helper) {
-        try (Connection connection = factory.getConnection()) {
+    public <T> void executeTransaction(BlocTransactionOfSqlCode<T> helper) {
+        Connection connection = null;
+        try {
+            connection = factory.getConnection();
             connection.setAutoCommit(false);
             T res = helper.exec(connection);
             connection.commit();
-            return res;
+            connection.close();
         } catch (SQLException e) {
+            try {
+                assert connection != null;
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new StorageException("Exception when transaction rollback", ex.getSQLState(),ex);
+            }
             if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(e.getMessage());
             }
