@@ -1,0 +1,13 @@
+header{
+    background: none repeat scroll 0 0 #A6C9E2;
+    color: beige;
+    font-size: 20px;
+    padding: 5px 20px;
+}
+
+footer{
+    background: none cadetblue repeat scroll 0 0;
+    color: blueviolet;
+    font-size: 15px;
+    padding: 20px 5px;
+}

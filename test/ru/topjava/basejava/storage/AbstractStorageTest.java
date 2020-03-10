@@ -18,21 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public abstract class AbstractStorageTest {
 
     protected static final File STORAGE_DIR = Config.getInstance().getSTORAGE_DIR();
-
-    final Storage storage;
-
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
     private static final String UUID_3 = "UUID_3";
     private static final String UUID_4 = "UUID_4";
     private static final String UUID_5 = "UUID_5";
-
-    private static final ResumeTestData rtd = new ResumeTestData(UUID_1,"Григорий Кислин");
+    private static final ResumeTestData rtd = new ResumeTestData(UUID_1, "Григорий Кислин");
     private static final Resume R_1 = rtd.getR1WithoutSection(); //rtd.getR1;
     private static final Resume R_2 = new Resume(UUID_2, "Boris");
     private static final Resume R_3 = new Resume(UUID_3, "Carl");
     private static final Resume R_4 = rtd.getR4WithoutSection(); //new Resume(UUID_4, "Daniel");
     private static final Resume R_5 = new Resume(UUID_5, "Eugen");
+    final Storage storage;
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
