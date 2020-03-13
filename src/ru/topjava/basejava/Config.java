@@ -12,7 +12,7 @@ public class Config {
     private String passwordDB;
 
     private Config() {
-        File PROPS = new File("./config/resumes.properties");
+        File PROPS = new File("C:\\topJava\\basejava\\config\\resumes.properties");
         try (InputStream is = new FileInputStream(PROPS)) {
             Properties properties = new Properties();
             properties.load(is);
