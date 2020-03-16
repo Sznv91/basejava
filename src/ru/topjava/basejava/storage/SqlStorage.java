@@ -23,23 +23,7 @@ public class SqlStorage implements Storage {
     public void update(Resume resume) {
 
         delete(resume.getUuid());
-        save(resume);/*
-        helper.<Void>executeTransaction(connection -> {
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE resume SET full_name = ? WHERE uuid = ?")) {
-                ps.setString(1, resume.getFullName());
-                ps.setString(2, resume.getUuid());
-                if (ps.executeUpdate() == 0) {
-                    throw new NotExistStorageException(resume.getUuid());
-                }
-            }
-            try (PreparedStatement ps = connection.prepareStatement("DELETE FROM contact WHERE resume_uuid=?")) {
-                ps.setString(1, resume.getUuid());
-            }
-            addContacts(resume, connection);
-            addSections(resume, connection);
-            return null;
-        });*/
+        save(resume);
     }
 
     @Override
@@ -220,30 +204,4 @@ public class SqlStorage implements Storage {
         ListSection section = new ListSection(result);
         resume.setSection(SectionType.valueOf(rs.getString("section_name")), section);
     }
-
-    /*private void writeTextSection(Map.Entry<SectionType, AbstractSection> entry, String uuid, Connection connection) {
-        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sections (resume_uuid, section_type, content, section_name) VALUES (?,?,?,?)")) {
-            TextSection section = (TextSection) entry.getValue();
-            ps.setString(1, uuid);
-            ps.setString(2, entry.getValue().getClass().getName());
-            ps.setString(3, section.;
-            ps.setString(4, entry.getKey().name());
-            ps.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeListSection(Map.Entry<SectionType, AbstractSection> entry, String uuid, Connection connection) {
-        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sections (resume_uuid, section_type, content, section_name) VALUES (?,?,?,?)")) {
-            ps.setString(1, uuid);
-            ps.setString(2, entry.getValue().getClass().getName());
-            ps.setString(3, entry.getValue().getStringSection());
-            ps.setString(4, entry.getKey().name());
-            ps.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
-
 }
