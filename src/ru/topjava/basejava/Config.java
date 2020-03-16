@@ -1,5 +1,7 @@
 package ru.topjava.basejava;
 
+import ru.topjava.basejava.storage.SqlStorage;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -10,6 +12,7 @@ public class Config {
     private String urlDB;
     private String userDB;
     private String passwordDB;
+    private SqlStorage storage;
 
     private Config() {
         File PROPS = new File("C:\\topJava\\basejava\\config\\resumes.properties");
@@ -20,6 +23,7 @@ public class Config {
             urlDB = properties.getProperty("db.url");
             userDB = properties.getProperty("db.user");
             passwordDB = properties.getProperty("db.password");
+            storage = new SqlStorage(urlDB, userDB, passwordDB);
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
@@ -43,5 +47,9 @@ public class Config {
 
     public static Config getInstance() {
         return INSTANCE;
+    }
+
+    public SqlStorage getSqlStorageInstance() {
+        return storage;
     }
 }

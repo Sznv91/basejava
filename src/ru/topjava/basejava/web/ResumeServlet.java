@@ -1,5 +1,6 @@
 package ru.topjava.basejava.web;
 
+import ru.topjava.basejava.Config;
 import ru.topjava.basejava.model.Resume;
 import ru.topjava.basejava.storage.Storage;
 
@@ -26,10 +27,10 @@ public class ResumeServlet extends javax.servlet.http.HttpServlet {
                     "<br> for display all resumes from SQL DB, use parameter <a href=\"resume?uuid=ALL\">?uuid=All<a>" +
                     "<br> <a href=\".\">go back<a>");
         } else {
-            storage = SqlStorageInstance.getInstance().getSqlStorageInstance();
+            storage = Config.getInstance().getSqlStorageInstance();
             if (uuid.equals("ALL")) {
                 List<Resume> resumeList = storage.getAllSorted();
-                response.getWriter().println("<table border=\"1\" bgcolor=\"#a9a9a9\"><tr bgcolor=\"red\"><td>UUID:</td><td>Full Name:</td></tr>");
+                response.getWriter().println("<table cellpadding=\"5\" border=\"5\" style=\"border-collapse:collapse\" bgcolor=\"#a9a9a9\"><tr bgcolor=\"red\"><td>UUID:</td><td>Full Name:</td></tr>");
                 for (Resume resume : resumeList) {
                     response.getWriter().println("<tr><td>" + resume.getUuid() + "</td><td>" + resume.getFullName() + "</td></tr>");
                 }

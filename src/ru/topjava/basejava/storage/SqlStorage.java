@@ -214,13 +214,36 @@ public class SqlStorage implements Storage {
     }
 
     private void readListSection(Resume resume, ResultSet rs) throws SQLException {
-        List<String> result = null;
         String notSplitString = rs.getString("content");
         String[] splitString = notSplitString.split("\r\n");
-        result = new ArrayList<>(Arrays.asList(splitString));
+        List<String> result = new ArrayList<>(Arrays.asList(splitString));
         ListSection section = new ListSection(result);
         resume.setSection(SectionType.valueOf(rs.getString("section_name")), section);
     }
 
+    /*private void writeTextSection(Map.Entry<SectionType, AbstractSection> entry, String uuid, Connection connection) {
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sections (resume_uuid, section_type, content, section_name) VALUES (?,?,?,?)")) {
+            TextSection section = (TextSection) entry.getValue();
+            ps.setString(1, uuid);
+            ps.setString(2, entry.getValue().getClass().getName());
+            ps.setString(3, section.;
+            ps.setString(4, entry.getKey().name());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeListSection(Map.Entry<SectionType, AbstractSection> entry, String uuid, Connection connection) {
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO sections (resume_uuid, section_type, content, section_name) VALUES (?,?,?,?)")) {
+            ps.setString(1, uuid);
+            ps.setString(2, entry.getValue().getClass().getName());
+            ps.setString(3, entry.getValue().getStringSection());
+            ps.setString(4, entry.getKey().name());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }*/
 
 }
