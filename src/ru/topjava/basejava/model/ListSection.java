@@ -20,21 +20,15 @@ public class ListSection extends AbstractSection {
         content = new ArrayList<>(Arrays.asList(item));
     }
 
-    public List<String> getContent (){
+    public List<String> getContent() {
         return content;
     }
 
-    public void addContent(String string){
+    public void addContent(String string) {
         content.add(string);
     }
 
-    @Override
-    public String toString() {
-        /*String res = "";
-        for (String item: content){
-            res+=item+'\n';
-        }
-        return res;*/
+    public String getStringSection() {
         StringBuilder result = new StringBuilder();
         for (String item : content) {
             result.append(item).append(System.lineSeparator());

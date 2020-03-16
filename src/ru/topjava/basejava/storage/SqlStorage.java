@@ -22,6 +22,8 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume resume) {
 
+        delete(resume.getUuid());
+        save(resume);/*
         helper.<Void>executeTransaction(connection -> {
             try (PreparedStatement ps = connection.prepareStatement(
                     "UPDATE resume SET full_name = ? WHERE uuid = ?")) {
@@ -35,8 +37,9 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
             }
             addContacts(resume, connection);
+            addSections(resume, connection);
             return null;
-        });
+        });*/
     }
 
     @Override
@@ -184,7 +187,7 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getValue().getClass().getName());
-                ps.setString(3, entry.getValue().toString());
+                ps.setString(3, entry.getValue().getStringSection());
                 ps.setString(4, entry.getKey().name());
                 ps.addBatch();
             }

@@ -23,8 +23,7 @@ public class CompanySection extends AbstractSection {
         companies.add(organization);
     }
 
-    @Override
-    public String toString() {
+    public String getStringSection() {
         StringBuilder result = new StringBuilder();
         for (Organization item : companies) {
             result.append(item).append(System.lineSeparator());
