@@ -38,6 +38,16 @@ public class ListSection extends AbstractSection {
     }
 
     @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (String item : content) {
+            result.append(item).append(System.lineSeparator());
+        }
+        result = new StringBuilder(result.substring(0, result.length() - 2));
+        return result.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

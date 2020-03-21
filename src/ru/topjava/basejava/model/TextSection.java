@@ -13,7 +13,12 @@ public class TextSection extends AbstractSection {
         this.content = content;
     }
 
-    public String getStringSection() {
+    public String getContent() {
+        return content;
+    }
+
+    @Override
+    public String toString() {
         return content;
     }
 

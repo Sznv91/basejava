@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ResumeServlet extends javax.servlet.http.HttpServlet {
 
-    private Storage storage;
+    private Storage storage = Config.getInstance().getSqlStorageInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
@@ -27,7 +27,6 @@ public class ResumeServlet extends javax.servlet.http.HttpServlet {
                     "<br> for display all resumes from SQL DB, use parameter <a href=\"resume?uuid=ALL\">?uuid=All<a>" +
                     "<br> <a href=\".\">go back<a>");
         } else {
-            storage = Config.getInstance().getSqlStorageInstance();
             if (uuid.equals("ALL")) {
                 List<Resume> resumeList = storage.getAllSorted();
                 response.getWriter().println("<table cellpadding=\"5\" border=\"5\" style=\"border-collapse:collapse\" bgcolor=\"#a9a9a9\"><tr bgcolor=\"red\"><td>UUID:</td><td>Full Name:</td></tr>");
