@@ -1,6 +1,5 @@
 package ru.topjava.basejava.sql;
 
-import ru.topjava.basejava.exeption.ExistStorageException;
 import ru.topjava.basejava.exeption.StorageException;
 
 import java.sql.Connection;
@@ -20,32 +19,22 @@ public class SqlHelper {
              PreparedStatement ps = connection.prepareStatement(sqlReq)) {
             return helper.exec(ps);
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(e.getMessage());
-            }
-            throw new StorageException("SQL error" + e.getMessage(), sqlReq, e);
+            throw ExistExceptionUtil.convertException(e);
         }
     }
 
     public <T> void executeTransaction(BlocTransactionOfSqlCode<T> helper) {
-        Connection connection = null;
-        try {
-            connection = factory.getConnection();
+        try (Connection connection = factory.getConnection()) {
             connection.setAutoCommit(false);
             T res = helper.exec(connection);
-            connection.commit();
-            connection.close();
-        } catch (SQLException e) {
             try {
-                assert connection != null;
+                connection.commit();
+            } catch (SQLException e) {
                 connection.rollback();
-            } catch (SQLException ex) {
-                throw new StorageException("Exception when transaction rollback", ex.getSQLState(),ex);
+                throw new StorageException("Exception in transaction. Make rollback", e.getSQLState(), e);
             }
-            if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(e.getMessage());
-            }
-            throw new StorageException("SQL error", helper.toString(), e);
+        } catch (SQLException ex) {
+            throw ExistExceptionUtil.convertException(ex);
         }
     }
 }

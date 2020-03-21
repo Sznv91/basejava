@@ -5,7 +5,10 @@ import ru.topjava.basejava.model.*;
 import ru.topjava.basejava.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -97,7 +100,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    @Override
+    /*@Override
     public List<Resume> getAllSorted() {
         return helper.execute("SELECT uuid,full_name,type, value, section_type, content, section_name " +
                         "FROM resume r " +
@@ -118,26 +121,38 @@ public class SqlStorage implements Storage {
                     }
                     return new ArrayList<>(resumeMap.values());
                 });
-    }
+    }*/
 
-    public List<Resume> getAllSortedTwoReq() {
+    @Override
+    public List<Resume> getAllSorted() { //getAllSortedTwoReq()
         List<Resume> result = new ArrayList<>();
-        helper.execute("SELECT * FROM resume", ps -> {
-            ResultSet resume = ps.executeQuery();
-            while (resume.next()) {
-                Resume res = new Resume(resume.getString("uuid"), resume.getString("full_name"));
-                helper.execute("SELECT type,value FROM contact WHERE resume_uuid=?", ps1 -> {
-                    ps1.setString(1, resume.getString("uuid"));
-                    ResultSet contacts = ps1.executeQuery();
-                    while (contacts.next()) {
-                        res.setContact(ContactType.valueOf(contacts.getString("type")), contacts.getString("value"));
+        helper.executeTransaction(connection -> {
+            ResultSet uuidList = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid").executeQuery();
+            ResultSet contactsList = connection.prepareStatement("SELECT * FROM contact", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery();
+            ResultSet sectionsList = connection.prepareStatement("SELECT * FROM sections", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery();
+
+
+            while (uuidList.next()) {
+                String uuid = uuidList.getString("uuid");
+                String fullName = uuidList.getString("full_name");
+                Resume currentResume = new Resume(uuid, fullName);
+                while (contactsList.next()) {
+                    if (contactsList.getString("resume_uuid").equals(uuid)) {
+                        readContacts(currentResume, contactsList);
                     }
-                    result.add(res);
-                    return null;
-                });
+                }
+                contactsList.beforeFirst();
+                while (sectionsList.next()) {
+                    if (sectionsList.getString("resume_uuid").equals(uuid)) {
+                        readSections(currentResume, sectionsList);
+                    }
+                }
+                sectionsList.beforeFirst();
+                result.add(currentResume);
             }
             return null;
         });
+        //result.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
         return result;
     }
 
