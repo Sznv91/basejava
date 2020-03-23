@@ -31,7 +31,7 @@ create table sections
         constraint sections_resume_uuid_fk
             references resume
             on update restrict on delete cascade,
-    type text not null,
+    section_type text not null,
     section_name text not null,
     content text not null
 );

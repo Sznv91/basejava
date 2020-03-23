@@ -134,14 +134,17 @@ public class SqlStorage implements Storage {
                 Resume currentResume = new Resume(uuid, fullName);
                 result.put(uuid, currentResume);
             }
+            uuidList.close();
             while (contactsList.next()){
                 String resumeUIID = contactsList.getString("resume_uuid");
                 readContact(result.get(resumeUIID),contactsList);
             }
+            contactsList.close();
             while (sectionsList.next()){
                 String resumeUIID = sectionsList.getString("resume_uuid");
                 readSection(result.get(resumeUIID),sectionsList);
             }
+            sectionsList.close();
             return null;
         });
         return new ArrayList<>(result.values());
@@ -192,11 +195,12 @@ public class SqlStorage implements Storage {
                 switch (entry.getKey().name()) {
                     case "PERSONAL":
                     case "OBJECTIVE":
-                        writeTextSection((TextSection) entry.getValue(), ps);
+                        addToQueue(3, ((TextSection)(entry.getValue())).getContent(), ps);
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        writeListSection((ListSection) entry.getValue(), ps);
+                        String result = String.join("\r\n", ((ListSection) entry.getValue()).getContent());
+                        addToQueue(3, result, ps);
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
@@ -210,14 +214,19 @@ public class SqlStorage implements Storage {
 
     private void readSection(Resume resume, ResultSet rs) throws SQLException {
         if (rs.getString("section_type") != null) {
+            AbstractSection section;
             switch (rs.getString("section_name")) {
                 case "PERSONAL":
                 case "OBJECTIVE":
-                    readTextSection(resume, rs.getString("section_name"), rs.getString("content"));
+                    section = new TextSection(rs.getString("content"));
+                    insertSectionToResume(resume, rs.getString("section_name"), section);
                     break;
                 case "ACHIEVEMENT":
                 case "QUALIFICATIONS":
-                    readListSection(resume, rs.getString("section_name"), rs.getString("content"));
+                    String[] splitString = rs.getString("content").split("\r\n");
+                    List<String> result = new ArrayList<>(Arrays.asList(splitString));
+                    section = new ListSection(result);
+                    insertSectionToResume(resume, rs.getString("section_name"), section);
                     break;
                 case "EXPERIENCE":
                 case "EDUCATION":
@@ -225,27 +234,6 @@ public class SqlStorage implements Storage {
                     break;
             }
         }
-    }
-
-    private void readTextSection(Resume resume, String sectionName, String sectionContent) throws SQLException {
-        TextSection section = new TextSection(sectionContent);
-        insertSectionToResume(resume, sectionName, section);
-    }
-
-    private void readListSection(Resume resume, String sectionName, String sectionContent) throws SQLException {
-        String[] splitString = sectionContent.split("\r\n");
-        List<String> result = new ArrayList<>(Arrays.asList(splitString));
-        ListSection section = new ListSection(result);
-        insertSectionToResume(resume, sectionName, section);
-    }
-
-    private void writeTextSection(TextSection value, PreparedStatement ps) throws SQLException {
-        addToQueue(3, value.getContent(), ps);
-    }
-
-    private void writeListSection(ListSection value, PreparedStatement ps) throws SQLException {
-        String result = String.join("\r\n", value.getContent());
-        addToQueue(3, result, ps);
     }
 
     private void writeCompanySection() {
