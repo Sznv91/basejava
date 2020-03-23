@@ -198,14 +198,17 @@ public class SqlStorage implements Storage {
                 ps.setString(2, entry.getValue().getClass().getName());
                 ps.setString(4, entry.getKey().name());
 
-                switch (entry.getValue().getClass().getName()) {
-                    case "ru.topjava.basejava.model.TextSection":
+                switch (entry.getKey().name()) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
                         writeTextSection(entry.getValue(), ps);
                         break;
-                    case "ru.topjava.basejava.model.ListSection":
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
                         writeListSection(entry.getValue(), ps);
                         break;
-                    case "ru.topjava.basejava.model.CompanySection":
+                    case "EXPERIENCE":
+                    case "EDUCATION":
                         writeCompanySection();
                         break;
                 }
@@ -216,12 +219,18 @@ public class SqlStorage implements Storage {
 
     private void readSections(Resume resume, ResultSet rs) throws SQLException {
         if (rs.getString("section_type") != null) {
-            switch (rs.getString("section_type")) {
-                case "ru.topjava.basejava.model.TextSection":
+            switch (rs.getString("section_name")) {
+                case "PERSONAL":
+                case "OBJECTIVE":
                     readTextSection(resume, rs);
                     break;
-                case "ru.topjava.basejava.model.ListSection":
+                case "ACHIEVEMENT":
+                case "QUALIFICATIONS":
                     readListSection(resume, rs);
+                    break;
+                case "EXPERIENCE":
+                case "EDUCATION":
+                    readCompanySection(resume, rs);
                     break;
             }
         }
@@ -256,5 +265,7 @@ public class SqlStorage implements Storage {
     }
 
     private void writeCompanySection() {
+    }
+    private void readCompanySection(Resume resume, ResultSet rs) {
     }
 }
