@@ -201,11 +201,11 @@ public class SqlStorage implements Storage {
                 switch (entry.getKey().name()) {
                     case "PERSONAL":
                     case "OBJECTIVE":
-                        writeTextSection(entry.getValue(), ps);
+                        writeTextSection((TextSection) entry.getValue(), ps);
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        writeListSection(entry.getValue(), ps);
+                        writeListSection((ListSection) entry.getValue(), ps);
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
@@ -249,23 +249,23 @@ public class SqlStorage implements Storage {
         resume.setSection(SectionType.valueOf(rs.getString("section_name")), section);
     }
 
-    private void writeTextSection(AbstractSection value, PreparedStatement ps) throws SQLException {
-        ps.setString(3, ((TextSection) value).getContent());
-        ps.addBatch();
+    private void writeTextSection(TextSection value, PreparedStatement ps) throws SQLException {
+        addToQueue(3, value.getContent(), ps);
     }
 
-    private void writeListSection(AbstractSection value, PreparedStatement ps) throws SQLException {
-        ListSection section = (ListSection) value;
-        StringBuilder builder = new StringBuilder();
-        for (String i : section.getContent()) {
-            builder.append(i).append(System.lineSeparator());
-        }
-        ps.setString(3, builder.substring(0, builder.length() - 2));
-        ps.addBatch();
+    private void writeListSection(ListSection value, PreparedStatement ps) throws SQLException {
+        String result = String.join("\r\n", value.getContent());
+        addToQueue(3, result, ps);
     }
 
     private void writeCompanySection() {
     }
+
     private void readCompanySection(Resume resume, ResultSet rs) {
+    }
+
+    private void addToQueue(int index, String content, PreparedStatement ps) throws SQLException {
+        ps.setString(index, content);
+        ps.addBatch();
     }
 }
