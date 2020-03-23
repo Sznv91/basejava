@@ -5,10 +5,7 @@ import ru.topjava.basejava.model.*;
 import ru.topjava.basejava.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -81,8 +78,8 @@ public class SqlStorage implements Storage {
             }
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             do {
-                readContacts(resume, rs);
-                readSections(resume, rs);
+                readContact(resume, rs);
+                readSection(resume, rs);
             }
             while (rs.next());
             return resume;
@@ -125,35 +122,29 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() { //getAllSortedTwoReq()
-        List<Resume> result = new ArrayList<>();
+        Map<String, Resume> result = new LinkedHashMap<>(); //k:UUID v: Resume
         helper.executeTransaction(connection -> {
             ResultSet uuidList = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid").executeQuery();
-            ResultSet contactsList = connection.prepareStatement("SELECT * FROM contact", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery();
-            ResultSet sectionsList = connection.prepareStatement("SELECT * FROM sections", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery();
-
+            ResultSet contactsList = connection.prepareStatement("SELECT * FROM contact").executeQuery();
+            ResultSet sectionsList = connection.prepareStatement("SELECT * FROM sections").executeQuery();
 
             while (uuidList.next()) {
                 String uuid = uuidList.getString("uuid");
                 String fullName = uuidList.getString("full_name");
                 Resume currentResume = new Resume(uuid, fullName);
-                while (contactsList.next()) {
-                    if (contactsList.getString("resume_uuid").equals(uuid)) {
-                        readContacts(currentResume, contactsList);
-                    }
-                }
-                contactsList.beforeFirst();
-                while (sectionsList.next()) {
-                    if (sectionsList.getString("resume_uuid").equals(uuid)) {
-                        readSections(currentResume, sectionsList);
-                    }
-                }
-                sectionsList.beforeFirst();
-                result.add(currentResume);
+                result.put(uuid, currentResume);
+            }
+            while (contactsList.next()){
+                String resumeUIID = contactsList.getString("resume_uuid");
+                readContact(result.get(resumeUIID),contactsList);
+            }
+            while (sectionsList.next()){
+                String resumeUIID = sectionsList.getString("resume_uuid");
+                readSection(result.get(resumeUIID),sectionsList);
             }
             return null;
         });
-        //result.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
-        return result;
+        return new ArrayList<>(result.values());
     }
 
     @Override
@@ -182,7 +173,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void readContacts(Resume resume, ResultSet rs) throws SQLException {
+    private void readContact(Resume resume, ResultSet rs) throws SQLException {
         String contactType = rs.getString("type");
         String contactValue = rs.getString("value");
         if (contactType != null) {
@@ -217,16 +208,16 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void readSections(Resume resume, ResultSet rs) throws SQLException {
+    private void readSection(Resume resume, ResultSet rs) throws SQLException {
         if (rs.getString("section_type") != null) {
             switch (rs.getString("section_name")) {
                 case "PERSONAL":
                 case "OBJECTIVE":
-                    readTextSection(resume, rs);
+                    readTextSection(resume, rs.getString("section_name"), rs.getString("content"));
                     break;
                 case "ACHIEVEMENT":
                 case "QUALIFICATIONS":
-                    readListSection(resume, rs);
+                    readListSection(resume, rs.getString("section_name"), rs.getString("content"));
                     break;
                 case "EXPERIENCE":
                 case "EDUCATION":
@@ -236,17 +227,16 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void readTextSection(Resume resume, ResultSet rs) throws SQLException {
-        TextSection section = new TextSection(rs.getString("content"));
-        resume.setSection(SectionType.valueOf(rs.getString("section_name")), section);
+    private void readTextSection(Resume resume, String sectionName, String sectionContent) throws SQLException {
+        TextSection section = new TextSection(sectionContent);
+        insertSectionToResume(resume, sectionName, section);
     }
 
-    private void readListSection(Resume resume, ResultSet rs) throws SQLException {
-        String notSplitString = rs.getString("content");
-        String[] splitString = notSplitString.split("\r\n");
+    private void readListSection(Resume resume, String sectionName, String sectionContent) throws SQLException {
+        String[] splitString = sectionContent.split("\r\n");
         List<String> result = new ArrayList<>(Arrays.asList(splitString));
         ListSection section = new ListSection(result);
-        resume.setSection(SectionType.valueOf(rs.getString("section_name")), section);
+        insertSectionToResume(resume, sectionName, section);
     }
 
     private void writeTextSection(TextSection value, PreparedStatement ps) throws SQLException {
@@ -267,5 +257,9 @@ public class SqlStorage implements Storage {
     private void addToQueue(int index, String content, PreparedStatement ps) throws SQLException {
         ps.setString(index, content);
         ps.addBatch();
+    }
+
+    private void insertSectionToResume(Resume resume, String sectionName, AbstractSection section) {
+        resume.setSection(SectionType.valueOf(sectionName), section);
     }
 }
