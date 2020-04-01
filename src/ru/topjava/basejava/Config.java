@@ -2,8 +2,16 @@ package ru.topjava.basejava;
 
 import ru.topjava.basejava.storage.SqlStorage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
+
+/*
+ * Need config TomCat param "-VM options" to -DhomeDir="PROJECT_DIR"
+ * look like as -DhomeDir="C:\\topJava\\basejava"
+ */
 
 public class Config {
 
@@ -15,7 +23,7 @@ public class Config {
     private SqlStorage storage;
 
     private Config() {
-        File PROPS = new File("C:\\topJava\\basejava\\config\\resumes.properties");
+        File PROPS = new File(getHomeDir() + "/config/resumes.properties");
         try (InputStream is = new FileInputStream(PROPS)) {
             Properties properties = new Properties();
             properties.load(is);
@@ -27,6 +35,19 @@ public class Config {
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
+    }
+
+    public static Config getInstance() {
+        return INSTANCE;
+    }
+
+    public static File getHomeDir() {
+        String props = System.getProperty("homeDir");
+        File homeDir = new File(props == null ? "." : props);
+        if (!homeDir.isDirectory()) {
+            throw new IllegalStateException(homeDir + " is not directory");
+        }
+        return homeDir;
     }
 
     public File getSTORAGE_DIR() {
@@ -43,10 +64,6 @@ public class Config {
 
     public String getPasswordDB() {
         return passwordDB;
-    }
-
-    public static Config getInstance() {
-        return INSTANCE;
     }
 
     public SqlStorage getSqlStorageInstance() {

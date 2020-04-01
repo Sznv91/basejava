@@ -1,11 +1,18 @@
 package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.exeption.NotExistStorageException;
-import ru.topjava.basejava.model.*;
+import ru.topjava.basejava.model.AbstractSection;
+import ru.topjava.basejava.model.ContactType;
+import ru.topjava.basejava.model.Resume;
+import ru.topjava.basejava.model.SectionType;
 import ru.topjava.basejava.sql.SqlHelper;
+import ru.topjava.basejava.storage.objectStreamStorage.JsonSerializeStrategyStorage;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -97,54 +104,32 @@ public class SqlStorage implements Storage {
         });
     }
 
-    /*@Override
-    public List<Resume> getAllSorted() {
-        return helper.execute("SELECT uuid,full_name,type, value, section_type, content, section_name " +
-                        "FROM resume r " +
-                        "LEFT JOIN contact c " +
-                        "ON r.uuid = c.resume_uuid " +
-                        "LEFT JOIN sections s " +
-                        "ON r.uuid = s.resume_uuid " +
-                        "ORDER BY full_name,uuid",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> resumeMap = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String currentUuid = rs.getString("uuid");
-                        String fullName = rs.getString("full_name");
-                        Resume currentResume = resumeMap.computeIfAbsent(currentUuid, k -> new Resume(currentUuid, fullName));
-                        readContacts(currentResume, rs);
-                        readSections(currentResume, rs);
-                    }
-                    return new ArrayList<>(resumeMap.values());
-                });
-    }*/
-
     @Override
-    public List<Resume> getAllSorted() { //getAllSortedTwoReq()
+    public List<Resume> getAllSorted() {
         Map<String, Resume> result = new LinkedHashMap<>(); //k:UUID v: Resume
         helper.executeTransaction(connection -> {
-            ResultSet uuidList = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid").executeQuery();
-            ResultSet contactsList = connection.prepareStatement("SELECT * FROM contact").executeQuery();
-            ResultSet sectionsList = connection.prepareStatement("SELECT * FROM sections").executeQuery();
 
-            while (uuidList.next()) {
-                String uuid = uuidList.getString("uuid");
-                String fullName = uuidList.getString("full_name");
-                Resume currentResume = new Resume(uuid, fullName);
-                result.put(uuid, currentResume);
+            try (ResultSet uuidList = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid").executeQuery()) {
+                while (uuidList.next()) {
+                    String uuid = uuidList.getString("uuid");
+                    String fullName = uuidList.getString("full_name");
+                    Resume currentResume = new Resume(uuid, fullName);
+                    result.put(uuid, currentResume);
+                }
             }
-            uuidList.close();
-            while (contactsList.next()){
-                String resumeUIID = contactsList.getString("resume_uuid");
-                readContact(result.get(resumeUIID),contactsList);
+            try (ResultSet contactsList = connection.prepareStatement("SELECT * FROM contact").executeQuery()) {
+                while (contactsList.next()) {
+                    String resumeUIID = contactsList.getString("resume_uuid");
+                    readContact(result.get(resumeUIID), contactsList);
+                }
             }
-            contactsList.close();
-            while (sectionsList.next()){
-                String resumeUIID = sectionsList.getString("resume_uuid");
-                readSection(result.get(resumeUIID),sectionsList);
+
+            try (ResultSet sectionsList = connection.prepareStatement("SELECT * FROM sections").executeQuery()) {
+                while (sectionsList.next()) {
+                    String resumeUIID = sectionsList.getString("resume_uuid");
+                    readSection(result.get(resumeUIID), sectionsList);
+                }
             }
-            sectionsList.close();
             return null;
         });
         return new ArrayList<>(result.values());
@@ -191,22 +176,7 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getValue().getClass().getName());
                 ps.setString(4, entry.getKey().name());
-
-                switch (entry.getKey().name()) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
-                        addToQueue(3, ((TextSection)(entry.getValue())).getContent(), ps);
-                        break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
-                        String result = String.join("\r\n", ((ListSection) entry.getValue()).getContent());
-                        addToQueue(3, result, ps);
-                        break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
-                        writeCompanySection();
-                        break;
-                }
+                addToQueue(3, JsonSerializeStrategyStorage.sectionToJSON(entry.getValue()), ps);
             }
             ps.executeBatch();
         }
@@ -214,32 +184,9 @@ public class SqlStorage implements Storage {
 
     private void readSection(Resume resume, ResultSet rs) throws SQLException {
         if (rs.getString("section_type") != null) {
-            AbstractSection section;
-            switch (rs.getString("section_name")) {
-                case "PERSONAL":
-                case "OBJECTIVE":
-                    section = new TextSection(rs.getString("content"));
-                    insertSectionToResume(resume, rs.getString("section_name"), section);
-                    break;
-                case "ACHIEVEMENT":
-                case "QUALIFICATIONS":
-                    String[] splitString = rs.getString("content").split("\r\n");
-                    List<String> result = new ArrayList<>(Arrays.asList(splitString));
-                    section = new ListSection(result);
-                    insertSectionToResume(resume, rs.getString("section_name"), section);
-                    break;
-                case "EXPERIENCE":
-                case "EDUCATION":
-                    readCompanySection(resume, rs);
-                    break;
-            }
+            AbstractSection section = JsonSerializeStrategyStorage.sectionFromJSON(rs.getString("content"));
+            insertSectionToResume(resume, rs.getString("section_name"), section);
         }
-    }
-
-    private void writeCompanySection() {
-    }
-
-    private void readCompanySection(Resume resume, ResultSet rs) {
     }
 
     private void addToQueue(int index, String content, PreparedStatement ps) throws SQLException {

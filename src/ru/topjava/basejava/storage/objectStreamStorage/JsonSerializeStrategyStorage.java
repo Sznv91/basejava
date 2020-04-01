@@ -16,6 +16,15 @@ public class JsonSerializeStrategyStorage implements StorageStrategy {
             .registerTypeAdapter(AbstractSection.class, new JsonAbstractSectionAdapter())
             .create();
 
+    public static String sectionToJSON(AbstractSection section) {
+        return GSON.toJson(section,AbstractSection.class);
+    }
+
+    public static AbstractSection sectionFromJSON(String jsonSection) {
+        return GSON.fromJson(jsonSection,AbstractSection.class);
+    }
+
+
     @Override
     public void doWrite(Resume r, OutputStream outputStream) throws IOException {
         OutputStreamWriter osw = new OutputStreamWriter(outputStream);
