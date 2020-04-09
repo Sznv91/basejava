@@ -12,10 +12,11 @@
 <% Resume resume = (Resume) request.getAttribute("Resume"); %>
 <html>
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <title>Resume <%=resume.getFullName()%></title>
 </head>
 <body>
-
+<jsp:include page="fragments/header.jsp"/>
 <section>
 
     <table border="1" bgcolor="#a9a9a9">
@@ -34,6 +35,7 @@
     </table>
 
 </section>
-
+<button onclick="window.history.back()">Back</button>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

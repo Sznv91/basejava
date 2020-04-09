@@ -16,11 +16,11 @@ public class ListServlet extends HttpServlet {
         try{
             if(!req.getParameter("uuid").isEmpty()) {
                 req.setAttribute("Resume", storage.get(req.getParameter("uuid")));
-                req.getRequestDispatcher("WEB-INF/uuid.jsp").forward(req,resp);
+                req.getRequestDispatcher("WEB-INF/jsp/uuid.jsp").forward(req,resp);
             }
         } catch (Exception e) {
             req.setAttribute("ResumesList", storage.getAllSorted());
-            req.getRequestDispatcher("WEB-INF/list.jsp").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/jsp/list.jsp").forward(req, resp);
         }
     }
 

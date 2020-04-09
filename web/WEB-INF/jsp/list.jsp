@@ -10,10 +10,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <title>All Resumes List</title>
 </head>
 <body>
-
+<jsp:include page="fragments/header.jsp"/>
 <section>
     <% List<Resume> storage = (ArrayList<Resume>) request.getAttribute("ResumesList"); %>
     <table cellpadding="5" border="5" style="border-collapse:collapse" bgcolor="#a9a9a9">
@@ -31,6 +32,7 @@
         <% } %>
     </table>
 </section>
-
+<button onclick="window.history.back()">Back</button>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
