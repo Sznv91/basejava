@@ -8,6 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <link rel="stylesheet" href="css/style.css">
@@ -16,12 +17,19 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <% List<Resume> storage = (ArrayList<Resume>) request.getAttribute("ResumesList"); %>
-    <table cellpadding="5" border="5" style="border-collapse:collapse" bgcolor="#a9a9a9">
-        <tr bgcolor="red">
-            <td>UUID:</td>
-            <td>Full Name:</td>
+    <table>
+        <tr>
+            <th>UUID:</th>
+            <th>Full Name:</th>
         </tr>
+        <c:forEach var="resume" items="${resumesList}">
+            <jsp:useBean id="resume" type="ru.topjava.basejava.model.Resume"/>
+            <tr>
+                <td><c:out value="${resume.uuid}"/></td>
+                <td><a href="resume?uuid=${resume.uuid}"><c:out value="${resume.fullName}"/></a></td>
+            </tr>
+        </c:forEach>
+        <%-- <% List<Resume> storage = (ArrayList<Resume>) request.getAttribute("ResumesList"); %>
         <% for (Resume resume : storage) { %>
         <tr>
             <td><%=resume.getUuid()%>
@@ -29,7 +37,7 @@
             <td><a href="resume?uuid=<%=resume.getUuid()%>"><%=resume.getFullName()%>
             </a></td>
         </tr>
-        <% } %>
+        <% } %>--%>
     </table>
 </section>
 <button onclick="window.history.back()">Back</button>

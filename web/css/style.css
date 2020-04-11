@@ -11,3 +11,18 @@ footer{
     font-size: 15px;
     padding: 20px 5px;
 }
+
+table{
+    border: 3px solid black;
+    border-collapse:collapse;
+    background-color: darkgrey;
+}
+
+td,th{
+    border: 1px solid gray;
+    padding: 5px;
+}
+
+th{
+    background-color: red;
+}
