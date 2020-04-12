@@ -16,17 +16,21 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
+<button onclick="">New Resume</button>
 <section>
-    <table>
+    <br><table>
         <tr>
             <th>UUID:</th>
             <th>Full Name:</th>
+            <th>Action:</th>
         </tr>
         <c:forEach var="resume" items="${resumesList}">
             <jsp:useBean id="resume" type="ru.topjava.basejava.model.Resume"/>
             <tr>
                 <td><c:out value="${resume.uuid}"/></td>
-                <td><a href="resume?uuid=${resume.uuid}"><c:out value="${resume.fullName}"/></a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=view"><c:out value="${resume.fullName}"/></a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=delete"><c:out value="delete"/></a>
+                <a href="resume?uuid=${resume.uuid}&action=edit"><c:out value="edit"/></a></td>
             </tr>
         </c:forEach>
         <%-- <% List<Resume> storage = (ArrayList<Resume>) request.getAttribute("ResumesList"); %>
@@ -40,6 +44,7 @@
         <% } %>--%>
     </table>
 </section>
+<br>
 <button onclick="window.history.back()">Back</button>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

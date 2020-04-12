@@ -13,7 +13,7 @@
     </servlet-mapping>-->
     <servlet>
         <servlet-name>listServlet</servlet-name>
-        <servlet-class>ru.topjava.basejava.web.ListServlet</servlet-class>
+        <servlet-class>ru.topjava.basejava.web.DispatcherServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>listServlet</servlet-name>
