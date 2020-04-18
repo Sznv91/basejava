@@ -18,5 +18,18 @@ Example HTML tagging for table:
     </tr>
 </table>
 <a href="http://webremeslo.ru/html/glava4.html">more example</a>
+
+<FORM NAME="Button">
+    <input type="button" value="Add String" onclick="CreateForm()">
+</FORM>
+
+<SCRIPT language="JavaScript">
+    function CreateForm() {
+        document.getElementById('test').innerHTML+='<br><input type="text" name="nameInput"value="">'
+    }
+</SCRIPT>
+
+<p id="test"> <input type="text" name="nameInput1"value="val1"><input type="text" name="nameInput2"value="val2"></p>
+
 </body>
 </html>

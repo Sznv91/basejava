@@ -39,6 +39,12 @@ public class DispatcherServlet extends HttpServlet {
                     req.setAttribute("action", "Edit");
                     req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req,resp);
                     break;
+                case "new":
+                    Resume resume = new Resume("");
+                    storage.save(resume);
+                    req.setAttribute("resume", resume);
+                    req.setAttribute("action", "New");
+                    req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req,resp);
             }
         }
     }
@@ -48,6 +54,11 @@ public class DispatcherServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
         String fullName = req.getParameter("fullName");
+        if (fullName.trim().length()<1){
+            storage.delete(uuid);
+            resp.sendRedirect("./resume");
+            return;
+        }
         Resume resume = storage.get(uuid);
         resume.setFullName(fullName);
         for (ContactType type : ContactType.values()){

@@ -1,4 +1,6 @@
-<%@ page import="ru.topjava.basejava.model.*" %>
+<%@ page import="ru.topjava.basejava.model.CompanySection" %>
+<%@ page import="ru.topjava.basejava.model.ListSection" %>
+<%@ page import="ru.topjava.basejava.model.TextSection" %>
 <%--
   Created by IntelliJ IDEA.
   User: Mihail_Sazonov
@@ -17,6 +19,7 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
+Имя: ${resume.fullName}
 <section>
     <table>
         <tr>
@@ -44,78 +47,69 @@
         --%>
     </table>
 
-    <table>
-        <tr>
-            <th>Секция</th>
-            <th>Значение</th>
-        </tr>
-
-
-        <c:forEach var="section" items="${resume.sections}">
+    <c:forEach var="section" items="${resume.sections}">
 
         <jsp:useBean id="section"
                      type="java.util.Map.Entry<ru.topjava.basejava.model.SectionType, ru.topjava.basejava.model.AbstractSection>"/>
+        <c:set var="keyName" value="${section.key.name()}"/>
+        <c:set var="keyTitle" value="${section.key.title}"/>
 
         <c:choose>
-        <c:when test="${section.key.name()=='PERSONAL'}">
-            <tr>
-                <td><c:out value="${section.key.title}"/></td>
-                <td><c:out value="<%=(TextSection) section.getValue()%>"/></td>
-            </tr>
-        </c:when>
+            <c:when test="${keyName=='PERSONAL'||keyName=='OBJECTIVE'}">
+                <table>
+                    <tr>
+                        <th>${keyTitle}</th>
 
-
-        <c:when test="${section.key.name()=='OBJECTIVE'}">
-            <tr>
-                <td><c:out value="${section.key.title}"/></td>
-                <td><c:out value="<%=(TextSection) section.getValue()%>"/></td>
-            </tr>
-        </c:when>
-
-
-        <c:when test="${section.key.name()=='ACHIEVEMENT'}">
-            <c:forEach items="<%=((ListSection) section.getValue()).getContent()%>" var="listContent">
-                <tr>
-                    <td><c:out value="${section.key.title}"/></td>
-                    <td><c:out value="${listContent}"/></td>
-                </tr>
-            </c:forEach>
-        </c:when>
-
-
-        <c:when test="${section.key.name()=='QUALIFICATIONS'}">
-            <c:forEach items="<%=((ListSection) section.getValue()).getContent()%>" var="listContent">
-                <tr>
-                    <td><c:out value="${section.key.title}"/></td>
-                    <td><c:out value="${listContent}"/></td>
-                </tr>
-            </c:forEach>
-        </c:when>
-
-
-        <c:when test="${section.key.name()=='EXPERIENCE'}">
-            <c:forEach items="<%=((CompanySection) section.getValue()).getCompanies()%>" var="companysList">
-                <tr>
-                    <td><c:out value="${section.key.title}"/></td>
-                    <td><c:out value="${companysList.name}"/></td>
-                </tr>
-            </c:forEach>
-        </c:when>
-
-
-        <c:when test="${section.key.name()=='EDUCATION'}">
-        <c:forEach items="<%=((CompanySection) section.getValue()).getCompanies()%>" var="companysList">
-        <tr>
-            <td><c:out value="${section.key.title}"/></td>
-            <td><c:out value="${companysList.name}"/></td>
-        <tr>
-            </c:forEach>
+                    </tr>
+                    <tr>
+                        <td><c:out value="<%=(TextSection) section.getValue()%>"/></td>
+                    </tr>
+                </table>
             </c:when>
 
-            </c:choose>
+            <c:when test="${keyName=='ACHIEVEMENT'||keyName=='QUALIFICATIONS'}">
+                <table>
+                    <tr>
+                        <th>${keyTitle}</th>
+                    </tr>
+                    <c:forEach items="<%=((ListSection) section.getValue()).getContent()%>" var="listContent">
+                        <tr>
+                            <td><c:out value="${listContent}"/></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
 
-            </c:forEach>
-    </table>
+            <c:when test="${keyName=='EXPERIENCE'||keyName=='EDUCATION'}">
+                <table>
+                    <tr>
+                        <th>${keyTitle}</th>
+                        <th>URL:</th>
+                        <th>Позиция:</th>
+                        <th>Период:</th>
+                    </tr>
+                    <c:forEach items="<%=((CompanySection) section.getValue()).getCompanies()%>" var="companysList">
+                        <tr>
+                            <td><c:out value="${companysList.name}"/></td>
+                            <td><c:out value="${companysList.url}"/></td>
+                            <td><c:forEach var="position" items="${companysList.positionsList}">
+                                ${position.title} <br>
+                                <hr noshade size="1">
+                                ${position.description}
+                            </c:forEach></td>
+                            <td><c:forEach var="position" items="${companysList.positionsList}">
+                                ${position.startDate}/${position.endDate}
+                                <br>
+                                <hr noshade size="1">
+                            </c:forEach></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
+
+        </c:choose>
+
+    </c:forEach>
 </section>
 <button onclick="window.history.back()">Back</button>
 <jsp:include page="fragments/footer.jsp"/>

@@ -1,6 +1,4 @@
-<%@ page import="ru.topjava.basejava.model.Resume" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Mihail_Sazonov
   Date: 06.04.2020
@@ -16,9 +14,14 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-<button onclick="">New Resume</button>
+
+<a id="mybutton" href="./resume?action=new" title="CreateResume">
+    <button>New Resume</button>
+</a>
+
 <section>
-    <br><table>
+    <br>
+    <table>
         <tr>
             <th>UUID:</th>
             <th>Full Name:</th>
@@ -30,7 +33,7 @@
                 <td><c:out value="${resume.uuid}"/></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=view"><c:out value="${resume.fullName}"/></a></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=delete"><c:out value="delete"/></a>
-                <a href="resume?uuid=${resume.uuid}&action=edit"><c:out value="edit"/></a></td>
+                    <a href="resume?uuid=${resume.uuid}&action=edit"><c:out value="edit"/></a></td>
             </tr>
         </c:forEach>
         <%-- <% List<Resume> storage = (ArrayList<Resume>) request.getAttribute("ResumesList"); %>
