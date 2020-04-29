@@ -31,5 +31,29 @@ Example HTML tagging for table:
 
 <p id="test"> <input type="text" name="nameInput1"value="val1"><input type="text" name="nameInput2"value="val2"></p>
 
+
+
+<script language="JavaScript">
+    var items = 1;
+    function AddItem(name) {
+        div = document.getElementById("items");
+        button = document.getElementById("add");
+        items++;
+        newItem = "<strong>Поле " + items + ": </strong>";
+        newItem += "<input type = \"text\" name =" + name + items;
+        newItem += "\" size = \"45\"><br>";
+        newNode = document.createElement("span");
+        newNode.innerHTML = newItem;
+        div.insertBefore(newNode,button);
+    }
+</script>
+
+<form name="form1">
+    <div ID = "items">
+        <strong>Поле 1: </strong><input type="text" name="item1" size="45"><br>
+        <input type="button" value="Добавить поле" onclick="AddItem('test');" ID="add">
+    </div>
+</form>
+
 </body>
 </html>
