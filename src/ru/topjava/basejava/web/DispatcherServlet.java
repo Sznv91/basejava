@@ -1,8 +1,7 @@
 package ru.topjava.basejava.web;
 
 import ru.topjava.basejava.Config;
-import ru.topjava.basejava.model.ContactType;
-import ru.topjava.basejava.model.Resume;
+import ru.topjava.basejava.model.*;
 import ru.topjava.basejava.storage.Storage;
 
 import javax.servlet.ServletException;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.YearMonth;
 
 public class DispatcherServlet extends HttpServlet {
 
@@ -37,14 +37,29 @@ public class DispatcherServlet extends HttpServlet {
                 case "edit":
                     req.setAttribute("resume", storage.get(uuid));
                     req.setAttribute("action", "Edit");
-                    req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req,resp);
+                    req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req, resp);
                     break;
                 case "new":
                     Resume resume = new Resume("");
+
+                    ListSection listSection = new ListSection("");
+
+                    resume.setSection(SectionType.ACHIEVEMENT, listSection);
+                    resume.setSection(SectionType.QUALIFICATIONS, listSection);
+
+
+                    Organization.Position position = new Organization.Position(YearMonth.now(), YearMonth.now(), "", "");
+                    Organization org = new Organization("", "", position);
+                    CompanySection companySection = new CompanySection();
+                    companySection.addCompany(org);
+                    resume.setSection(SectionType.EDUCATION, companySection);
+                    resume.setSection(SectionType.EXPERIENCE, companySection);
+
+
                     storage.save(resume);
                     req.setAttribute("resume", resume);
                     req.setAttribute("action", "New");
-                    req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req,resp);
+                    req.getRequestDispatcher("WEB-INF/jsp/newEdit.jsp").forward(req, resp);
             }
         }
     }
@@ -54,22 +69,44 @@ public class DispatcherServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
         String fullName = req.getParameter("fullName");
-        if (fullName.trim().length()<1){
+        if (fullName.trim().length() < 1) {
             storage.delete(uuid);
             resp.sendRedirect("./resume");
             return;
         }
         Resume resume = storage.get(uuid);
         resume.setFullName(fullName);
-        for (ContactType type : ContactType.values()){
+        for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
-            if (value != null && value.trim().length() != 0){
-                resume.setContact(type,value);
+            if (value != null && value.trim().length() != 0) {
+                resume.setContact(type, value);
             } else {
                 resume.getContacts().remove(type);
             }
         }
+
+        for (SectionType type : SectionType.values()) {
+            String value = req.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        resume.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.setSection(type, new ListSection(value));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        break;
+                }
+            } else {
+                resume.getSections().remove(type);
+            }
+        }
+
         storage.update(resume);
-        resp.sendRedirect("resume?uuid="+uuid+"&action=view");
+        resp.sendRedirect("resume?uuid=" + uuid + "&action=view");
     }
 }
