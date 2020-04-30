@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DispatcherServlet extends HttpServlet {
 
@@ -99,6 +101,19 @@ public class DispatcherServlet extends HttpServlet {
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
+                        resume.getSections().remove(type);
+                        Organization.Position position = new Organization.Position(YearMonth.parse(req.getParameter(type.name() + "PositionStartDate"))
+                                , YearMonth.parse(req.getParameter(type.name() + "PositionEndDate"))
+                                , req.getParameter(type.name() + "PositionTitle")
+                                , req.getParameter(type.name() + "PositionDescription"));
+                        List<Organization.Position> positionList = new ArrayList<>();
+                        positionList.add(position);
+                        Organization org = new Organization(req.getParameter(type.name()) //"type.name()" making for work switch case
+                                , req.getParameter(type.name() + "CompanyURL")
+                                , positionList);
+                        CompanySection companySection = new CompanySection();
+                        companySection.addCompany(org);
+                        resume.setSection(type, companySection);
                         break;
                 }
             } else {

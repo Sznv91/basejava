@@ -53,23 +53,18 @@
                     <br>${section.title}
                     <c:forEach var="company" items="<%=((CompanySection) resume.getSection(section)).getCompanies()%>">
                         <br> Company Name: <input type="text" name="${section.name()}" value="${company.name}" size="60%">
-                        URL: <input type="text" name="${section.name()}" value="${company.url}" size="60%">
+                        URL: <input type="text" name="${section.name()}CompanyURL" value="${company.url}" size="60%">
                         <c:forEach items="${company.positionsList}" var="position">
-                            <br> Title: <input type="text" name="${section.name()}" value="${position.title}">
-                            Description:  <input type="text" name="${section.name()}" value="${position.description}">
-                            <br> Year(start -> end): <input type="text" name="${section.name()}" value="${position.startDate}">
-                            <input type="text" name="${section.name()}" value="${position.endDate}">
-                            <input type="text" onkeyup="this.value()    ">
+                            <br> Title: <input type="text" name="${section.name()}PositionTitle" value="${position.title}">
+                            Description:  <input type="text" name="${section.name()}PositionDescription" value="${position.description}">
+                            <br> Year(start -> end): <input type="text" name="${section.name()}PositionStartDate" value="${position.startDate}">
+                            <input type="text" name="${section.name()}PositionEndDate" value="${position.endDate}">
                         </c:forEach>
+
                     </c:forEach>
                 </c:when>
             </c:choose>
-
-
-            <%--<br>${section.title}
-            <input type="text" name="${section.name()}" value="${resume.getSection(section)}" size="60%">--%>
         </c:forEach>
-
 
     </section>
     <button type onclick="window.history.back()">Back</button>
