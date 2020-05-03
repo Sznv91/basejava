@@ -3,7 +3,6 @@ package ru.topjava.basejava;
 import ru.topjava.basejava.storage.SqlStorage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,8 +22,8 @@ public class Config {
     private SqlStorage storage;
 
     private Config() {
-        File PROPS = new File(getHomeDir() + "/config/resumes.properties");
-        try (InputStream is = new FileInputStream(PROPS)) {
+        String PROPS = "//resumes.properties";
+        try (InputStream is = Config.class.getResourceAsStream(PROPS)) {
             Properties properties = new Properties();
             properties.load(is);
             STORAGE_DIR = new File(properties.getProperty("STORAGE_DIR"));
@@ -33,7 +32,7 @@ public class Config {
             passwordDB = properties.getProperty("db.password");
             storage = new SqlStorage(urlDB, userDB, passwordDB);
         } catch (IOException e) {
-            throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
+            throw new IllegalStateException("Invalid config file " + PROPS);
         }
     }
 
