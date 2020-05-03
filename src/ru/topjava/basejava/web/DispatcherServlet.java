@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DispatcherServlet extends HttpServlet {
 
@@ -19,7 +17,6 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //Storage storage = Config.getInstance().getSqlStorageInstance();
         String uuid = req.getParameter("uuid");
         String action = req.getParameter("action");
 
@@ -102,18 +99,23 @@ public class DispatcherServlet extends HttpServlet {
                     case EDUCATION:
                     case EXPERIENCE:
                         resume.getSections().remove(type);
-                        Organization.Position position = new Organization.Position(YearMonth.parse(req.getParameter(type.name() + "PositionStartDate"))
-                                , YearMonth.parse(req.getParameter(type.name() + "PositionEndDate"))
-                                , req.getParameter(type.name() + "PositionTitle")
-                                , req.getParameter(type.name() + "PositionDescription"));
-                        List<Organization.Position> positionList = new ArrayList<>();
-                        positionList.add(position);
-                        Organization org = new Organization(req.getParameter(type.name()) //"type.name()" making for work switch case
-                                , req.getParameter(type.name() + "CompanyURL")
-                                , positionList);
+                        String[] companyNames = req.getParameterValues(type.name());
+                        String[] companyURLs = req.getParameterValues(type.name() + "CompanyURL");
+                        String[] positionsStartDate = req.getParameterValues(type.name() + "PositionStartDate");
+                        String[] positionsEndDate = req.getParameterValues(type.name() + "PositionEndDate");
+                        String[] positionsTitles = req.getParameterValues(type.name() + "PositionTitle");
+                        String[] positionsDescription = req.getParameterValues(type.name() + "PositionDescription");
                         CompanySection companySection = new CompanySection();
-                        companySection.addCompany(org);
-                        resume.setSection(type, companySection);
+                        for (int i = 0; i < companyNames.length; i++) {
+                            Organization.Position position = new Organization.Position(
+                                    YearMonth.parse(positionsStartDate[i])
+                                    ,YearMonth.parse(positionsEndDate[i])
+                                    ,positionsTitles[i]
+                                    ,positionsDescription[i]
+                            );
+                            companySection.addCompany(new Organization(companyNames[i],companyURLs[i],position));
+                            resume.setSection(type, companySection);
+                        }
                         break;
                 }
             } else {

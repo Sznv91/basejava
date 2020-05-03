@@ -5,11 +5,10 @@
   Time: 22:08
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="ru.topjava.basejava.model.ContactType" %>
-<%@ page import="ru.topjava.basejava.model.SectionType" %>
-<%@ page import="ru.topjava.basejava.model.TextSection" %>
-<%@ page import="ru.topjava.basejava.model.ListSection" %>
 <%@ page import="ru.topjava.basejava.model.CompanySection" %>
+<%@ page import="ru.topjava.basejava.model.ContactType" %>
+<%@ page import="ru.topjava.basejava.model.ListSection" %>
+<%@ page import="ru.topjava.basejava.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="resume" type="ru.topjava.basejava.model.Resume" scope="request"/>
@@ -17,6 +16,64 @@
 <head>
     <title>${action} ${resume.fullName} </title>
     <link rel="stylesheet" href="css/style.css">
+    <script language="JavaScript">
+        var items = 1;
+        function AddItem(sectionType) {
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            orgName = "<strong>Название огранизации: </strong>";
+            orgName += "<input type = \"text\" name =" + sectionType;
+            orgName += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = orgName;
+            div.insertBefore(newNode,button);
+
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            orgUrl = "<strong>URL: </strong>";
+            orgUrl += "<input type = \"text\" name =" + sectionType+'CompanyURL';
+            orgUrl += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = orgUrl;
+            div.insertBefore(newNode,button);
+
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            posStartDate = "<strong>StartDate: </strong>";
+            posStartDate += "<input type = \"text\" name =" + sectionType+'PositionStartDate';
+            posStartDate += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = posStartDate;
+            div.insertBefore(newNode,button);
+
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            posEndDate = "<strong>EndDate: </strong>";
+            posEndDate += "<input type = \"text\" name =" + sectionType+'PositionEndDate';
+            posEndDate += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = posEndDate;
+            div.insertBefore(newNode,button);
+
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            posTitle = "<strong>PositionTitle: </strong>";
+            posTitle += "<input type = \"text\" name =" + sectionType+'PositionTitle';
+            posTitle += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = posTitle;
+            div.insertBefore(newNode,button);
+
+            div = document.getElementById("items");
+            button = document.getElementById("add");
+            posDescription = "<strong>Description: </strong>";
+            posDescription += "<input type = \"text\" name =" + sectionType+'PositionDescription';
+            posDescription += " size = \"45\"><br>";
+            newNode = document.createElement("span");
+            newNode.innerHTML = posDescription;
+            div.insertBefore(newNode,button);
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
@@ -52,12 +109,16 @@
                 <c:when test="${sectionName == 'EXPERIENCE' || sectionName == 'EDUCATION'}">
                     <br>${section.title}
                     <c:forEach var="company" items="<%=((CompanySection) resume.getSection(section)).getCompanies()%>">
-                        <br> Company Name: <input type="text" name="${section.name()}" value="${company.name}" size="60%">
+                        <br> Company Name: <input type="text" name="${section.name()}" value="${company.name}"
+                                                  size="60%">
                         URL: <input type="text" name="${section.name()}CompanyURL" value="${company.url}" size="60%">
                         <c:forEach items="${company.positionsList}" var="position">
-                            <br> Title: <input type="text" name="${section.name()}PositionTitle" value="${position.title}">
-                            Description:  <input type="text" name="${section.name()}PositionDescription" value="${position.description}">
-                            <br> Year(start -> end): <input type="text" name="${section.name()}PositionStartDate" value="${position.startDate}">
+                            <br> Title: <input type="text" name="${section.name()}PositionTitle"
+                                               value="${position.title}">
+                            Description: <input type="text" name="${section.name()}PositionDescription"
+                                                value="${position.description}">
+                            <br> Year(start -> end): <input type="text" name="${section.name()}PositionStartDate"
+                                                            value="${position.startDate}">
                             <input type="text" name="${section.name()}PositionEndDate" value="${position.endDate}">
                         </c:forEach>
 
@@ -65,6 +126,10 @@
                 </c:when>
             </c:choose>
         </c:forEach>
+        <div ID = "items">
+            <input type="button" value="Добавить поле EXPERIENCE" onclick="AddItem('EXPERIENCE');" ID="add">
+            <input type="button" value="Добавить поле EDUCATION" onclick="AddItem('EDUCATION');" ID="add">
+        </div>
 
     </section>
     <button type onclick="window.history.back()">Back</button>
